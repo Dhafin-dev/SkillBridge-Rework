@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 540" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .box { fill: #ffffff; stroke: #4f46e5; stroke-width: 1.5; rx: 6; }
+      .entity-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 600; fill: #1e1b4b; text-anchor: middle; }
+      .lifeline { stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4; }
+      .active-bar { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; rx: 3; }
+      .arrow { stroke: #1e293b; stroke-width: 1.5; marker-end: url(#arrowhead); }
+      .return-arrow { stroke: #4f46e5; stroke-width: 1.5; stroke-dasharray: 4; marker-end: url(#arrowhead-blue); }
+      .msg-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; fill: #1e293b; }
+      .alt-box { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 1; stroke-dasharray: 3; rx: 6; }
+      .alt-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: #475569; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1e293b"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4f46e5"/>
+    </marker>
+  </defs>
+
+  <rect width="850" height="540" class="bg"/>
+
+  <text x="425" y="35" text-anchor="middle" class="title">Sequence Diagram: Registrasi Akun &amp; Inisialisasi Profil Multi-Peran</text>
+
+  <!-- Entities -->
+  <rect x="40" y="60" width="110" height="35" class="box"/>
+  <text x="95" y="82" class="entity-text">Pengguna Baru</text>
+  <line x1="95" y1="95" x2="95" y2="500" class="lifeline"/>
+
+  <rect x="210" y="60" width="130" height="35" class="box"/>
+  <text x="275" y="82" class="entity-text">Register View (HTML)</text>
+  <line x1="275" y1="95" x2="275" y2="500" class="lifeline"/>
+
+  <rect x="400" y="60" width="110" height="35" class="box"/>
+  <text x="455" y="82" class="entity-text">auth.js</text>
+  <line x1="455" y1="95" x2="455" y2="500" class="lifeline"/>
+
+  <rect x="570" y="60" width="120" height="35" class="box"/>
+  <text x="630" y="82" class="entity-text">Supabase Auth</text>
+  <line x1="630" y1="95" x2="630" y2="500" class="lifeline"/>
+
+  <rect x="730" y="60" width="100" height="35" class="box"/>
+  <text x="780" y="82" class="entity-text">PostgreSQL</text>
+  <line x1="780" y1="95" x2="780" y2="500" class="lifeline"/>
+
+  <!-- Active Lifelines -->
+  <rect x="89" y="110" width="12" height="370" class="active-bar"/>
+  <rect x="269" y="115" width="12" height="360" class="active-bar"/>
+  <rect x="449" y="140" width="12" height="320" class="active-bar"/>
+  <rect x="624" y="165" width="12" height="50" class="active-bar"/>
+  <rect x="774" y="240" width="12" height="150" class="active-bar"/>
+
+  <!-- Messages -->
+  <line x1="101" y1="120" x2="269" y2="120" class="arrow"/>
+  <text x="110" y="115" class="msg-text">1. Pilih Role (STUDENT / UMKM), isi data &amp; klik "Daftar"</text>
+
+  <line x1="281" y1="145" x2="449" y2="145" class="arrow"/>
+  <text x="290" y="140" class="msg-text">2. handleRegister(payload)</text>
+
+  <line x1="461" y1="170" x2="624" y2="170" class="arrow"/>
+  <text x="470" y="165" class="msg-text">3. signUp({email, password, metadata: {role, name}})</text>
+
+  <line x1="624" y1="205" x2="461" y2="205" class="return-arrow"/>
+  <text x="470" y="200" class="msg-text">4. 201 Created (User Object &amp; UID)</text>
+
+  <line x1="461" y1="245" x2="774" y2="245" class="arrow"/>
+  <text x="470" y="240" class="msg-text">5. INSERT INTO public.users (id, email, name, role)</text>
+
+  <rect x="220" y="270" width="590" height="110" class="alt-box"/>
+  <text x="230" y="285" class="alt-title">[alt: Inisialisasi Profil Spesifik]</text>
+
+  <text x="290" y="310" class="msg-text">if role == 'STUDENT': INSERT INTO student_profiles (user_id, institution, skills)</text>
+  <text x="290" y="335" class="msg-text">else if role == 'UMKM': INSERT INTO umkm_profiles (user_id, company_name, industry)</text>
+
+  <line x1="774" y1="365" x2="461" y2="365" class="return-arrow"/>
+  <text x="470" y="360" class="msg-text">6. 201 Success (Profile Created)</text>
+
+  <line x1="449" y1="410" x2="281" y2="410" class="return-arrow"/>
+  <text x="290" y="405" class="msg-text">7. showSuccessToast("Pendaftaran berhasil, silakan masuk")</text>
+
+  <line x1="269" y1="450" x2="101" y2="450" class="return-arrow"/>
+  <text x="110" y="445" class="msg-text">8. Alihkan Pengguna ke /pages/auth/login.html</text>
+</svg>

@@ -1,0 +1,410 @@
+' ====================================================================
+' FILE: UML_PLANTUML_REVISED.puml
+' PROYEK: SkillBridge Rework (Praktikum Pembangunan Perangkat Lunak - UNAIR)
+' DOSEN: Dr. Indra Kharisma Raharjana, S.Kom., M.T.
+' TEKNOLOGI: HTML5, CSS3, JavaScript, Python FastAPI, Supabase (PostgreSQL)
+' ====================================================================
+
+' --------------------------------------------------------------------
+' 1. REVISED USE CASE DIAGRAM
+' --------------------------------------------------------------------
+@startuml SkillBridge_UseCase_Diagram
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 8
+
+skinparam actor {
+  BackgroundColor #EEF2FF
+  BorderColor #4F46E5
+}
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #475569
+  ArrowColor #0F172A
+}
+
+actor "Mahasiswa\n(Talenta)" as Student
+actor "Pemilik UMKM\n(Mitra Industri)" as UMKM
+actor "Admin Platform" as Admin
+actor "Pengguna" as User
+
+Student -up-|> User
+UMKM -up-|> User
+Admin -up-|> User
+
+rectangle "Sistem Platform SkillBridge" {
+
+  package "Modul Autentikasi & Profil" {
+    usecase "UC-01: Registrasi Akun Multi-Peran" as UC01
+    usecase "UC-02: Login ke Sistem & Sesi JWT" as UC02
+    usecase "UC-03: Mengelola Profil & Portofolio" as UC03
+  }
+
+  package "Modul Marketplace & Proyek Industri" {
+    usecase "UC-04: Menjelajah & Memfilter Proyek" as UC04
+    usecase "UC-05: Memublikasikan Brief Proyek" as UC05
+    usecase "UC-06: Mengajukan Lamaran (1-Click Apply)" as UC06
+    usecase "UC-07: Meninjau Pelamar & Seleksi" as UC07
+  }
+
+  package "Modul AI Talent Matchmaking" {
+    usecase "UC-08: Menghitung Skor Kecocokan AI (Gemini)" as UC08
+    usecase "UC-09: Melihat Rasionalisasi & Saran AI" as UC09
+  }
+
+  package "Modul Ruang Kerja Kolaboratif (Workspace)" {
+    usecase "UC-10: Mengelola Checklist Tugas & Milestones" as UC10
+    usecase "UC-11: Berkomunikasi via In-App Chat Realtime" as UC11
+    usecase "UC-12: Menyerahkan Deliverable Akhir Proyek" as UC12
+    usecase "UC-13: Memberikan Ulasan & Rating 2 Arah" as UC13
+  }
+
+  package "Modul Tata Kelola & Tata Tertib (Governance)" {
+    usecase "UC-14: Memoderasi Proyek & Verifikasi Identitas" as UC14
+  }
+}
+
+' Relasi Pengguna
+User --> UC01
+User --> UC02
+User --> UC03
+
+' Relasi Mahasiswa
+Student --> UC04
+Student --> UC06
+Student --> UC10
+Student --> UC11
+Student --> UC12
+Student --> UC13
+
+' Relasi UMKM
+UMKM --> UC05
+UMKM --> UC07
+UMKM --> UC08
+UMKM --> UC10
+UMKM --> UC11
+UMKM --> UC13
+
+' Relasi AI Extension
+UC08 .> UC09 : <<include>>
+UC07 ..> UC08 : <<extend>>
+
+' Relasi Admin
+Admin --> UC14
+@enduml
+
+' --------------------------------------------------------------------
+' 2. SEQUENCE DIAGRAM: LOGIN & MULTI-ROLE ROUTING
+' --------------------------------------------------------------------
+@startuml SkillBridge_Sequence_Login
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 8
+
+actor "Pengguna" as User
+boundary "Login View\n(HTML/JS)" as View
+control "Auth Controller\n(auth.js)" as AuthCtrl
+entity "Supabase Auth\n(GoTrue Engine)" as SupaAuth
+database "PostgreSQL\n(public.users)" as DB
+
+autonumber
+User -> View : Buka /pages/auth/login.html
+activate User
+activate View
+User -> View : Masukkan Email & Kata Sandi, klik "Masuk"
+View -> AuthCtrl : handleLogin(email, password)
+activate AuthCtrl
+
+AuthCtrl -> SupaAuth : signInWithPassword({email, password})
+activate SupaAuth
+
+alt Kredensial Valid
+    SupaAuth --> AuthCtrl : 200 OK (JWT Token, User Metadata)
+    deactivate SupaAuth
+    AuthCtrl -> DB : SELECT role FROM public.users WHERE id = auth.uid()
+    activate DB
+    DB --> AuthCtrl : { role: 'STUDENT' | 'UMKM' | 'ADMIN' }
+    deactivate DB
+    AuthCtrl -> AuthCtrl : Simpan session di localStorage
+    
+    alt Role == 'STUDENT'
+        AuthCtrl --> View : redirect('/pages/student/dashboard.html')
+    else Role == 'UMKM'
+        AuthCtrl --> View : redirect('/pages/umkm/dashboard.html')
+    else Role == 'ADMIN'
+        AuthCtrl --> View : redirect('/pages/admin/dashboard.html')
+    end
+    View --> User : Tampilkan Dashboard Pengguna
+else Kredensial Tidak Valid
+    SupaAuth --> AuthCtrl : 400 Bad Request (Invalid login credentials)
+    AuthCtrl --> View : showErrorToast("Email atau kata sandi salah")
+    View --> User : Tampilkan Pesan Error Validasi
+end
+
+deactivate AuthCtrl
+deactivate View
+deactivate User
+@enduml
+
+' --------------------------------------------------------------------
+' 3. SEQUENCE DIAGRAM: REGISTRASI AKUN
+' --------------------------------------------------------------------
+@startuml SkillBridge_Sequence_Register
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 8
+
+actor "Pengguna Baru" as User
+boundary "Register View\n(HTML/JS)" as View
+control "Auth Controller\n(auth.js)" as AuthCtrl
+entity "Supabase Auth" as SupaAuth
+database "PostgreSQL" as DB
+
+autonumber
+User -> View : Pilih Role (STUDENT / UMKM), isi formulir data
+activate User
+activate View
+User -> View : Klik tombol "Daftar Akun"
+View -> AuthCtrl : handleRegister(payload)
+activate AuthCtrl
+
+AuthCtrl -> SupaAuth : signUp({email, password, options: {data: {role, name}}})
+activate SupaAuth
+
+alt Email Unik & Password Kuat
+    SupaAuth --> AuthCtrl : 201 Created (User Object)
+    deactivate SupaAuth
+    
+    AuthCtrl -> DB : INSERT INTO public.users (id, email, name, role)
+    activate DB
+    DB --> AuthCtrl : 201 Success
+    
+    alt Role == 'STUDENT'
+        AuthCtrl -> DB : INSERT INTO public.student_profiles (user_id, institution, skills)
+        DB --> AuthCtrl : 201 Success
+    else Role == 'UMKM'
+        AuthCtrl -> DB : INSERT INTO public.umkm_profiles (user_id, company_name, industry)
+        DB --> AuthCtrl : 201 Success
+    end
+    deactivate DB
+    
+    AuthCtrl --> View : showSuccessToast("Pendaftaran berhasil, silakan masuk")
+    View --> User : Alihkan ke halaman /pages/auth/login.html
+else Email Duplikat
+    SupaAuth --> AuthCtrl : 422 Unprocessable (User already registered)
+    AuthCtrl --> View : showErrorToast("Email sudah terdaftar")
+    View --> User : Tampilkan Peringatan
+end
+
+deactivate AuthCtrl
+deactivate View
+deactivate User
+@enduml
+
+' --------------------------------------------------------------------
+' 4. SEQUENCE DIAGRAM: AI TALENT MATCHMAKING (GEMINI 2.5 FLASH)
+' --------------------------------------------------------------------
+@startuml SkillBridge_Sequence_AIMatch
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 8
+
+actor "Pemilik UMKM" as UMKM
+boundary "Applicants View\n(HTML/JS)" as View
+control "API Client\n(api.js)" as Client
+control "FastAPI Backend\n(main.py)" as FastAPIService
+control "Gemini Client\n(gemini_service.py)" as GeminiEngine
+entity "Google GenAI API\n(Gemini 2.5 Flash)" as GoogleCloud
+
+autonumber
+UMKM -> View : Buka daftar pelamar proyek
+activate UMKM
+activate View
+UMKM -> View : Klik "Lihat Analisis Kecocokan AI"
+View -> Client : fetchAIMatch(studentProfile, projectDetails)
+activate Client
+
+Client -> FastAPIService : POST /api/ai-match (Payload JSON)
+activate FastAPIService
+
+FastAPIService -> GeminiEngine : evaluate_match(candidate, project)
+activate GeminiEngine
+
+GeminiEngine -> GoogleCloud : ai.models.generateContent(model='gemini-2.5-flash', prompt)
+activate GoogleCloud
+GoogleCloud --> GeminiEngine : Return JSON String (matchPercent, rationale, nextSteps)
+deactivate GoogleCloud
+
+GeminiEngine --> FastAPIService : Parsed Dict Object
+deactivate GeminiEngine
+
+FastAPIService --> Client : 200 OK Envelope JSON
+deactivate FastAPIService
+
+Client --> View : renderAIMatchModal(data)
+deactivate Client
+
+View --> UMKM : Tampilkan Modal: 94% Match, Rationale & 3 Saran Aksi
+deactivate View
+deactivate UMKM
+@enduml
+
+' --------------------------------------------------------------------
+' 5. SEQUENCE DIAGRAM: WORKSPACE REAL-TIME COLLABORATION
+' --------------------------------------------------------------------
+@startuml SkillBridge_Sequence_Workspace_Collaboration
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 8
+
+actor "Mahasiswa" as Student
+boundary "Workspace View\n(Tab Mahasiswa)" as ViewStudent
+entity "Supabase Realtime\n(WebSocket Channel)" as RealtimeHub
+database "PostgreSQL\n(project_tasks & messages)" as DB
+boundary "Workspace View\n(Tab UMKM)" as ViewUMKM
+actor "Pemilik UMKM" as UMKM
+
+autonumber
+Student -> ViewStudent : Centang tugas "Selesaikan Wireframe Figma"
+activate Student
+activate ViewStudent
+
+ViewStudent -> DB : UPDATE project_tasks SET completed = true WHERE id = task_id
+activate DB
+DB --> ViewStudent : 200 OK (Task Updated)
+
+DB -> RealtimeHub : CDC Event (UPDATE project_tasks)
+deactivate DB
+activate RealtimeHub
+
+RealtimeHub -> ViewStudent : Broadcast (Task Updated)
+RealtimeHub -> ViewUMKM : Broadcast (Task Updated)
+deactivate RealtimeHub
+activate ViewUMKM
+
+ViewStudent -> ViewStudent : Hitung Progress Bar (misal: 66% -> 100%)
+ViewUMKM -> ViewUMKM : Animasi Progress Bar (66% -> 100%)
+ViewUMKM --> UMKM : Lihat Progres Tugas Diperbarui Seketika
+
+UMKM -> ViewUMKM : Ketik pesan "Keren, kirim link prototype ya!", kirim
+ViewUMKM -> DB : INSERT INTO messages (text, workspace_id, sender_id)
+activate DB
+DB --> ViewUMKM : 201 Created
+
+DB -> RealtimeHub : CDC Event (INSERT messages)
+deactivate DB
+activate RealtimeHub
+
+RealtimeHub -> ViewStudent : Broadcast New Message Bubble
+deactivate RealtimeHub
+
+ViewStudent --> Student : Tampilkan Bubble Chat Baru (< 300ms)
+
+deactivate ViewStudent
+deactivate ViewUMKM
+deactivate Student
+@enduml
+
+' --------------------------------------------------------------------
+' 6. ACTIVITY DIAGRAM: PENGAJUAN & SELEKSI PROYEK
+' --------------------------------------------------------------------
+@startuml SkillBridge_Activity_Project_Application
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 8
+
+|Mahasiswa|
+start
+:Jelajahi Katalog Proyek di Marketplace;
+:Pilih Kartu Proyek yang Relevan;
+:Baca Brief Proyek, Target Deliverables & Stipend;
+:Klik "Lamar Proyek Ini";
+:Isi Formulir Pitch Pernyataan & Tautan Portofolio;
+:Kirim Lamaran;
+
+|Sistem Platform|
+:Validasi Data Pelamar;
+:Simpan Lamaran ke Database (Status: PENDING);
+:Kirim Notifikasi ke Pemilik UMKM;
+
+|Pemilik UMKM|
+:Buka Halaman Manajemen Pelamar;
+:Pilih Kandidat Mahasiswa;
+:Klik "Hitung Skor Kecocokan AI";
+
+|Sistem Platform|
+:Eksekusi Analisis Gemini 2.5 Flash;
+:Tampilkan Persentase Kecocokan & Rekomendasi;
+
+|Pemilik UMKM|
+if (Apakah Kandidat Memenuhi Syarat?) then (Ya)
+  :Klik "Terima Lamaran";
+  |Sistem Platform|
+  :Perbarui Status Lamaran (ACCEPTED);
+  :Otomatis Buat Ruang Kerja (Workspace) Baru;
+  :Inisialisasi Checklist Tugas dari Deliverables Proyek;
+  :Perbarui Status Proyek (ACTIVE);
+  :Kirim Notifikasi Undangan Workspace ke Mahasiswa;
+else (Tidak)
+  |Pemilik UMKM|
+  :Klik "Tolak Lamaran";
+  |Sistem Platform|
+  :Perbarui Status Lamaran (REJECTED);
+  :Kirim Notifikasi Status ke Mahasiswa;
+endif
+
+stop
+@enduml
+
+' --------------------------------------------------------------------
+' 7. ACTIVITY DIAGRAM: WORKSPACE COLLABORATION & REVIEW
+' --------------------------------------------------------------------
+@startuml SkillBridge_Activity_Workspace_Review
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 8
+
+|Mahasiswa|
+start
+:Buka Halaman Ruang Kerja (Workspace);
+:Lakukan Koordinasi Teknis via In-App Chat Realtime;
+:Kerjakan Milestone Tugas dan Centang Checklist;
+
+|Sistem Platform|
+:Hitung & Perbarui Progress Bar secara Real-Time;
+
+|Mahasiswa|
+:Unggah dan Submit Tautan Berkas Deliverable Akhir;
+
+|Pemilik UMKM|
+:Periksa Kelengkapan Deliverable;
+if (Apakah Hasil Pekerjaan Sesuai Brief?) then (Perlu Revisi)
+  :Kirim Catatan Revisi via Chat Ruang Kerja;
+  |Mahasiswa|
+  :Perbaiki Pekerjaan dan Kirim Ulang;
+else (Selesai & Memuaskan)
+  |Pemilik UMKM|
+  :Klik "Selesaikan Proyek";
+  |Sistem Platform|
+  :Perbarui Status Workspace & Proyek (COMPLETED);
+  :Tampilkan Modal Rating & Ulasan 2 Arah;
+  |Pemilik UMKM|
+  :Beri Bintang (1-5) dan Ulasan untuk Mahasiswa;
+  |Mahasiswa|
+  :Beri Bintang (1-5) dan Ulasan untuk UMKM;
+  |Sistem Platform|
+  :Simpan Review di Database;
+  :Rekalkulasi Skor Portofolio & Counter Proyek Mahasiswa;
+endif
+
+stop
+@enduml

@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 820" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; fill: #64748b; }
+      .box { fill: #ffffff; stroke: #4f46e5; stroke-width: 2; rx: 12; }
+      .package-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; font-weight: 600; fill: #4f46e5; }
+      .package-box { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4; rx: 8; }
+      .actor-head { fill: #eef2ff; stroke: #4f46e5; stroke-width: 2; }
+      .actor-body { stroke: #4f46e5; stroke-width: 2; stroke-linecap: round; }
+      .actor-label { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; font-weight: 600; fill: #1e1b4b; text-anchor: middle; }
+      .uc-oval { fill: #ffffff; stroke: #64748b; stroke-width: 1.5; rx: 20; ry: 18; }
+      .uc-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 500; fill: #1e293b; text-anchor: middle; dominant-baseline: middle; }
+      .line { stroke: #64748b; stroke-width: 1.5; }
+      .dashed-line { stroke: #4f46e5; stroke-width: 1.5; stroke-dasharray: 4; }
+      .include-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; fill: #4f46e5; font-weight: 600; }
+    </style>
+  </defs>
+
+  <rect width="950" height="820" class="bg"/>
+
+  <!-- Title -->
+  <text x="475" y="40" text-anchor="middle" class="title">SkillBridge — Use Case Diagram</text>
+  <text x="475" y="62" text-anchor="middle" class="subtitle">Platform Kolaborasi Proyek Industri Akademik &amp; UMKM Terintegrasi AI</text>
+
+  <!-- Boundary Box -->
+  <rect x="220" y="85" width="510" height="705" class="box"/>
+  <text x="240" y="115" class="package-title">Sistem Platform SkillBridge</text>
+
+  <!-- Actor: Mahasiswa (Left) -->
+  <g transform="translate(110, 240)">
+    <circle cx="0" cy="0" r="16" class="actor-head"/>
+    <line x1="0" y1="16" x2="0" y2="50" class="actor-body"/>
+    <line x1="-20" y1="28" x2="20" y2="28" class="actor-body"/>
+    <line x1="0" y1="50" x2="-16" y2="85" class="actor-body"/>
+    <line x1="0" y1="50" x2="16" y2="85" class="actor-body"/>
+    <text x="0" y="105" class="actor-label">Mahasiswa</text>
+    <text x="0" y="122" class="subtitle" text-anchor="middle">(Talenta)</text>
+  </g>
+
+  <!-- Actor: UMKM (Right) -->
+  <g transform="translate(840, 240)">
+    <circle cx="0" cy="0" r="16" class="actor-head"/>
+    <line x1="0" y1="16" x2="0" y2="50" class="actor-body"/>
+    <line x1="-20" y1="28" x2="20" y2="28" class="actor-body"/>
+    <line x1="0" y1="50" x2="-16" y2="85" class="actor-body"/>
+    <line x1="0" y1="50" x2="16" y2="85" class="actor-body"/>
+    <text x="0" y="105" class="actor-label">Mitra UMKM</text>
+    <text x="0" y="122" class="subtitle" text-anchor="middle">(Industri)</text>
+  </g>
+
+  <!-- Actor: Admin (Right Bottom) -->
+  <g transform="translate(840, 640)">
+    <circle cx="0" cy="0" r="16" class="actor-head"/>
+    <line x1="0" y1="16" x2="0" y2="50" class="actor-body"/>
+    <line x1="-20" y1="28" x2="20" y2="28" class="actor-body"/>
+    <line x1="0" y1="50" x2="-16" y2="85" class="actor-body"/>
+    <line x1="0" y1="50" x2="16" y2="85" class="actor-body"/>
+    <text x="0" y="105" class="actor-label">Admin</text>
+    <text x="0" y="122" class="subtitle" text-anchor="middle">(Governance)</text>
+  </g>
+
+  <!-- Package 1: Autentikasi -->
+  <rect x="240" y="130" width="470" height="120" class="package-box"/>
+  <text x="255" y="150" class="package-title" font-size="12">Modul Autentikasi &amp; Profil</text>
+  <!-- UC-01 -->
+  <rect x="260" y="165" width="200" height="36" rx="18" class="uc-oval"/>
+  <text x="360" y="183" class="uc-text">UC-01: Registrasi Akun</text>
+  <!-- UC-02 -->
+  <rect x="490" y="165" width="200" height="36" rx="18" class="uc-oval"/>
+  <text x="590" y="183" class="uc-text">UC-02: Login ke Sistem</text>
+  <!-- UC-03 -->
+  <rect x="375" y="208" width="200" height="34" rx="17" class="uc-oval"/>
+  <text x="475" y="225" class="uc-text">UC-03: Kelola Profil &amp; Portofolio</text>
+
+  <!-- Package 2: Marketplace Proyek -->
+  <rect x="240" y="260" width="470" height="150" class="package-box"/>
+  <text x="255" y="280" class="package-title" font-size="12">Modul Marketplace &amp; Proyek Industri</text>
+  <!-- UC-04 -->
+  <rect x="260" y="295" width="210" height="36" rx="18" class="uc-oval"/>
+  <text x="365" y="313" class="uc-text">UC-04: Jelajah &amp; Filter Proyek</text>
+  <!-- UC-05 -->
+  <rect x="490" y="295" width="200" height="36" rx="18" class="uc-oval"/>
+  <text x="590" y="313" class="uc-text">UC-05: Pasang Brief Proyek</text>
+  <!-- UC-06 -->
+  <rect x="260" y="345" width="210" height="36" rx="18" class="uc-oval"/>
+  <text x="365" y="363" class="uc-text">UC-06: Lamar Proyek (1-Click)</text>
+  <!-- UC-07 -->
+  <rect x="490" y="345" width="200" height="36" rx="18" class="uc-oval"/>
+  <text x="590" y="363" class="uc-text">UC-07: Tinjau &amp; Seleksi Pelamar</text>
+
+  <!-- Package 3: AI Talent Matchmaking -->
+  <rect x="240" y="420" width="470" height="110" class="package-box"/>
+  <text x="255" y="440" class="package-title" font-size="12">Modul AI Talent Matchmaking (Gemini 2.5 Flash)</text>
+  <!-- UC-08 -->
+  <rect x="260" y="455" width="210" height="36" rx="18" class="uc-oval"/>
+  <text x="365" y="473" class="uc-text">UC-08: Hitung Skor Kecocokan AI</text>
+  <!-- UC-09 -->
+  <rect x="490" y="455" width="200" height="36" rx="18" class="uc-oval"/>
+  <text x="590" y="473" class="uc-text">UC-09: Rasionalisasi &amp; Saran AI</text>
+
+  <!-- Package 4: Ruang Kerja Kolaboratif -->
+  <rect x="240" y="540" width="470" height="150" class="package-box"/>
+  <text x="255" y="560" class="package-title" font-size="12">Modul Ruang Kerja Kolaboratif (Workspace)</text>
+  <!-- UC-10 -->
+  <rect x="260" y="575" width="210" height="36" rx="18" class="uc-oval"/>
+  <text x="365" y="593" class="uc-text">UC-10: Checklist Tugas &amp; Milestone</text>
+  <!-- UC-11 -->
+  <rect x="490" y="575" width="200" height="36" rx="18" class="uc-oval"/>
+  <text x="590" y="593" class="uc-text">UC-11: Chat Realtime Ruang Kerja</text>
+  <!-- UC-12 -->
+  <rect x="260" y="625" width="210" height="36" rx="18" class="uc-oval"/>
+  <text x="365" y="643" class="uc-text">UC-12: Serahkan Deliverable Akhir</text>
+  <!-- UC-13 -->
+  <rect x="490" y="625" width="200" height="36" rx="18" class="uc-oval"/>
+  <text x="590" y="643" class="uc-text">UC-13: Rating &amp; Review 2 Arah</text>
+
+  <!-- Package 5: Governance -->
+  <rect x="240" y="700" width="470" height="75" class="package-box"/>
+  <text x="255" y="720" class="package-title" font-size="12">Modul Tata Kelola (Admin Center)</text>
+  <!-- UC-14 -->
+  <rect x="345" y="730" width="260" height="36" rx="18" class="uc-oval"/>
+  <text x="475" y="748" class="uc-text">UC-14: Moderasi Proyek &amp; Verifikasi</text>
+
+  <!-- Connection Lines: Mahasiswa -->
+  <line x1="140" y1="260" x2="260" y2="183" class="line"/>
+  <line x1="140" y1="270" x2="260" y2="313" class="line"/>
+  <line x1="140" y1="280" x2="260" y2="363" class="line"/>
+  <line x1="140" y1="290" x2="260" y2="593" class="line"/>
+  <line x1="140" y1="300" x2="260" y2="643" class="line"/>
+
+  <!-- Connection Lines: UMKM -->
+  <line x1="810" y1="260" x2="690" y2="183" class="line"/>
+  <line x1="810" y1="270" x2="690" y2="313" class="line"/>
+  <line x1="810" y1="280" x2="690" y2="363" class="line"/>
+  <line x1="810" y1="290" x2="690" y2="593" class="line"/>
+  <line x1="810" y1="300" x2="690" y2="643" class="line"/>
+
+  <!-- Connection Lines: Admin -->
+  <line x1="810" y1="680" x2="605" y2="748" class="line"/>
+
+  <!-- AI Extension line -->
+  <line x1="470" y1="473" x2="490" y2="473" class="dashed-line"/>
+  <text x="475" y="465" class="include-text" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+</svg>
