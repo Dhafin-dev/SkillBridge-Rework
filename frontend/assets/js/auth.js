@@ -6,29 +6,156 @@
 (function () {
   const STORAGE_KEY = 'SKILLBRIDGE_CURRENT_USER';
 
-  const DEFAULT_STUDENT = {
-    id: 'std_demo_1',
-    name: 'Budi Santoso',
-    email: 'budi.santoso@itb.ac.id',
-    role: 'mahasiswa',
-    university: 'Institut Teknologi Bandung',
-    major: 'Teknik Informatika',
-    semester: 5,
-    bio: 'Pengembang Web & Mobile yang bersemangat membantu digitalisasi UMKM lokal.',
-    skills: ['HTML/CSS', 'JavaScript', 'Python', 'UI/UX Design', 'SQL']
-  };
+  // 10 Preloaded Student Accounts matching Mock Applications
+  const PRELOADED_STUDENTS = [
+    {
+      id: 'std1',
+      name: 'Budi Santoso',
+      email: 'budi.santoso@itb.ac.id',
+      role: 'mahasiswa',
+      university: 'Institut Teknologi Bandung',
+      major: 'Teknik Informatika',
+      semester: 5,
+      bio: 'Pengembang Web & Mobile yang bersemangat membantu digitalisasi UMKM lokal.',
+      skills: ['HTML/CSS', 'JavaScript', 'Python', 'UI/UX Design', 'SQL']
+    },
+    {
+      id: 'std2',
+      name: 'Siti Rahmawati',
+      email: 'siti.rahmawati@ui.ac.id',
+      role: 'mahasiswa',
+      university: 'Universitas Indonesia',
+      major: 'Sistem Informasi',
+      semester: 5,
+      bio: 'Spesialis Frontend React & UI/UX design modern.',
+      skills: ['Frontend', 'React', 'Tailwind CSS', 'Figma']
+    },
+    {
+      id: 'std3',
+      name: 'Kevin Wijaya',
+      email: 'kevin.wijaya@ugm.ac.id',
+      role: 'mahasiswa',
+      university: 'Universitas Gadjah Mada',
+      major: 'Ilmu Komputer',
+      semester: 6,
+      bio: 'Fullstack developer dengan fokus pada performa web app dan database.',
+      skills: ['Fullstack Web', 'JavaScript', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 'std4',
+      name: 'Rina Puspita',
+      email: 'rina.puspita@telkomuniversity.ac.id',
+      role: 'mahasiswa',
+      university: 'Telkom University',
+      major: 'Desain Komunikasi Visual',
+      semester: 5,
+      bio: 'UI/UX designer dengan keahlian riset pengguna dan prototyping interaktif.',
+      skills: ['UI/UX Design', 'Figma', 'Web Design', 'HTML/CSS']
+    },
+    {
+      id: 'std5',
+      name: 'Ahmad Fauzi',
+      email: 'ahmad.fauzi@ub.ac.id',
+      role: 'mahasiswa',
+      university: 'Universitas Brawijaya',
+      major: 'Manajemen Pemasaran',
+      semester: 7,
+      bio: 'Digital marketer spesialis SEO dan social media growth strategy.',
+      skills: ['SEO', 'Copywriting', 'Social Media Marketing', 'Google Analytics']
+    },
+    {
+      id: 'std6',
+      name: 'Dimas Pratama',
+      email: 'dimas.pratama@um.ac.id',
+      role: 'mahasiswa',
+      university: 'Universitas Negeri Malang',
+      major: 'Ilmu Komunikasi',
+      semester: 5,
+      bio: 'Content creator dan video editor untuk campaign promosi TikTok & Instagram.',
+      skills: ['Content Creation', 'TikTok Ads', 'Instagram Reels', 'SEO On-Page']
+    },
+    {
+      id: 'std7',
+      name: 'Jessica Tan',
+      email: 'jessica.tan@isi.ac.id',
+      role: 'mahasiswa',
+      university: 'Institut Seni Indonesia',
+      major: 'Desain Produk',
+      semester: 6,
+      bio: 'Desainer kemasan produk makanan & minuman ramah lingkungan.',
+      skills: ['Packaging Design', '3D Mockup', 'Adobe Illustrator', 'Brand Identity']
+    },
+    {
+      id: 'std8',
+      name: 'Farhan Syahputra',
+      email: 'farhan.syahputra@unair.ac.id',
+      role: 'mahasiswa',
+      university: 'Universitas Airlangga',
+      major: 'Desain Komunikasi Visual',
+      semester: 5,
+      bio: 'Spesialis identitas merek, tipografi, dan kemasan ritel modern.',
+      skills: ['Brand Identity', 'Typography', 'Adobe Illustrator', 'Photoshop']
+    },
+    {
+      id: 'std9',
+      name: 'Nadia Utami',
+      email: 'nadia.utami@its.ac.id',
+      role: 'mahasiswa',
+      university: 'Institut Teknologi Sepuluh Nopember',
+      major: 'Desain Produk Industri',
+      semester: 5,
+      bio: 'Product designer dengan spesialisasi material ramah lingkungan dan ergonomi kemasan.',
+      skills: ['Packaging Eco-Friendly', 'Graphic Design', 'Figma', 'Illustrator']
+    },
+    {
+      id: 'std10',
+      name: 'Bagas Wicaksono',
+      email: 'bagas.wicaksono@undip.ac.id',
+      role: 'mahasiswa',
+      university: 'Universitas Diponegoro',
+      major: 'Sistem Informasi Akuntansi',
+      semester: 6,
+      bio: 'Pengembang sistem pembukuan, pelaporan keuangan, dan ledger kas UMKM.',
+      skills: ['Python', 'FastAPI', 'SQL', 'Accounting Logic', 'JavaScript']
+    }
+  ];
 
-  const DEFAULT_UMKM = {
-    id: 'umkm_demo_1',
-    name: 'Pak Bambang',
-    email: 'bambang@kopinusantara.id',
-    role: 'umkm',
-    business_name: 'Kopi Nusantara UMKM',
-    business_category: 'Kuliner & Agribisnis',
-    city: 'Bandung',
-    phone: '081234567890',
-    description: 'Produsen biji kopi artisan lokal Jawa Barat dengan kemitraan 30 petani lokal.'
-  };
+  // Preloaded UMKM Partner Accounts
+  const PRELOADED_UMKM = [
+    {
+      id: 'umkm_demo_1',
+      name: 'Pak Bambang',
+      email: 'bambang@kopinusantara.id',
+      role: 'umkm',
+      business_name: 'Kopi Nusantara UMKM',
+      business_category: 'Kuliner & Agribisnis',
+      city: 'Bandung',
+      phone: '081234567890',
+      description: 'Produsen biji kopi artisan lokal Jawa Barat dengan kemitraan 30 petani lokal.'
+    },
+    {
+      id: 'umkm_demo_2',
+      name: 'Ibu Barokah',
+      email: 'barokah@keripiktempe.id',
+      role: 'umkm',
+      business_name: 'Keripik Tempe Barokah',
+      business_category: 'Makanan Ringan & Olahan',
+      city: 'Malang',
+      phone: '081298765432',
+      description: 'Sentra industri keripik tempe renyah aneka rasa khas Sanan Malang.'
+    },
+    {
+      id: 'umkm_demo_3',
+      name: 'Bu Rudy',
+      email: 'admin@sambalburudy.id',
+      role: 'umkm',
+      business_name: 'Sambal Khas Bu Rudy',
+      business_category: 'Kuliner Legendaris',
+      city: 'Surabaya',
+      phone: '081345678912',
+      description: 'Pelopor sambal bawang dan oleh-oleh khas Surabaya berskala nasional.'
+    }
+  ];
 
   const DEFAULT_ADMIN = {
     id: 'admin_1',
@@ -38,6 +165,14 @@
   };
 
   const Auth = {
+    getPreloadedStudents: function () {
+      return PRELOADED_STUDENTS;
+    },
+
+    getPreloadedUMKM: function () {
+      return PRELOADED_UMKM;
+    },
+
     getUser: function () {
       const data = localStorage.getItem(STORAGE_KEY);
       return data ? JSON.parse(data) : null;
@@ -49,14 +184,39 @@
     },
 
     login: function (email, password, role = 'mahasiswa') {
-      let user;
-      if (role === 'umkm') {
-        user = { ...DEFAULT_UMKM, email: email || DEFAULT_UMKM.email };
-      } else if (role === 'admin' || (email && email.toLowerCase().includes('admin'))) {
+      const cleanEmail = (email || '').trim().toLowerCase();
+      let user = null;
+
+      if (cleanEmail === 'admin@skillbridge.id' || role === 'admin' || cleanEmail.includes('admin')) {
         user = { ...DEFAULT_ADMIN, email: email || DEFAULT_ADMIN.email };
       } else {
-        user = { ...DEFAULT_STUDENT, email: email || DEFAULT_STUDENT.email };
+        // Look up in preloaded students
+        const matchedStudent = PRELOADED_STUDENTS.find(s => s.email.toLowerCase() === cleanEmail);
+        if (matchedStudent) {
+          user = { ...matchedStudent };
+        } else {
+          // Look up in preloaded UMKM
+          const matchedUMKM = PRELOADED_UMKM.find(u => u.email.toLowerCase() === cleanEmail);
+          if (matchedUMKM) {
+            user = { ...matchedUMKM };
+          } else {
+            // Check dynamically registered users
+            const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
+            const matchedReg = registered.find(r => r.email.toLowerCase() === cleanEmail);
+            if (matchedReg) {
+              user = { ...matchedReg };
+            } else {
+              // Fallback based on role
+              if (role === 'umkm') {
+                user = { ...PRELOADED_UMKM[0], email: email || PRELOADED_UMKM[0].email };
+              } else {
+                user = { ...PRELOADED_STUDENTS[0], email: email || PRELOADED_STUDENTS[0].email };
+              }
+            }
+          }
+        }
       }
+
       this.setUser(user);
       return user;
     },

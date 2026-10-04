@@ -90,11 +90,32 @@
         <button class="role-tab" id="tab-umkm" type="button">🏪 Pemilik UMKM</button>
       </div>
 
-      <!-- Quick Demo Login Helpers -->
-      <div class="quick-fill" style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
-        <button type="button" class="btn btn-outline btn-sm" id="btn-demo-std">Demo: Mahasiswa</button>
-        <button type="button" class="btn btn-outline btn-sm" id="btn-demo-umkm">Demo: UMKM</button>
-        <button type="button" class="btn btn-outline btn-sm" id="btn-demo-admin" style="color: var(--color-danger); border-color: rgba(239,68,68,0.3);">Demo: Admin</button>
+      <!-- Quick Demo Account Switcher -->
+      <div style="margin-bottom: var(--space-4); background: #F8FAFC; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); padding: var(--space-3);">
+        <label for="demo-account-select" style="font-size: 11px; font-weight: 700; color: var(--color-text-secondary); text-transform: uppercase; display: block; margin-bottom: 4px;">⚡ Coba Langsung 10 Akun Mahasiswa & UMKM:</label>
+        <select id="demo-account-select" class="form-select" style="font-size: var(--font-size-xs); padding: 6px 10px;">
+          <option value="">-- Pilih Akun untuk Otomatis Mengisi --</option>
+          <optgroup label="🎓 10 Akun Mahasiswa Pelamar Aktif:">
+            <option value="budi.santoso@itb.ac.id|mahasiswa">1. Budi Santoso (ITB - Web & UI/UX)</option>
+            <option value="siti.rahmawati@ui.ac.id|mahasiswa">2. Siti Rahmawati (UI - Frontend React)</option>
+            <option value="kevin.wijaya@ugm.ac.id|mahasiswa">3. Kevin Wijaya (UGM - Fullstack Node.js)</option>
+            <option value="rina.puspita@telkomuniversity.ac.id|mahasiswa">4. Rina Puspita (Telkom - UI/UX Figma)</option>
+            <option value="ahmad.fauzi@ub.ac.id|mahasiswa">5. Ahmad Fauzi (UB - SEO & Social Media)</option>
+            <option value="dimas.pratama@um.ac.id|mahasiswa">6. Dimas Pratama (UM - Content & TikTok)</option>
+            <option value="jessica.tan@isi.ac.id|mahasiswa">7. Jessica Tan (ISI - Packaging Design)</option>
+            <option value="farhan.syahputra@unair.ac.id|mahasiswa">8. Farhan Syahputra (UNAIR - Brand Identity)</option>
+            <option value="nadia.utami@its.ac.id|mahasiswa">9. Nadia Utami (ITS - Eco Packaging)</option>
+            <option value="bagas.wicaksono@undip.ac.id|mahasiswa">10. Bagas Wicaksono (UNDIP - Python & Akuntansi)</option>
+          </optgroup>
+          <optgroup label="🏪 3 Akun Mitra Pemilik UMKM:">
+            <option value="bambang@kopinusantara.id|umkm">1. Pak Bambang (Kopi Nusantara - Bandung)</option>
+            <option value="barokah@keripiktempe.id|umkm">2. Ibu Barokah (Keripik Tempe - Malang)</option>
+            <option value="admin@sambalburudy.id|umkm">3. Bu Rudy (Sambal Bu Rudy - Surabaya)</option>
+          </optgroup>
+          <optgroup label="🛡️ Portal Admin:">
+            <option value="admin@skillbridge.id|admin">Administrator Sistem</option>
+          </optgroup>
+        </select>
       </div>
 
       <form id="login-form">
@@ -129,6 +150,7 @@
     const tabMhs = document.getElementById('tab-mahasiswa');
     const tabUmkm = document.getElementById('tab-umkm');
     const emailInput = document.getElementById('email');
+    const accountSelect = document.getElementById('demo-account-select');
 
     tabMhs.addEventListener('click', () => {
       currentRole = 'mahasiswa';
@@ -144,20 +166,25 @@
       emailInput.value = 'bambang@kopinusantara.id';
     });
 
-    document.getElementById('btn-demo-std').addEventListener('click', () => {
-      tabMhs.click();
-    });
+    accountSelect.addEventListener('change', () => {
+      const val = accountSelect.value;
+      if (!val) return;
+      const [email, role] = val.split('|');
+      emailInput.value = email;
+      currentRole = role;
 
-    document.getElementById('btn-demo-umkm').addEventListener('click', () => {
-      tabUmkm.click();
-    });
+      if (role === 'umkm') {
+        tabUmkm.classList.add('active');
+        tabMhs.classList.remove('active');
+      } else if (role === 'admin') {
+        tabMhs.classList.remove('active');
+        tabUmkm.classList.remove('active');
+      } else {
+        tabMhs.classList.add('active');
+        tabUmkm.classList.remove('active');
+      }
 
-    document.getElementById('btn-demo-admin').addEventListener('click', () => {
-      currentRole = 'admin';
-      tabMhs.classList.remove('active');
-      tabUmkm.classList.remove('active');
-      emailInput.value = 'admin@skillbridge.id';
-      window.toast.info('Mode login Administrator dipilih.');
+      window.toast.info(`Akun dipilih: ${email}`);
     });
 
     document.getElementById('login-form').addEventListener('submit', (e) => {
