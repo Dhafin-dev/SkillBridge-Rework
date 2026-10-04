@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 720" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .swimlane { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .swimlane-header { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; font-weight: 700; fill: #1e1b4b; text-anchor: middle; }
+      .act-node { fill: #ffffff; stroke: #4f46e5; stroke-width: 1.5; rx: 16; }
+      .act-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; font-weight: 500; fill: #1e293b; text-anchor: middle; dominant-baseline: middle; }
+      .decision { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .start-node { fill: #10b981; stroke: #047857; stroke-width: 2; }
+      .stop-node { fill: #ef4444; stroke: #b91c1c; stroke-width: 2; }
+      .stop-outer { fill: none; stroke: #ef4444; stroke-width: 2; }
+      .flow-arrow { stroke: #475569; stroke-width: 1.5; marker-end: url(#arrowhead); }
+      .branch-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; font-weight: 600; fill: #d97706; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="850" height="720" class="bg"/>
+
+  <text x="425" y="32" text-anchor="middle" class="title">Activity Diagram: Pengajuan Proyek &amp; Evaluasi AI Matchmaking</text>
+
+  <!-- Swimlanes -->
+  <!-- Lane 1: Mahasiswa -->
+  <rect x="40" y="50" width="250" height="640" class="swimlane"/>
+  <rect x="40" y="50" width="250" height="35" fill="#eef2ff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="165" y="73" class="swimlane-header">Mahasiswa (Talenta)</text>
+
+  <!-- Lane 2: Sistem Platform -->
+  <rect x="290" y="50" width="270" height="640" class="swimlane"/>
+  <rect x="290" y="50" width="270" height="35" fill="#f0fdf4" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="425" y="73" class="swimlane-header">Sistem Platform (BaaS &amp; AI)</text>
+
+  <!-- Lane 3: Pemilik UMKM -->
+  <rect x="560" y="50" width="250" height="640" class="swimlane"/>
+  <rect x="560" y="50" width="250" height="35" fill="#fffbeb" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="685" y="73" class="swimlane-header">Pemilik UMKM (Mitra)</text>
+
+  <!-- Start Node -->
+  <circle cx="165" cy="110" r="10" class="start-node"/>
+
+  <!-- Step 1: Browse -->
+  <line x1="165" y1="120" x2="165" y2="145" class="flow-arrow"/>
+  <rect x="65" y="145" width="200" height="36" class="act-node"/>
+  <text x="165" y="163" class="act-text">Jelajah Katalog Marketplace</text>
+
+  <!-- Step 2: Apply -->
+  <line x1="165" y1="181" x2="165" y2="210" class="flow-arrow"/>
+  <rect x="65" y="210" width="200" height="36" class="act-node"/>
+  <text x="165" y="228" class="act-text">Isi Pitch &amp; Tautan Portofolio</text>
+
+  <!-- Step 3: Kirim -> System -->
+  <line x1="165" y1="246" x2="165" y2="280" class="flow-arrow"/>
+  <rect x="65" y="280" width="200" height="36" class="act-node"/>
+  <text x="165" y="298" class="act-text">Klik "Kirim Lamaran"</text>
+
+  <line x1="265" y1="298" x2="325" y2="298" class="flow-arrow"/>
+  <rect x="325" y="280" width="200" height="36" class="act-node"/>
+  <text x="425" y="298" class="act-text">Simpan Lamaran (PENDING)</text>
+
+  <!-- System alerts UMKM -->
+  <line x1="525" y1="298" x2="585" y2="298" class="flow-arrow"/>
+  <rect x="585" y="280" width="200" height="36" class="act-node"/>
+  <text x="685" y="298" class="act-text">Buka Daftar Pelamar</text>
+
+  <!-- UMKM triggers AI Match -->
+  <line x1="685" y1="316" x2="685" y2="350" class="flow-arrow"/>
+  <rect x="585" y="350" width="200" height="36" class="act-node"/>
+  <text x="685" y="368" class="act-text">Klik "Analisis AI Match"</text>
+
+  <!-- Back to System AI -->
+  <line x1="585" y1="368" x2="525" y2="368" class="flow-arrow"/>
+  <rect x="325" y="350" width="200" height="36" class="act-node"/>
+  <text x="425" y="368" class="act-text">Eksekusi Gemini 2.5 Flash</text>
+
+  <!-- Return AI Score to UMKM -->
+  <line x1="425" y1="386" x2="425" y2="425" class="flow-arrow"/>
+  <rect x="325" y="425" width="200" height="36" class="act-node"/>
+  <text x="425" y="443" class="act-text">Tampilkan Skor (94%) &amp; Rationale</text>
+
+  <line x1="525" y1="443" x2="685" y2="443" class="flow-arrow"/>
+
+  <!-- Decision -->
+  <polygon points="685,475 730,500 685,525 640,500" class="decision"/>
+  <line x1="685" y1="443" x2="685" y2="475" class="flow-arrow"/>
+  <text x="685" y="503" font-size="10" font-weight="600" text-anchor="middle">Terima?</text>
+
+  <!-- Reject Branch -->
+  <line x1="730" y1="500" x2="770" y2="500" class="flow-arrow"/>
+  <text x="740" y="492" class="branch-text">[Tolak]</text>
+  <rect x="670" y="540" width="130" height="30" class="act-node"/>
+  <line x1="770" y1="500" x2="770" y2="540" class="flow-arrow"/>
+  <text x="735" y="555" class="act-text">Status: REJECTED</text>
+
+  <!-- Accept Branch -->
+  <line x1="640" y1="500" x2="425" y2="500" class="flow-arrow"/>
+  <text x="590" y="492" class="branch-text">[Terima]</text>
+  <line x1="425" y1="500" x2="425" y2="530" class="flow-arrow"/>
+  <rect x="315" y="530" width="220" height="36" class="act-node"/>
+  <text x="425" y="548" class="act-text">Inisialisasi Workspace &amp; Tugas</text>
+
+  <!-- Update project to Active -->
+  <line x1="425" y1="566" x2="425" y2="600" class="flow-arrow"/>
+  <rect x="315" y="600" width="220" height="36" class="act-node"/>
+  <text x="425" y="618" class="act-text">Kirim Undangan ke Mahasiswa</text>
+
+  <!-- End Node -->
+  <line x1="425" y1="636" x2="425" y2="665" class="flow-arrow"/>
+  <circle cx="425" cy="675" r="14" class="stop-outer"/>
+  <circle cx="425" cy="675" r="8" class="stop-node"/>
+</svg>
