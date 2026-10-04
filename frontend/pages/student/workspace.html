@@ -217,117 +217,6 @@
     </div>
   </div>
 
-  <script src="../../assets/js/toast.js"></script>
-  <script src="../../assets/js/supabase.js"></script>
-  <script src="../../assets/js/auth.js"></script>
-  <script>
-    const WORKSPACE_ID = 'ws1';
-
-    async function loadTasks() {
-      const tasks = await window.SkillBridgeDB.getTasks(WORKSPACE_ID);
-      const cols = {
-        todo: document.getElementById('items-todo'),
-        in_progress: document.getElementById('items-in_progress'),
-        done: document.getElementById('items-done')
-      };
-
-      cols.todo.innerHTML = '';
-      cols.in_progress.innerHTML = '';
-      cols.done.innerHTML = '';
-
-      let counts = { todo: 0, in_progress: 0, done: 0 };
-
-      tasks.forEach(task => {
-        counts[task.status] = (counts[task.status] || 0) + 1;
-        const targetContainer = cols[task.status] || cols.todo;
-
-        const nextAction = task.status === 'todo' 
-          ? `<button class="btn btn-outline btn-sm" onclick="moveTask('${task.id}', 'in_progress')" style="font-size: 10px; padding: 2px 6px;">Kerjakan →</button>`
-          : task.status === 'in_progress'
-          ? `<button class="btn btn-primary btn-sm" onclick="moveTask('${task.id}', 'done')" style="font-size: 10px; padding: 2px 6px;">Selesaikan ✓</button>`
-          : `<span class="badge badge-success" style="font-size: 10px;">Selesai</span>`;
-
-        const card = document.createElement('div');
-        card.className = 'kanban-item';
-        card.innerHTML = `
-          <div class="kanban-item-title">${task.title}</div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-            <span class="badge badge-neutral" style="font-size: 10px;">${task.priority || 'medium'}</span>
-            ${nextAction}
-          </div>
-        `;
-        targetContainer.appendChild(card);
-      });
-
-      document.getElementById('count-todo').textContent = counts.todo;
-      document.getElementById('count-in_progress').textContent = counts.in_progress;
-      document.getElementById('count-done').textContent = counts.done;
-
-      // Update progress bar
-      const total = tasks.length || 1;
-      const pct = Math.round((counts.done / total) * 100);
-      document.getElementById('progress-bar-fill').style.width = pct + '%';
-      document.getElementById('progress-percent-label').textContent = pct + '%';
-    }
-
-    async function moveTask(taskId, newStatus) {
-      await window.SkillBridgeDB.updateTaskStatus(taskId, newStatus);
-      window.toast.success(`Status tugas berhasil diubah ke ${newStatus}!`);
-      loadTasks();
-    }
-
-    // Chat functionality
-    async function loadChat() {
-      const messages = await window.SkillBridgeDB.getMessages(WORKSPACE_ID);
-      const container = document.getElementById('chat-messages-container');
-      const currentUser = window.SkillBridgeAuth.getUser() || { role: 'mahasiswa' };
-
-      container.innerHTML = messages.map(m => {
-        const isMe = m.sender_role === currentUser.role;
-        return `
-          <div class="chat-bubble ${isMe ? 'chat-bubble-outgoing' : 'chat-bubble-incoming'}">
-            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 2px; font-weight: 700;">
-              ${m.sender_name} (${m.sender_role})
-            </div>
-            <div>${m.content}</div>
-            <div class="chat-meta">${m.created_at}</div>
-          </div>
-        `;
-      }).join('');
-
-      container.scrollTop = container.scrollHeight;
-    }
-
-  <!-- Add Task Modal -->
-  <div class="modal-backdrop" id="task-modal">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h3 class="modal-title">Tambah Tugas Baru</h3>
-        <button class="modal-close" id="task-modal-close">&times;</button>
-      </div>
-      <form id="task-form">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="task-title">Judul Tugas</label>
-            <input type="text" id="task-title" class="form-control" placeholder="Contoh: Integrasi payment gateway" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="task-status">Status Awal</label>
-            <select id="task-status" class="form-select">
-              <option value="todo">To Do</option>
-              <option value="in_progress">In Progress</option>
-              <option value="done">Done</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline" id="task-modal-cancel">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Tugas</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <!-- Deliverable Submission Modal -->
   <div class="modal-backdrop" id="deliverable-modal">
     <div class="modal-container">
@@ -413,6 +302,93 @@
       await window.SkillBridgeDB.updateTaskStatus(taskId, newStatus);
       window.toast.success(`Status tugas berhasil diubah ke ${newStatus}!`);
       loadTasks();
+    }
+
+    // Task Modal Handlers
+    const taskModal = document.getElementById('task-modal');
+    const btnAddTaskModal = document.getElementById('btn-add-task-modal');
+    const btnCloseTaskModal = document.getElementById('task-modal-close');
+    const btnCancelTaskModal = document.getElementById('task-modal-cancel');
+    const taskForm = document.getElementById('task-form');
+
+    if (btnAddTaskModal) {
+      btnAddTaskModal.addEventListener('click', () => {
+        document.getElementById('task-title').value = '';
+        document.getElementById('task-status').value = 'todo';
+        taskModal.classList.add('active');
+      });
+    }
+
+    if (btnCloseTaskModal) {
+      btnCloseTaskModal.addEventListener('click', () => taskModal.classList.remove('active'));
+    }
+
+    if (btnCancelTaskModal) {
+      btnCancelTaskModal.addEventListener('click', () => taskModal.classList.remove('active'));
+    }
+
+    if (taskForm) {
+      taskForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('task-title').value.trim();
+        const status = document.getElementById('task-status').value || 'todo';
+        if (!title) return;
+
+        await window.SkillBridgeDB.createTask({
+          workspace_id: WORKSPACE_ID,
+          title: title,
+          status: status,
+          priority: 'medium'
+        });
+
+        taskModal.classList.remove('active');
+        window.toast.success('Tugas baru berhasil ditambahkan ke Kanban!');
+        loadTasks();
+      });
+    }
+
+    // Chat Collaboration Workflow
+    async function loadChat() {
+      const msgs = await window.SkillBridgeDB.getMessages(WORKSPACE_ID);
+      const container = document.getElementById('chat-messages-container');
+      const currentUser = window.SkillBridgeAuth.getUser() || { name: 'Pengguna' };
+
+      container.innerHTML = msgs.map(m => {
+        const isMe = m.sender_name === currentUser.name || (currentUser.role === 'mahasiswa' && m.sender_role === 'mahasiswa');
+        const bubbleClass = isMe ? 'chat-bubble me' : 'chat-bubble';
+        return `
+          <div class="${bubbleClass}" style="max-width: 80%; padding: var(--space-3) var(--space-4); margin-bottom: var(--space-3); border-radius: var(--radius-lg); ${isMe ? 'align-self: flex-end; background: var(--color-primary); color: #fff;' : 'align-self: flex-start; background: #F1F5F9; color: var(--color-text-main);'}">
+            <div style="font-size: 11px; font-weight: 700; opacity: 0.85; margin-bottom: 2px; display: flex; justify-content: space-between; gap: var(--space-3);">
+              <span>${m.sender_name} (${m.sender_role.toUpperCase()})</span>
+              <span>${m.created_at}</span>
+            </div>
+            <div style="font-size: var(--font-size-sm); line-height: 1.4;">${m.content}</div>
+          </div>
+        `;
+      }).join('');
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    const chatForm = document.getElementById('chat-input-form');
+    if (chatForm) {
+      chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('chat-text-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        const user = window.SkillBridgeAuth.getUser() || { name: 'Budi Santoso', role: 'mahasiswa' };
+        await window.SkillBridgeDB.sendMessage({
+          workspace_id: WORKSPACE_ID,
+          sender_name: user.name,
+          sender_role: user.role,
+          content: text
+        });
+
+        input.value = '';
+        loadChat();
+      });
     }
 
     // Deliverables & Project Completion Workflow

@@ -203,7 +203,16 @@
     },
 
     getTasks: async function (workspaceId = 'ws1') {
-      const tasks = JSON.parse(localStorage.getItem('SB_MOCK_TASKS') || '[]');
+      let tasks = JSON.parse(localStorage.getItem('SB_MOCK_TASKS') || '[]');
+      if (tasks.length === 0) {
+        tasks = [
+          { id: 't1', workspace_id: 'ws1', title: 'Riset Preferensi Visual & Moodboard Kopi', status: 'done', priority: 'medium' },
+          { id: 't2', workspace_id: 'ws1', title: 'Desain Wireframe Halaman Beranda & Menu', status: 'in_progress', priority: 'high' },
+          { id: 't3', workspace_id: 'ws1', title: 'Implementasi Frontend Responsif & Katalog', status: 'todo', priority: 'high' },
+          { id: 't4', workspace_id: 'ws1', title: 'Uji Coba Pengguna & Serah Terima Deliverable', status: 'todo', priority: 'low' }
+        ];
+        localStorage.setItem('SB_MOCK_TASKS', JSON.stringify(tasks));
+      }
       return tasks.filter(t => t.workspace_id === workspaceId);
     },
 
@@ -211,6 +220,7 @@
       const tasks = JSON.parse(localStorage.getItem('SB_MOCK_TASKS') || '[]');
       const newTask = {
         id: 't_' + Date.now(),
+        workspace_id: task.workspace_id || 'ws1',
         ...task,
         created_at: new Date().toISOString()
       };
@@ -230,7 +240,14 @@
     },
 
     getMessages: async function (workspaceId = 'ws1') {
-      const msgs = JSON.parse(localStorage.getItem('SB_MOCK_MESSAGES') || '[]');
+      let msgs = JSON.parse(localStorage.getItem('SB_MOCK_MESSAGES') || '[]');
+      if (msgs.length === 0) {
+        msgs = [
+          { id: 'm1', workspace_id: 'ws1', sender_name: 'Pak Bambang', sender_role: 'umkm', content: 'Halo Budi, selamat bergabung di proyek Kopi Nusantara! Silakan tinjau brief proyek di workspace ya.', created_at: '09:30' },
+          { id: 'm2', workspace_id: 'ws1', sender_name: 'Budi Santoso', sender_role: 'mahasiswa', content: 'Siap Pak Bambang! Saya sudah menyusun rencana kerja di Kanban board.', created_at: '09:45' }
+        ];
+        localStorage.setItem('SB_MOCK_MESSAGES', JSON.stringify(msgs));
+      }
       return msgs.filter(m => m.workspace_id === workspaceId);
     },
 
@@ -238,6 +255,7 @@
       const msgs = JSON.parse(localStorage.getItem('SB_MOCK_MESSAGES') || '[]');
       const newMsg = {
         id: 'm_' + Date.now(),
+        workspace_id: msg.workspace_id || 'ws1',
         ...msg,
         created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
@@ -377,36 +395,57 @@
     // --- ADMIN VERIFICATIONS & AUDIT TRAIL ---
     getVerificationRequests: async function () {
       let reqs = JSON.parse(localStorage.getItem('SB_MOCK_VERIFICATIONS') || '[]');
-      if (reqs.length === 0) {
-        reqs = [
-          {
-            id: 'ver_1',
-            entity_name: 'Batik Lestari Solo',
-            entity_type: 'umkm',
-            doc_type: 'NIB / SIUP Perdagangan',
-            doc_number: 'NIB-912030491028',
-            status: 'pending',
-            submitted_date: '2026-10-02'
-          },
-          {
-            id: 'ver_2',
-            entity_name: 'Sarah Az-Zahra',
-            entity_type: 'mahasiswa',
-            doc_type: 'Kartu Tanda Mahasiswa (KTM)',
-            doc_number: 'NIM-13522045',
-            status: 'pending',
-            submitted_date: '2026-10-03'
-          },
-          {
-            id: 'ver_3',
-            entity_name: 'Kopi Nusantara UMKM',
-            entity_type: 'umkm',
-            doc_type: 'NIB Berusaha',
-            doc_number: 'NIB-102948192831',
-            status: 'approved',
-            submitted_date: '2026-10-01'
-          }
-        ];
+      const defaultDocs = [
+        {
+          id: 'ver_1',
+          entity_name: 'Batik Lestari Solo',
+          entity_type: 'umkm',
+          doc_type: 'NIB / SIUP Perdagangan',
+          doc_number: 'NIB-912030491028',
+          file_name: 'NIB_Batik_Lestari_Solo_2026.pdf',
+          file_size: '1.4 MB',
+          file_type: 'PDF Document (Resmi OSS)',
+          issuing_institution: 'Kementerian Investasi / BKPM RI',
+          valid_until: 'Seumur Hidup (Kegiatan Berusaha Aktif)',
+          extracted_ocr_text: 'Nomor Induk Berusaha: 912030491028. Nama Usaha: Batik Lestari Solo. KBLI: 13134 (Industri Batik Tulis). Status: Aktif & Terverifikasi OSS RBA.',
+          status: 'pending',
+          submitted_date: '2026-10-02'
+        },
+        {
+          id: 'ver_2',
+          entity_name: 'Sarah Az-Zahra',
+          entity_type: 'mahasiswa',
+          doc_type: 'Kartu Tanda Mahasiswa (KTM)',
+          doc_number: 'NIM-13522045',
+          file_name: 'KTM_Digital_Sarah_AzZahra_ITB.jpg',
+          file_size: '860 KB',
+          file_type: 'Image JPG / Kartu Digital',
+          issuing_institution: 'Institut Teknologi Bandung (ITB)',
+          valid_until: '31 Agustus 2027',
+          extracted_ocr_text: 'Nama: Sarah Az-Zahra. NIM: 13522045. Program Studi: Teknik Informatika. Status Akademik: Aktif Semester 5. Terverifikasi PDDikti Kemendikbudristek.',
+          status: 'pending',
+          submitted_date: '2026-10-03'
+        },
+        {
+          id: 'ver_3',
+          entity_name: 'Kopi Nusantara UMKM',
+          entity_type: 'umkm',
+          doc_type: 'NIB Berusaha',
+          doc_number: 'NIB-102948192831',
+          file_name: 'NIB_Kopi_Nusantara_OSS.pdf',
+          file_size: '2.1 MB',
+          file_type: 'PDF Document (Resmi OSS)',
+          issuing_institution: 'Kementerian Koperasi & UKM / OSS',
+          valid_until: 'Seumur Hidup',
+          extracted_ocr_text: 'Nomor Induk Berusaha: 102948192831. Nama Usaha: Kopi Nusantara. Sektor: Pengolahan & Distribusi Hasil Kopi. Terverifikasi OSS RBA.',
+          status: 'approved',
+          submitted_date: '2026-10-01'
+        }
+      ];
+
+      // Auto-migrate if stored format lacks file_name
+      if (reqs.length === 0 || !reqs[0].file_name) {
+        reqs = defaultDocs;
         localStorage.setItem('SB_MOCK_VERIFICATIONS', JSON.stringify(reqs));
       }
       return reqs;

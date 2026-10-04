@@ -50,8 +50,16 @@ def health_check():
 @app.post("/api/ai-match", response_model=AIMatchResponse, tags=["AI Matchmaking"])
 async def match_candidate(payload: AIMatchRequest):
     try:
-        student = payload.studentProfile or StudentProfilePayload()
-        project = payload.projectDetails or ProjectDetailsPayload()
+        student = payload.studentProfile or payload.student_profile or StudentProfilePayload()
+        project = payload.projectDetails or payload.project or ProjectDetailsPayload()
+
+        # Normalisasi properti alternatif
+        if not student.institution and student.university:
+            student.institution = student.university
+        if not project.tags and project.required_skills:
+            project.tags = project.required_skills
+        if not project.overview and project.description:
+            project.overview = project.description
         
         result = await evaluate_match(student, project)
         return result
