@@ -244,6 +244,213 @@
       msgs.push(newMsg);
       localStorage.setItem('SB_MOCK_MESSAGES', JSON.stringify(msgs));
       return newMsg;
+    },
+
+    // --- DELIVERABLES & WORKSPACE COMPLETION ---
+    getDeliverable: async function (workspaceId = 'ws1') {
+      const all = JSON.parse(localStorage.getItem('SB_MOCK_DELIVERABLES') || '{}');
+      return all[workspaceId] || null;
+    },
+
+    submitDeliverable: async function (workspaceId, deliverableData) {
+      const all = JSON.parse(localStorage.getItem('SB_MOCK_DELIVERABLES') || '{}');
+      all[workspaceId] = {
+        ...deliverableData,
+        submitted_at: new Date().toISOString(),
+        status: 'submitted'
+      };
+      localStorage.setItem('SB_MOCK_DELIVERABLES', JSON.stringify(all));
+
+      // Notification to UMKM
+      this.addNotification({
+        recipient_role: 'umkm',
+        title: 'Hasil Kerja (Deliverable) Telah Diserahkan!',
+        message: 'Mahasiswa telah mengunggah tautan deliverable final. Silakan tinjau dan selesaikan proyek.',
+        link: '../student/workspace.html'
+      });
+
+      return all[workspaceId];
+    },
+
+    completeWorkspace: async function (workspaceId) {
+      const all = JSON.parse(localStorage.getItem('SB_MOCK_DELIVERABLES') || '{}');
+      if (all[workspaceId]) {
+        all[workspaceId].status = 'accepted';
+        localStorage.setItem('SB_MOCK_DELIVERABLES', JSON.stringify(all));
+      }
+
+      this.addNotification({
+        recipient_role: 'mahasiswa',
+        title: 'Proyek Selesai & Diterima!',
+        message: 'Pemilik UMKM telah menyetujui hasil kerja Anda. Berikan ulasan dan rating sekarang.',
+        link: '../student/workspace.html'
+      });
+
+      this.addAuditLog({
+        action: 'PROJECT_COMPLETED',
+        details: `Workspace ${workspaceId} ditandai selesai oleh UMKM.`
+      });
+
+      return true;
+    },
+
+    // --- TWO-WAY REVIEWS & RATINGS ---
+    getReviews: async function (targetId = null) {
+      const reviews = JSON.parse(localStorage.getItem('SB_MOCK_REVIEWS') || '[]');
+      if (targetId) {
+        return reviews.filter(r => r.target_id === targetId);
+      }
+      return reviews;
+    },
+
+    submitReview: async function (reviewData) {
+      const reviews = JSON.parse(localStorage.getItem('SB_MOCK_REVIEWS') || '[]');
+      const newReview = {
+        id: 'rev_' + Date.now(),
+        ...reviewData,
+        created_at: new Date().toISOString()
+      };
+      reviews.push(newReview);
+      localStorage.setItem('SB_MOCK_REVIEWS', JSON.stringify(reviews));
+
+      this.addAuditLog({
+        action: 'REVIEW_SUBMITTED',
+        details: `${newReview.reviewer_name} memberikan rating ${newReview.rating}/5 untuk ${newReview.target_name || 'mitra'}.`
+      });
+
+      return newReview;
+    },
+
+    // --- IN-APP NOTIFICATIONS ---
+    getNotifications: async function (userRole = 'mahasiswa') {
+      const notifs = JSON.parse(localStorage.getItem('SB_MOCK_NOTIFICATIONS') || '[]');
+      if (notifs.length === 0) {
+        // Initial seed notifications
+        const initial = [
+          {
+            id: 'notif_1',
+            recipient_role: 'mahasiswa',
+            title: 'Lamaran Disetujui! 🎉',
+            message: 'UMKM Kopi Nusantara telah menerima lamaran Anda. Ruang kolaborasi telah siap.',
+            is_read: false,
+            created_at: '10 menit yang lalu',
+            link: 'workspace.html'
+          },
+          {
+            id: 'notif_2',
+            recipient_role: 'umkm',
+            title: 'Pelamar Baru Masuk',
+            message: 'Budi Santoso mengajukan lamaran pada proyek Website Kopi Nusantara.',
+            is_read: false,
+            created_at: '1 jam yang lalu',
+            link: 'applicants.html'
+          }
+        ];
+        localStorage.setItem('SB_MOCK_NOTIFICATIONS', JSON.stringify(initial));
+        return initial.filter(n => n.recipient_role === userRole || n.recipient_role === 'all');
+      }
+      return notifs.filter(n => n.recipient_role === userRole || n.recipient_role === 'all');
+    },
+
+    addNotification: function (notif) {
+      const notifs = JSON.parse(localStorage.getItem('SB_MOCK_NOTIFICATIONS') || '[]');
+      const item = {
+        id: 'notif_' + Date.now(),
+        is_read: false,
+        created_at: 'Baru saja',
+        ...notif
+      };
+      notifs.unshift(item);
+      localStorage.setItem('SB_MOCK_NOTIFICATIONS', JSON.stringify(notifs));
+      return item;
+    },
+
+    markNotificationRead: function (id) {
+      const notifs = JSON.parse(localStorage.getItem('SB_MOCK_NOTIFICATIONS') || '[]');
+      const target = notifs.find(n => n.id === id);
+      if (target) {
+        target.is_read = true;
+        localStorage.setItem('SB_MOCK_NOTIFICATIONS', JSON.stringify(notifs));
+      }
+    },
+
+    // --- ADMIN VERIFICATIONS & AUDIT TRAIL ---
+    getVerificationRequests: async function () {
+      let reqs = JSON.parse(localStorage.getItem('SB_MOCK_VERIFICATIONS') || '[]');
+      if (reqs.length === 0) {
+        reqs = [
+          {
+            id: 'ver_1',
+            entity_name: 'Batik Lestari Solo',
+            entity_type: 'umkm',
+            doc_type: 'NIB / SIUP Perdagangan',
+            doc_number: 'NIB-912030491028',
+            status: 'pending',
+            submitted_date: '2026-10-02'
+          },
+          {
+            id: 'ver_2',
+            entity_name: 'Sarah Az-Zahra',
+            entity_type: 'mahasiswa',
+            doc_type: 'Kartu Tanda Mahasiswa (KTM)',
+            doc_number: 'NIM-13522045',
+            status: 'pending',
+            submitted_date: '2026-10-03'
+          },
+          {
+            id: 'ver_3',
+            entity_name: 'Kopi Nusantara UMKM',
+            entity_type: 'umkm',
+            doc_type: 'NIB Berusaha',
+            doc_number: 'NIB-102948192831',
+            status: 'approved',
+            submitted_date: '2026-10-01'
+          }
+        ];
+        localStorage.setItem('SB_MOCK_VERIFICATIONS', JSON.stringify(reqs));
+      }
+      return reqs;
+    },
+
+    updateVerificationStatus: async function (id, status) {
+      const reqs = JSON.parse(localStorage.getItem('SB_MOCK_VERIFICATIONS') || '[]');
+      const target = reqs.find(r => r.id === id);
+      if (target) {
+        target.status = status;
+        localStorage.setItem('SB_MOCK_VERIFICATIONS', JSON.stringify(reqs));
+        this.addAuditLog({
+          action: `VERIFICATION_${status.toUpperCase()}`,
+          details: `Admin memverifikasi status ${target.entity_name} (${target.doc_type}) menjadi ${status}.`
+        });
+      }
+      return target;
+    },
+
+    getAuditLogs: async function () {
+      let logs = JSON.parse(localStorage.getItem('SB_MOCK_AUDIT_LOGS') || '[]');
+      if (logs.length === 0) {
+        logs = [
+          { id: 'log_1', timestamp: '2026-10-04 12:30', user: 'Admin System', action: 'SYSTEM_BOOT', details: 'Sistem SkillBridge diinisialisasi dengan PostgreSQL RLS.' },
+          { id: 'log_2', timestamp: '2026-10-04 12:45', user: 'Pak Bambang', action: 'PROJECT_PUBLISHED', details: 'Proyek Pembuatan Website Kopi Nusantara dipublikasikan.' },
+          { id: 'log_3', timestamp: '2026-10-04 13:00', user: 'Budi Santoso', action: 'APPLICATION_SUBMITTED', details: 'Melamar ke proyek Website Kopi Nusantara.' }
+        ];
+        localStorage.setItem('SB_MOCK_AUDIT_LOGS', JSON.stringify(logs));
+      }
+      return logs;
+    },
+
+    addAuditLog: function (log) {
+      const logs = JSON.parse(localStorage.getItem('SB_MOCK_AUDIT_LOGS') || '[]');
+      const user = window.SkillBridgeAuth?.getUser()?.name || 'System';
+      const item = {
+        id: 'log_' + Date.now(),
+        timestamp: new Date().toLocaleString('id-ID'),
+        user: user,
+        ...log
+      };
+      logs.unshift(item);
+      localStorage.setItem('SB_MOCK_AUDIT_LOGS', JSON.stringify(logs));
+      return item;
     }
   };
 

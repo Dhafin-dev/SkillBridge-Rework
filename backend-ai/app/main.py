@@ -38,6 +38,7 @@ def root():
         "docs": "/docs"
     }
 
+@app.get("/health", response_model=HealthResponse, tags=["Health"])
 @app.get("/api/health", response_model=HealthResponse, tags=["Health"])
 def health_check():
     return HealthResponse(

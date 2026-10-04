@@ -37,7 +37,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
 - **DEPENDENCIES:** None.
 - **EXPECTED OUTPUT:** Standardized directories created; git status clean.
 - **ACCEPTANCE CRITERIA:** Directory tree matches `architecture.md`.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -51,7 +51,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
 - **DEPENDENCIES:** TASK-001.
 - **EXPECTED OUTPUT:** Tables created with zero errors; seed categories and demo data populated.
 - **ACCEPTANCE CRITERIA:** All 12 tables queryable with referential integrity intact.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -66,7 +66,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
 - **DEPENDENCIES:** TASK-001.
 - **EXPECTED OUTPUT:** `fastapi`, `uvicorn`, `google-genai`, `supabase-py` installable with 0 errors.
 - **ACCEPTANCE CRITERIA:** Python service boots with `uvicorn app.main:app`.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -80,7 +80,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/css/style.css`
 - **DEPENDENCIES:** TASK-001.
 - **ACCEPTANCE CRITERIA:** Variables match `design-tokens.md`; responsive breakpoints function properly.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -93,7 +93,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/toast.js`
 - **DEPENDENCIES:** TASK-004.
 - **ACCEPTANCE CRITERIA:** Buttons support loading states; `showToast(msg, type)` displays and dismisses smoothly.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -108,7 +108,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/auth.js`
 - **DEPENDENCIES:** TASK-002.
 - **ACCEPTANCE CRITERIA:** Session persists across page reload; unauthenticated users redirected from guarded routes.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -121,7 +121,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/pages/auth/login.html`
 - **DEPENDENCIES:** TASK-006.
 - **ACCEPTANCE CRITERIA:** Form validations prevent invalid inputs; successful login redirects by role.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -134,7 +134,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/pages/umkm/profile.html`
 - **DEPENDENCIES:** TASK-007.
 - **ACCEPTANCE CRITERIA:** Profile changes persist to Supabase; avatar file uploads succeed.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -148,7 +148,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/index.html`
 - **DEPENDENCIES:** TASK-005.
 - **ACCEPTANCE CRITERIA:** Renders hero, category cards, live stats, and footer; mobile-responsive.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -161,7 +161,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/pages/projects.js`
 - **DEPENDENCIES:** TASK-009.
 - **ACCEPTANCE CRITERIA:** Filter updates execute reactive Supabase queries with 0 page reloads.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -174,7 +174,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/pages/project-detail.js`
 - **DEPENDENCIES:** TASK-010.
 - **ACCEPTANCE CRITERIA:** Submitting pitch writes to `project_applications`; updates button to "Sudah Dilamar".
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -187,7 +187,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/pages/create-project.js`
 - **DEPENDENCIES:** TASK-008.
 - **ACCEPTANCE CRITERIA:** Validated form inserts record into `projects` table with status `PUBLISHED`.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -201,7 +201,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `backend-ai/app/gemini_service.py`
 - **DEPENDENCIES:** TASK-003.
 - **ACCEPTANCE CRITERIA:** Returns structured dictionary `{matchPercent, rationale, recommendedNextSteps}`.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -214,7 +214,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `backend-ai/app/main.py`
 - **DEPENDENCIES:** TASK-013.
 - **ACCEPTANCE CRITERIA:** Endpoint responds with 200 OK and valid JSON under 2.5 seconds.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -227,7 +227,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/pages/applicants.js`
 - **DEPENDENCIES:** TASK-014.
 - **ACCEPTANCE CRITERIA:** Clicking "Analisis AI" fetches and displays match score, rationale, and next steps.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -241,7 +241,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/pages/applicants.js`
 - **DEPENDENCIES:** TASK-015.
 - **ACCEPTANCE CRITERIA:** Creates row in `workspaces` and transitions project status to `ACTIVE`.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -254,7 +254,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/pages/workspace.js`
 - **DEPENDENCIES:** TASK-016.
 - **ACCEPTANCE CRITERIA:** Toggling task checkbox updates Supabase and animates progress bar gauge live.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -266,7 +266,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/pages/student/workspace.html`
 - **DEPENDENCIES:** TASK-017.
 - **ACCEPTANCE CRITERIA:** Workspace transitions to `COMPLETED`; prompts both parties for reviews.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -280,7 +280,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/chat.js`
 - **DEPENDENCIES:** TASK-017.
 - **ACCEPTANCE CRITERIA:** Sent messages appear instantly on counterparty screen (<300ms latency).
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -292,7 +292,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/notifications.js`
 - **DEPENDENCIES:** TASK-006.
 - **ACCEPTANCE CRITERIA:** Unread badge updates live; clicking navigates to relevant project/workspace.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -306,7 +306,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/review.js`
 - **DEPENDENCIES:** TASK-018.
 - **ACCEPTANCE CRITERIA:** Review updates student's `portfolioScore` and `completedProjectsCount`.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -319,7 +319,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/assets/js/pages/admin.js`
 - **DEPENDENCIES:** TASK-008.
 - **ACCEPTANCE CRITERIA:** Displays total users, active workspaces, and allows project unpublishing.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -331,7 +331,7 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `frontend/pages/admin/verification.html`
 - **DEPENDENCIES:** TASK-022.
 - **ACCEPTANCE CRITERIA:** Admin actions append immutable logs to `audit_logs` table.
-- **STATUS:** READY
+- **STATUS:** COMPLETED
 
 ---
 
@@ -345,4 +345,4 @@ PHASE 8: End-to-End Verification & Release (TASK-024)
   - `backend-ai/tests/test_match.py`
 - **DEPENDENCIES:** TASK-001 through TASK-023.
 - **ACCEPTANCE CRITERIA:** 100% passing BDD & unit tests; zero console errors; Lighthouse score >= 90.
-- **STATUS:** READY
+- **STATUS:** COMPLETED

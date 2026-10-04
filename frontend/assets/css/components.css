@@ -725,3 +725,123 @@
     padding: var(--space-4);
   }
 }
+
+/* --- 11. NOTIFICATION CENTER & BELL DROPDOWN --- */
+.notif-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.notif-bell-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-full);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+}
+.notif-bell-btn:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.notif-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: var(--color-danger);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 340px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  margin-top: var(--space-2);
+  z-index: 1050;
+  display: none;
+  overflow: hidden;
+  animation: notifFadeIn 0.2s ease forwards;
+}
+
+.notif-dropdown.show {
+  display: block;
+}
+
+@keyframes notifFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notif-header {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FAFAFC;
+}
+
+.notif-list {
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-item {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.notif-item:hover {
+  background-color: var(--color-surface-muted);
+}
+.notif-item.unread {
+  background-color: var(--color-primary-light);
+}
+
+/* --- 12. STAR RATING WIDGET --- */
+.rating-stars {
+  display: inline-flex;
+  gap: var(--space-1);
+  font-size: 1.75rem;
+  cursor: pointer;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  color: #CBD5E1;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+.star-btn:hover,
+.star-btn.active {
+  color: #F59E0B;
+  transform: scale(1.1);
+}

@@ -106,6 +106,19 @@
             <div class="progress-bar-fill" id="progress-bar-fill" style="width: 66%;"></div>
           </div>
         </div>
+
+        <div id="workspace-action-container" style="display: flex; gap: var(--space-2); align-items: center;">
+          <!-- Dynamically filled: Submit deliverable, Complete, or Review buttons -->
+        </div>
+      </div>
+
+      <!-- Deliverable Status Banner (hidden by default) -->
+      <div id="deliverable-banner" style="display: none; padding: var(--space-3) var(--space-6); background-color: var(--color-primary-light); border-top: 1px solid rgba(79,70,229,0.15); font-size: var(--font-size-xs); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2);">
+        <div>
+          <strong>📦 Deliverable Final:</strong> <a id="deliverable-link" href="#" target="_blank" style="color: var(--color-primary); font-weight: 600; text-decoration: underline;">https://github.com/...</a>
+          <span id="deliverable-note" style="color: var(--color-text-secondary); margin-left: 0.5rem;">(Catatan: Siap deploy)</span>
+        </div>
+        <span class="badge badge-success" id="deliverable-status-badge">Telah Diserahkan</span>
       </div>
     </div>
 
@@ -285,52 +298,214 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    document.getElementById('chat-input-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const input = document.getElementById('chat-text-input');
-      const text = input.value.trim();
-      if (!text) return;
+  <!-- Add Task Modal -->
+  <div class="modal-backdrop" id="task-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Tambah Tugas Baru</h3>
+        <button class="modal-close" id="task-modal-close">&times;</button>
+      </div>
+      <form id="task-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="task-title">Judul Tugas</label>
+            <input type="text" id="task-title" class="form-control" placeholder="Contoh: Integrasi payment gateway" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="task-status">Status Awal</label>
+            <select id="task-status" class="form-select">
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="task-modal-cancel">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Tugas</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-      const user = window.SkillBridgeAuth.getUser() || { name: 'Budi Santoso', role: 'mahasiswa' };
-      await window.SkillBridgeDB.sendMessage({
-        workspace_id: WORKSPACE_ID,
-        sender_name: user.name,
-        sender_role: user.role,
-        content: text
+  <!-- Deliverable Submission Modal -->
+  <div class="modal-backdrop" id="deliverable-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Serahkan Hasil Kerja Final (Deliverable)</h3>
+        <button class="modal-close" id="deliv-modal-close">&times;</button>
+      </div>
+      <form id="deliverable-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="deliv-url">Tautan Hasil Kerja (GitHub / Google Drive / Figma / Live URL)</label>
+            <input type="url" id="deliv-url" class="form-control" placeholder="https://github.com/..." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="deliv-notes">Catatan & Dokumentasi Singkat</label>
+            <textarea id="deliv-notes" class="form-textarea" placeholder="Jelaskan ringkasan pekerjaan yang telah diselesaikan, instruksi instalasi, atau kredensial demo..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="deliv-modal-cancel">Batal</button>
+          <button type="submit" class="btn btn-primary">Serahkan ke UMKM</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/notifications.js"></script>
+  <script src="../../assets/js/review.js"></script>
+  <script>
+    const WORKSPACE_ID = 'ws1';
+
+    async function loadTasks() {
+      const tasks = await window.SkillBridgeDB.getTasks(WORKSPACE_ID);
+      const cols = {
+        todo: document.getElementById('items-todo'),
+        in_progress: document.getElementById('items-in_progress'),
+        done: document.getElementById('items-done')
+      };
+
+      cols.todo.innerHTML = '';
+      cols.in_progress.innerHTML = '';
+      cols.done.innerHTML = '';
+
+      let counts = { todo: 0, in_progress: 0, done: 0 };
+
+      tasks.forEach(task => {
+        counts[task.status] = (counts[task.status] || 0) + 1;
+        const targetContainer = cols[task.status] || cols.todo;
+
+        const nextAction = task.status === 'todo' 
+          ? `<button class="btn btn-outline btn-sm" onclick="moveTask('${task.id}', 'in_progress')" style="font-size: 10px; padding: 2px 6px;">Kerjakan →</button>`
+          : task.status === 'in_progress'
+          ? `<button class="btn btn-primary btn-sm" onclick="moveTask('${task.id}', 'done')" style="font-size: 10px; padding: 2px 6px;">Selesaikan ✓</button>`
+          : `<span class="badge badge-success" style="font-size: 10px;">Selesai</span>`;
+
+        const card = document.createElement('div');
+        card.className = 'kanban-item';
+        card.innerHTML = `
+          <div class="kanban-item-title">${task.title}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+            <span class="badge badge-neutral" style="font-size: 10px;">${task.priority || 'medium'}</span>
+            ${nextAction}
+          </div>
+        `;
+        targetContainer.appendChild(card);
       });
 
-      input.value = '';
-      await loadChat();
-    });
+      document.getElementById('count-todo').textContent = counts.todo;
+      document.getElementById('count-in_progress').textContent = counts.in_progress;
+      document.getElementById('count-done').textContent = counts.done;
 
-    // Task Modal
-    const taskModal = document.getElementById('task-modal');
-    document.getElementById('btn-add-task-modal').addEventListener('click', () => taskModal.classList.add('active'));
-    document.getElementById('task-modal-close').addEventListener('click', () => taskModal.classList.remove('active'));
-    document.getElementById('task-modal-cancel').addEventListener('click', () => taskModal.classList.remove('active'));
+      // Update progress bar
+      const total = tasks.length || 1;
+      const pct = Math.round((counts.done / total) * 100);
+      document.getElementById('progress-bar-fill').style.width = pct + '%';
+      document.getElementById('progress-percent-label').textContent = pct + '%';
+    }
 
-    document.getElementById('task-form').addEventListener('submit', async (e) => {
+    async function moveTask(taskId, newStatus) {
+      await window.SkillBridgeDB.updateTaskStatus(taskId, newStatus);
+      window.toast.success(`Status tugas berhasil diubah ke ${newStatus}!`);
+      loadTasks();
+    }
+
+    // Deliverables & Project Completion Workflow
+    async function loadDeliverableState() {
+      const deliv = await window.SkillBridgeDB.getDeliverable(WORKSPACE_ID);
+      const actionContainer = document.getElementById('workspace-action-container');
+      const banner = document.getElementById('deliverable-banner');
+      const currentUser = window.SkillBridgeAuth.getUser() || { role: 'mahasiswa' };
+
+      if (deliv) {
+        banner.style.display = 'flex';
+        document.getElementById('deliverable-link').href = deliv.url;
+        document.getElementById('deliverable-link').textContent = deliv.url;
+        document.getElementById('deliverable-note').textContent = `(Catatan: ${deliv.notes})`;
+
+        if (deliv.status === 'accepted') {
+          document.getElementById('deliverable-status-badge').textContent = '✅ Proyek Telah Selesai';
+          document.getElementById('deliverable-status-badge').className = 'badge badge-success';
+
+          // Show Review Button
+          actionContainer.innerHTML = `
+            <button class="btn btn-secondary btn-sm" id="btn-open-review">
+              ⭐ Beri Penilaian & Ulasan
+            </button>
+          `;
+          document.getElementById('btn-open-review').addEventListener('click', () => {
+            const target = currentUser.role === 'umkm'
+              ? { id: 'std_demo_1', name: 'Budi Santoso' }
+              : { id: 'umkm_demo_1', name: 'Pak Bambang (Kopi Nusantara)' };
+            window.SkillBridgeReview.openModal(target, 'p1');
+          });
+        } else {
+          document.getElementById('deliverable-status-badge').textContent = 'Menunggu Persetujuan UMKM';
+          document.getElementById('deliverable-status-badge').className = 'badge badge-warning';
+
+          if (currentUser.role === 'umkm') {
+            actionContainer.innerHTML = `
+              <button class="btn btn-primary btn-sm" id="btn-accept-project">
+                ✅ Terima Hasil Kerja & Selesaikan Proyek
+              </button>
+            `;
+            document.getElementById('btn-accept-project').addEventListener('click', async () => {
+              await window.SkillBridgeDB.completeWorkspace(WORKSPACE_ID);
+              window.toast.success('Proyek disetujui dan ditandai selesai! Silakan beri penilaian.');
+              loadDeliverableState();
+              window.SkillBridgeReview.openModal({ id: 'std_demo_1', name: 'Budi Santoso' }, 'p1');
+            });
+          } else {
+            actionContainer.innerHTML = `
+              <span class="badge badge-warning" style="font-size: 11px;">Deliverable Telah Terkirim</span>
+            `;
+          }
+        }
+      } else {
+        banner.style.display = 'none';
+        if (currentUser.role === 'mahasiswa') {
+          actionContainer.innerHTML = `
+            <button class="btn btn-primary btn-sm" id="btn-open-deliv-modal">
+              📦 Unggah Deliverable Final
+            </button>
+          `;
+          document.getElementById('btn-open-deliv-modal').addEventListener('click', () => {
+            document.getElementById('deliverable-modal').classList.add('active');
+          });
+        } else {
+          actionContainer.innerHTML = `
+            <span class="badge badge-neutral" style="font-size: 11px;">Menunggu Hasil Mahasiswa</span>
+          `;
+        }
+      }
+    }
+
+    // Deliverable Modal actions
+    const delivModal = document.getElementById('deliverable-modal');
+    document.getElementById('deliv-modal-close').addEventListener('click', () => delivModal.classList.remove('active'));
+    document.getElementById('deliv-modal-cancel').addEventListener('click', () => delivModal.classList.remove('active'));
+
+    document.getElementById('deliverable-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = document.getElementById('task-title').value;
-      const status = document.getElementById('task-status').value;
+      const url = document.getElementById('deliv-url').value;
+      const notes = document.getElementById('deliv-notes').value;
 
-      await window.SkillBridgeDB.createTask({
-        workspace_id: WORKSPACE_ID,
-        title: title,
-        status: status,
-        priority: 'high'
-      });
-
-      taskModal.classList.remove('active');
-      document.getElementById('task-title').value = '';
-      window.toast.success('Tugas baru ditambahkan ke papan Kanban!');
-      await loadTasks();
+      await window.SkillBridgeDB.submitDeliverable(WORKSPACE_ID, { url, notes });
+      delivModal.classList.remove('active');
+      window.toast.success('Hasil kerja (deliverable) berhasil diserahkan ke mitra UMKM!');
+      await loadDeliverableState();
     });
 
     document.addEventListener('DOMContentLoaded', () => {
       window.SkillBridgeAuth.requireAuth();
       loadTasks();
       loadChat();
+      loadDeliverableState();
     });
   </script>
 </body>
