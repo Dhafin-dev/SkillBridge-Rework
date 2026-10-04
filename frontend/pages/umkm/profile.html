@@ -153,13 +153,13 @@
       </div>
 
       <div class="sidebar-footer">
-        <a href="settings.html" class="sidebar-item" style="color: #64748B;">
+        <button onclick="window.SkillBridgeSettings ? window.SkillBridgeSettings.openModal() : window.location.href='settings.html'" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 0.75rem;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
           </svg>
-          <span>Settings</span>
-        </a>
+          <span>Pengaturan & Tema</span>
+        </button>
       </div>
     </aside>
 
@@ -187,7 +187,7 @@
             </button>
           </div>
 
-          <div class="topbar-avatar-pill" onclick="window.location.href='settings.html'">
+          <div class="topbar-avatar-pill">
             <div class="avatar-circle" id="umkm-avatar-circle" style="background: #2563EB; color: #FFFFFF;">L</div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
               <path d="m6 9 6 6 6-6"/>
@@ -202,12 +202,12 @@
           <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0;">
             Business Profile
           </h1>
-          <a href="settings.html" style="color: #64748B; padding: 6px;">
+          <button onclick="window.SkillBridgeSettings ? window.SkillBridgeSettings.openModal() : window.location.href='settings.html'" style="background: none; border: none; color: #64748B; padding: 6px; cursor: pointer;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"/>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
             </svg>
-          </a>
+          </button>
         </div>
 
         <!-- Top Main Card (Matching 11_umkm_profile.png) -->
@@ -402,6 +402,29 @@
                 </div>
               </div>
             </div>
+
+            <!-- Sesi & Keamanan Akun (Logout Card) -->
+            <div class="profile-section-card" style="border: 1px solid #FEE2E2; background: var(--color-surface, #FFFFFF);">
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #DC2626; margin: 0 0 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span>Sesi & Keamanan Akun</span>
+              </h3>
+              <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 1.25rem; line-height: 1.5;">
+                Keluar dari akun bisnis Anda di perangkat ini untuk menjaga keamanan operasional UMKM.
+              </p>
+              <button onclick="window.SkillBridgeAuth.logout(true)" class="btn" style="width: 100%; background: #FEF2F2; color: #DC2626; border: 1.5px solid #FCA5A5; font-weight: 700; border-radius: 0.875rem; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer; transition: all 0.2s ease;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span>Keluar dari Akun UMKM</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -435,7 +458,9 @@
   </div>
 
   <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/settings.js"></script>
   <script>
     function openEditCompanyModal() {
       document.getElementById('input-co-name').value = document.getElementById('prof-company-name').textContent.trim();
@@ -454,20 +479,33 @@
       document.getElementById('prof-company-name').textContent = name;
       document.getElementById('prof-company-desc').textContent = desc;
 
-      const user = window.SkillBridgeAuth.getUser() || {};
-      user.company_name = name;
-      user.bio = desc;
-      localStorage.setItem('skillbridge_user', JSON.stringify(user));
+      if (window.SkillBridgeAuth && window.SkillBridgeAuth.updateCurrentUser) {
+        window.SkillBridgeAuth.updateCurrentUser({
+          name: name,
+          company_name: name,
+          bio: desc
+        });
+      } else {
+        const user = window.SkillBridgeAuth.getUser() || {};
+        user.name = name;
+        user.company_name = name;
+        user.bio = desc;
+        localStorage.setItem('SKILLBRIDGE_CURRENT_USER', JSON.stringify(user));
+        localStorage.setItem('skillbridge_user', JSON.stringify(user));
+      }
 
       closeEditCompanyModal();
-      window.toast.success('Profil perusahaan berhasil diperbarui!');
+      if (window.toast) window.toast.success('Profil perusahaan berhasil diperbarui!');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       window.SkillBridgeAuth.requireAuth('umkm');
       const user = window.SkillBridgeAuth.getUser() || {};
-      if (user.company_name) {
-        document.getElementById('prof-company-name').textContent = user.company_name;
+      if (user.company_name || user.name) {
+        document.getElementById('prof-company-name').textContent = user.company_name || user.name;
+      }
+      if (user.bio) {
+        document.getElementById('prof-company-desc').textContent = user.bio;
       }
     });
   </script>

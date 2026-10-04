@@ -175,12 +175,12 @@
       </div>
 
       <div class="sidebar-footer">
-        <button onclick="window.SkillBridgeAuth.logout()" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
+        <button onclick="window.SkillBridgeSettings.openModal()" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
           </svg>
-          <span>Logout</span>
+          <span>Pengaturan &amp; Tema</span>
         </button>
       </div>
     </aside>
@@ -224,7 +224,7 @@
           <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0;">
             My Profile
           </h1>
-          <button onclick="openEditProfileModal()" style="background: none; border: none; color: #64748B; cursor: pointer; padding: 6px;">
+          <button onclick="window.SkillBridgeSettings.openModal()" title="Pengaturan &amp; Tema" style="background: none; border: none; color: #64748B; cursor: pointer; padding: 6px;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"/>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -423,48 +423,115 @@
             </div>
           </div>
         </div>
+
+        <!-- Account Security & Dedicated Logout Zone (Per User Rule) -->
+        <div class="info-box-card" style="margin-top: 1.75rem; border-color: #FECACA; background: #FFFBFB;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; color: #DC2626; font-weight: 800; font-size: 1.05rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span>Pengaturan Akun &amp; Sesi Masuk</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #64748B; margin: 0.25rem 0 0;">
+                Keluar dari sesi peramban ini secara aman untuk menjaga privasi akun Anda.
+              </p>
+            </div>
+            <button onclick="window.SkillBridgeAuth.logout(true)" class="btn btn-outline-danger" style="border-radius: 0.875rem; padding: 0.65rem 1.25rem; font-weight: 700;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              <span>Keluar dari Akun (Logout)</span>
+            </button>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
 
-  <!-- Edit Profile Modal -->
+  <!-- Comprehensive Edit Profile Modal -->
   <div class="modal" id="edit-profile-modal">
-    <div class="modal-content" style="max-width: 520px;">
+    <div class="modal-content" style="max-width: 580px;">
       <div class="modal-header">
-        <h3 style="font-weight: 800;">Edit Student Profile</h3>
+        <h3 style="font-weight: 800; margin: 0;">Edit Profil Mahasiswa</h3>
         <button class="modal-close" onclick="closeEditProfileModal()">&times;</button>
       </div>
       <form id="edit-profile-form" onsubmit="handleSaveProfile(event)">
-        <div class="modal-body">
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
           <div class="form-group">
-            <label class="form-label">Full Name</label>
-            <input type="text" id="input-prof-name" class="form-input" required>
+            <label class="form-label">Nama Lengkap</label>
+            <input type="text" id="input-prof-name" class="form-input" required placeholder="Contoh: Ahmad Dhafin Al Farisy">
+          </div>
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label">Universitas / Institusi</label>
+              <input type="text" id="input-prof-uni" class="form-input" required placeholder="Contoh: Universitas Indonesia">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <input type="number" id="input-prof-semester" class="form-input" min="1" max="14" placeholder="5">
+            </div>
           </div>
           <div class="form-group">
-            <label class="form-label">University / Institution</label>
-            <input type="text" id="input-prof-uni" class="form-input" required>
+            <label class="form-label">Program Studi / Jurusan</label>
+            <input type="text" id="input-prof-major" class="form-input" placeholder="Contoh: Sistem Informasi / Teknik Informatika">
           </div>
           <div class="form-group">
-            <label class="form-label">Professional Bio & Ambition</label>
-            <textarea id="input-prof-bio" class="form-textarea" rows="3" required></textarea>
+            <label class="form-label">Bio &amp; Ambisi Profesional</label>
+            <textarea id="input-prof-bio" class="form-textarea" rows="3" required placeholder="Ceritakan latar belakang, fokus keahlian, dan tujuan Anda..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Keahlian Utama (Pisahkan dengan koma)</label>
+            <input type="text" id="input-prof-skills" class="form-input" placeholder="Contoh: React, TypeScript, Python, UI/UX Design, Node.js">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tautan Portofolio / GitHub / LinkedIn</label>
+            <input type="url" id="input-prof-portfolio" class="form-input" placeholder="https://github.com/username">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="closeEditProfileModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-outline" onclick="closeEditProfileModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
         </div>
       </form>
     </div>
   </div>
 
+  <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/settings.js"></script>
   <script>
+    function renderSkillsList(skills) {
+      const cloud = document.getElementById('skills-cloud');
+      if (!cloud) return;
+      if (!skills || skills.length === 0) {
+        skills = ['React', 'TypeScript', 'Python', 'Machine Learning', 'Node.js', 'UI/UX Design'];
+      }
+      cloud.innerHTML = `
+        ${skills.map(s => `<span class="skill-pill-tag">${s.trim()}</span>`).join('')}
+        <button onclick="promptAddSkill()" class="btn btn-sm btn-outline" style="border-radius: 9999px; font-size: 0.75rem; border-style: dashed; padding: 4px 10px;">
+          + Add Skill
+        </button>
+      `;
+    }
+
     function openEditProfileModal() {
       const user = window.SkillBridgeAuth.getUser() || {};
-      document.getElementById('input-prof-name').value = document.getElementById('prof-display-name').textContent.trim();
-      document.getElementById('input-prof-uni').value = document.getElementById('prof-display-uni').textContent.trim();
-      document.getElementById('input-prof-bio').value = document.getElementById('prof-display-bio').textContent.trim();
+      document.getElementById('input-prof-name').value = user.name || document.getElementById('prof-display-name').textContent.trim();
+      document.getElementById('input-prof-uni').value = user.university || document.getElementById('prof-display-uni').textContent.trim();
+      document.getElementById('input-prof-major').value = user.major || '';
+      document.getElementById('input-prof-semester').value = user.semester || 5;
+      document.getElementById('input-prof-bio').value = user.bio || document.getElementById('prof-display-bio').textContent.trim();
+      const currentSkills = user.skills || ['React', 'TypeScript', 'Python', 'UI/UX Design', 'Node.js'];
+      document.getElementById('input-prof-skills').value = Array.isArray(currentSkills) ? currentSkills.join(', ') : currentSkills;
+      document.getElementById('input-prof-portfolio').value = user.portfolio_url || '';
       document.getElementById('edit-profile-modal').classList.add('active');
     }
 
@@ -476,49 +543,73 @@
       e.preventDefault();
       const name = document.getElementById('input-prof-name').value.trim();
       const uni = document.getElementById('input-prof-uni').value.trim();
+      const major = document.getElementById('input-prof-major').value.trim();
+      const semester = parseInt(document.getElementById('input-prof-semester').value) || 5;
       const bio = document.getElementById('input-prof-bio').value.trim();
+      const skillsRaw = document.getElementById('input-prof-skills').value.trim();
+      const portfolio_url = document.getElementById('input-prof-portfolio').value.trim();
 
+      const skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+      // Update DOM instantly
       document.getElementById('prof-display-name').textContent = name;
-      document.getElementById('prof-display-uni').textContent = uni;
+      document.getElementById('prof-display-uni').textContent = major ? `${uni} • ${major} (Smtr ${semester})` : uni;
       document.getElementById('prof-display-bio').textContent = bio;
-      document.getElementById('profile-hero-avatar').textContent = (name || 'A')[0].toUpperCase();
-      document.getElementById('student-avatar-circle').textContent = (name || 'A')[0].toUpperCase();
+      
+      const initial = (name || 'A')[0].toUpperCase();
+      document.getElementById('profile-hero-avatar').textContent = initial;
+      const navAvatar = document.getElementById('student-avatar-circle');
+      if (navAvatar) navAvatar.textContent = initial;
 
-      const user = window.SkillBridgeAuth.getUser() || {};
-      user.name = name;
-      user.university = uni;
-      user.bio = bio;
-      localStorage.setItem('skillbridge_user', JSON.stringify(user));
+      renderSkillsList(skills);
+
+      // Persist in Auth state
+      window.SkillBridgeAuth.updateCurrentUser({
+        name,
+        university: uni,
+        major,
+        semester,
+        bio,
+        skills,
+        portfolio_url
+      });
 
       closeEditProfileModal();
-      window.toast.success('Profil berhasil diperbarui!');
+      window.toast.success('Profil mahasiswa berhasil diperbarui dan disimpan!');
     }
 
     function promptAddSkill() {
       const skill = prompt('Masukkan keahlian baru (misal: Docker, GraphQL, Kubernetes):');
       if (skill && skill.trim()) {
-        const cloud = document.getElementById('skills-cloud');
-        const tag = document.createElement('span');
-        tag.className = 'skill-pill-tag';
-        tag.textContent = skill.trim();
-        cloud.insertBefore(tag, cloud.lastElementChild);
-        window.toast.success(`Keahlian "${skill.trim()}" ditambahkan!`);
+        const user = window.SkillBridgeAuth.getUser() || {};
+        const currentSkills = Array.isArray(user.skills) ? [...user.skills] : ['React', 'TypeScript', 'Python', 'UI/UX Design'];
+        currentSkills.push(skill.trim());
+        window.SkillBridgeAuth.updateCurrentUser({ skills: currentSkills });
+        renderSkillsList(currentSkills);
+        window.toast.success(`Keahlian "${skill.trim()}" berhasil ditambahkan!`);
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       window.SkillBridgeAuth.requireAuth('mahasiswa');
       const user = window.SkillBridgeAuth.getUser();
-      if (user && user.name) {
-        document.getElementById('prof-display-name').textContent = user.name;
-        document.getElementById('profile-hero-avatar').textContent = user.name[0].toUpperCase();
-        document.getElementById('student-avatar-circle').textContent = user.name[0].toUpperCase();
+      if (user) {
+        if (user.name) {
+          document.getElementById('prof-display-name').textContent = user.name;
+          const initial = user.name[0].toUpperCase();
+          document.getElementById('profile-hero-avatar').textContent = initial;
+          const navAvatar = document.getElementById('student-avatar-circle');
+          if (navAvatar) navAvatar.textContent = initial;
+        }
         if (user.university) {
-          document.getElementById('prof-display-uni').textContent = user.university;
+          document.getElementById('prof-display-uni').textContent = user.major 
+            ? `${user.university} • ${user.major} (Smtr ${user.semester || 5})`
+            : user.university;
         }
         if (user.bio) {
           document.getElementById('prof-display-bio').textContent = user.bio;
         }
+        renderSkillsList(user.skills);
       }
     });
   </script>

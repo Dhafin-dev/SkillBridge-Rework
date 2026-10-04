@@ -279,12 +279,31 @@
       }
     },
 
-    logout: function () {
+    updateCurrentUser: function (updatedFields) {
+      const user = this.getUser() || {};
+      const merged = { ...user, ...updatedFields };
+      this.setUser(merged);
+      const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
+      const idx = registered.findIndex(u => u.id === merged.id || u.email === merged.email);
+      if (idx !== -1) {
+        registered[idx] = merged;
+        localStorage.setItem('SB_REGISTERED_USERS', JSON.stringify(registered));
+      }
+      return merged;
+    },
+
+    logout: function (promptConfirm = false) {
+      if (promptConfirm && !confirm('Apakah Anda yakin ingin keluar dari akun SkillBridge?')) {
+        return;
+      }
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem('skillbridge_user');
+      localStorage.removeItem('skillbridge_token');
+      sessionStorage.clear();
       window.toast?.info('Anda telah keluar dari akun.');
       setTimeout(() => {
-        window.location.href = this.getPathTo('login');
-      }, 500);
+        window.location.replace(this.getPathTo('login'));
+      }, 350);
     },
 
     requireAuth: function (allowedRoles = []) {

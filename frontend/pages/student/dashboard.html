@@ -37,38 +37,70 @@
       margin-bottom: 0.25rem;
     }
 
-    /* Vector Curve Chart Container */
-    .chart-container {
+    /* Dynamic Interactive Chart Styles */
+    .chart-period-tabs {
+      display: flex;
+      background: #F1F5F9;
+      border-radius: var(--radius-full);
+      padding: 3px;
+      gap: 2px;
+    }
+    [data-theme="dark"] .chart-period-tabs {
+      background: #1E293B;
+    }
+    .chart-tab-btn {
+      border: none;
+      background: transparent;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.775rem;
+      font-weight: 700;
+      color: #64748B;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chart-tab-btn:hover {
+      color: var(--color-primary);
+    }
+    .chart-tab-btn.active {
+      background: #FFFFFF;
+      color: var(--color-primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    [data-theme="dark"] .chart-tab-btn.active {
+      background: #0F172A;
+      color: #60A5FA;
+    }
+    .chart-interactive-wrap {
       position: relative;
       width: 100%;
       height: 240px;
-      margin: 1.5rem 0;
+      margin: 1.5rem 0 0.5rem;
     }
-
-    .chart-svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-    }
-
-    .chart-badge-jun {
-      background-color: #4F46E5;
+    .chart-tooltip-box {
+      position: absolute;
+      pointer-events: none;
+      background: #0F172A;
       color: #FFFFFF;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transform: translate(-50%, -125%);
+      display: none;
+      z-index: 20;
+      white-space: nowrap;
     }
-
-    .chart-badge-sep {
-      background-color: #2563EB;
-      color: #FFFFFF;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+    .chart-data-point {
+      cursor: pointer;
+      transition: r 0.15s ease, fill 0.15s ease;
+    }
+    .chart-data-point:hover {
+      r: 7 !important;
+      fill: #2563EB !important;
+      stroke: #FFFFFF !important;
+      stroke-width: 3 !important;
     }
 
     .chart-banner-info {
@@ -178,12 +210,12 @@
       </div>
 
       <div class="sidebar-footer">
-        <button onclick="window.SkillBridgeAuth.logout()" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
+        <button onclick="window.SkillBridgeSettings.openModal()" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
           </svg>
-          <span>Logout / Settings</span>
+          <span>Pengaturan &amp; Tema</span>
         </button>
       </div>
     </aside>
@@ -212,7 +244,7 @@
             </button>
           </div>
 
-          <div class="topbar-avatar-pill" onclick="window.location.href='profile.html'">
+          <div class="topbar-avatar-pill">
             <div class="avatar-circle" id="student-avatar-circle">A</div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
               <path d="m6 9 6 6 6-6"/>
@@ -283,88 +315,57 @@
           </div>
         </div>
 
-        <!-- Monthly Activity Vector Line Chart Card -->
+        <!-- Dynamic Student Activity Chart Card -->
         <div class="card" style="margin-bottom: 2rem;">
-          <div class="card-header">
+          <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
             <div>
-              <h2 class="card-title">Monthly Activity</h2>
-              <p class="card-subtitle">Milestone completions and verified project contributions</p>
+              <h2 class="card-title">Grafik Aktivitas & Kontribusi Mahasiswa</h2>
+              <p class="card-subtitle">Pencatatan milestone selesai, jam kerja aktif, dan deliverable proyek</p>
             </div>
-            <span class="badge badge-success" style="font-size: 0.8rem; font-weight: 700;">
-              ↗ +38% vs prev term
-            </span>
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <div class="chart-period-tabs">
+                <button class="chart-tab-btn active" id="tab-btn-7d" onclick="switchChartPeriod('7d')">7 Hari</button>
+                <button class="chart-tab-btn" id="tab-btn-30d" onclick="switchChartPeriod('30d')">30 Hari</button>
+                <button class="chart-tab-btn" id="tab-btn-semester" onclick="switchChartPeriod('semester')">Semester Ini</button>
+              </div>
+              <span class="badge badge-success" id="chart-growth-badge" style="font-size: 0.8rem; font-weight: 700;">
+                ↗ +38% Aktif
+              </span>
+            </div>
           </div>
 
           <div class="activity-metrics-row">
             <div class="activity-metric-box">
-              <div class="activity-metric-label">Tasks Done (YTD)</div>
-              <div class="activity-metric-val">161</div>
+              <div class="activity-metric-label">Milestone Selesai</div>
+              <div class="activity-metric-val" id="metric-tasks-done">14</div>
             </div>
             <div class="activity-metric-box">
-              <div class="activity-metric-label">Hours Logged</div>
-              <div class="activity-metric-val" style="color: #2563EB;">394h</div>
+              <div class="activity-metric-label">Jam Belajar & Proyek</div>
+              <div class="activity-metric-val" id="metric-hours-logged" style="color: #2563EB;">42 jam</div>
             </div>
             <div class="activity-metric-box">
-              <div class="activity-metric-label">On-Time Rate</div>
-              <div class="activity-metric-val" style="color: #10B981;">100%</div>
+              <div class="activity-metric-label">Ketepatan Waktu</div>
+              <div class="activity-metric-val" id="metric-ontime-rate" style="color: #10B981;">100%</div>
             </div>
           </div>
 
-          <!-- Beautiful Vector Line Curve Chart (Jan - Dec) -->
-          <div class="chart-container">
-            <svg class="chart-svg" viewBox="0 0 1000 200" preserveAspectRatio="none">
+          <!-- Dynamic Responsive Vector Area Chart Container -->
+          <div class="chart-interactive-wrap">
+            <div class="chart-tooltip-box" id="chart-tooltip"></div>
+            <svg class="chart-svg" id="dynamic-activity-svg" viewBox="0 0 900 240" preserveAspectRatio="none" style="width: 100%; height: 240px; overflow: visible;">
               <defs>
-                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#2563EB" stop-opacity="0.25"/>
+                <linearGradient id="actGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2563EB" stop-opacity="0.3"/>
                   <stop offset="100%" stop-color="#2563EB" stop-opacity="0.0"/>
                 </linearGradient>
               </defs>
 
-              <!-- Grid Horizontal Lines -->
-              <line x1="40" y1="40" x2="960" y2="40" stroke="#F1F5F9" stroke-dasharray="4"/>
-              <line x1="40" y1="90" x2="960" y2="90" stroke="#F1F5F9" stroke-dasharray="4"/>
-              <line x1="40" y1="140" x2="960" y2="140" stroke="#F1F5F9" stroke-dasharray="4"/>
-
-              <!-- Area Fill -->
-              <path d="M 50 150 L 130 140 L 210 110 L 290 130 L 370 85 L 450 60 L 530 100 L 610 120 L 690 70 L 690 180 L 50 180 Z" fill="url(#chartGradient)"/>
-
-              <!-- Solid Blue Historical Line -->
-              <path d="M 50 150 L 130 140 L 210 110 L 290 130 L 370 85 L 450 60 L 530 100 L 610 120 L 690 70" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-
-              <!-- Active Sep Vertical Dashed Line -->
-              <line x1="690" y1="70" x2="690" y2="180" stroke="#2563EB" stroke-width="2" stroke-dasharray="4"/>
-
-              <!-- Q4 Future Dotted Line -->
-              <path d="M 690 70 L 770 140 L 850 140 L 930 140" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6"/>
-
-              <!-- Data Point Circles -->
-              <circle cx="50" cy="150" r="4" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
-              <circle cx="130" cy="140" r="4" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
-              <circle cx="210" cy="110" r="4" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
-              <circle cx="290" cy="130" r="4" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
-              <circle cx="370" cy="85" r="4" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
-              <circle cx="450" cy="60" r="6" fill="#4F46E5" stroke="#FFFFFF" stroke-width="2"/>
-              <circle cx="530" cy="100" r="4" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
-              <circle cx="610" cy="120" r="4" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
-              <circle cx="690" cy="70" r="6" fill="#2563EB" stroke="#FFFFFF" stroke-width="2"/>
-
-              <circle cx="770" cy="140" r="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-              <circle cx="850" cy="140" r="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-              <circle cx="930" cy="140" r="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
-
-              <!-- Month Labels -->
-              <text x="50" y="195" font-size="12" fill="#64748B" text-anchor="middle">Jan</text>
-              <text x="130" y="195" font-size="12" fill="#64748B" text-anchor="middle">Feb</text>
-              <text x="210" y="195" font-size="12" fill="#64748B" text-anchor="middle">Mar</text>
-              <text x="290" y="195" font-size="12" fill="#64748B" text-anchor="middle">Apr</text>
-              <text x="370" y="195" font-size="12" fill="#64748B" text-anchor="middle">May</text>
-              <text x="450" y="195" font-size="12" fill="#4F46E5" font-weight="700" text-anchor="middle">Jun</text>
-              <text x="530" y="195" font-size="12" fill="#64748B" text-anchor="middle">Jul</text>
-              <text x="610" y="195" font-size="12" fill="#64748B" text-anchor="middle">Aug</text>
-              <text x="690" y="195" font-size="12" fill="#2563EB" font-weight="800" text-anchor="middle">Sep</text>
-              <text x="770" y="195" font-size="12" fill="#94A3B8" text-anchor="middle">Oct</text>
-              <text x="850" y="195" font-size="12" fill="#94A3B8" text-anchor="middle">Nov</text>
-              <text x="930" y="195" font-size="12" fill="#94A3B8" text-anchor="middle">Dec</text>
+              <!-- Dynamic Grid & Elements populated by renderActivityChart() -->
+              <g id="chart-grid-group"></g>
+              <path id="chart-area-path" fill="url(#actGradient)"></path>
+              <path id="chart-line-path" fill="none" stroke="#2563EB" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <g id="chart-points-group"></g>
+              <g id="chart-labels-group"></g>
             </svg>
           </div>
 
@@ -372,7 +373,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
               <path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/>
             </svg>
-            <span><strong>Top 3% Contributor:</strong> Consistent weekly deliverables with an average client feedback score of 4.9/5.0.</span>
+            <span id="chart-summary-text"><strong>Aktivitas Terverifikasi:</strong> Mahasiswa konsisten menyelesaikan deliverable mingguan dengan feedback mitra UMKM bernilai 4.9/5.0.</span>
           </div>
         </div>
 
@@ -441,7 +442,154 @@
   <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/settings.js"></script>
   <script>
+    const CHART_DATA = {
+      '7d': {
+        labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+        tasks: [2, 3, 5, 4, 6, 2, 1],
+        hours: [4, 6, 8, 7, 9, 5, 3],
+        totalTasks: 23,
+        totalHours: '42 jam',
+        ontime: '100%',
+        growth: '↗ +24% Pekan Ini'
+      },
+      '30d': {
+        labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+        tasks: [14, 19, 24, 21],
+        hours: [38, 46, 54, 50],
+        totalTasks: 78,
+        totalHours: '188 jam',
+        ontime: '98%',
+        growth: '↗ +32% Bulan Ini'
+      },
+      'semester': {
+        labels: ['Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt'],
+        tasks: [18, 26, 32, 28, 38, 44],
+        hours: [45, 62, 78, 70, 88, 95],
+        totalTasks: 186,
+        totalHours: '438 jam',
+        ontime: '99%',
+        growth: '↗ +38% Semester Ini'
+      }
+    };
+
+    let currentPeriod = '7d';
+
+    function renderActivityChart(period) {
+      currentPeriod = period;
+      const data = CHART_DATA[period] || CHART_DATA['7d'];
+      const width = 900;
+      const height = 240;
+      const padX = 60;
+      const padYTop = 30;
+      const padYBottom = 50;
+      const plotWidth = width - padX * 2;
+      const plotHeight = height - padYTop - padYBottom;
+
+      // Update Metric summaries
+      document.getElementById('metric-tasks-done').textContent = data.totalTasks;
+      document.getElementById('metric-hours-logged').textContent = data.totalHours;
+      document.getElementById('metric-ontime-rate').textContent = data.ontime;
+      document.getElementById('chart-growth-badge').textContent = data.growth;
+
+      // Dynamic Grid Lines
+      const gridGroup = document.getElementById('chart-grid-group');
+      gridGroup.innerHTML = '';
+      [0.25, 0.5, 0.75, 1.0].forEach(ratio => {
+        const y = padYTop + plotHeight * ratio;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', '40');
+        line.setAttribute('y1', y);
+        line.setAttribute('x2', '860');
+        line.setAttribute('y2', y);
+        line.setAttribute('stroke', '#E2E8F0');
+        line.setAttribute('stroke-dasharray', '4');
+        gridGroup.appendChild(line);
+      });
+
+      // Calculate Coordinates
+      const maxVal = Math.max(...data.tasks) * 1.25 || 10;
+      const points = data.tasks.map((val, idx) => {
+        const x = padX + (idx / (data.tasks.length - 1)) * plotWidth;
+        const y = padYTop + plotHeight - (val / maxVal) * plotHeight;
+        return { x, y, val, label: data.labels[idx], hours: data.hours[idx] };
+      });
+
+      // Build Bezier Smooth Path
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 0; i < points.length - 1; i++) {
+        const p0 = points[i];
+        const p1 = points[i + 1];
+        const cpX1 = p0.x + (p1.x - p0.x) * 0.45;
+        const cpX2 = p0.x + (p1.x - p0.x) * 0.55;
+        pathD += ` C ${cpX1} ${p0.y}, ${cpX2} ${p1.y}, ${p1.x} ${p1.y}`;
+      }
+
+      document.getElementById('chart-line-path').setAttribute('d', pathD);
+
+      // Area Path
+      const last = points[points.length - 1];
+      const first = points[0];
+      const areaD = `${pathD} L ${last.x} ${height - padYBottom} L ${first.x} ${height - padYBottom} Z`;
+      document.getElementById('chart-area-path').setAttribute('d', areaD);
+
+      // Render Points
+      const pointsGroup = document.getElementById('chart-points-group');
+      const tooltip = document.getElementById('chart-tooltip');
+      const wrap = document.querySelector('.chart-interactive-wrap');
+      pointsGroup.innerHTML = '';
+
+      points.forEach(pt => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', pt.x);
+        circle.setAttribute('cy', pt.y);
+        circle.setAttribute('r', '5');
+        circle.setAttribute('fill', '#FFFFFF');
+        circle.setAttribute('stroke', '#2563EB');
+        circle.setAttribute('stroke-width', '2.5');
+        circle.setAttribute('class', 'chart-data-point');
+
+        circle.addEventListener('mouseenter', (e) => {
+          tooltip.style.display = 'block';
+          tooltip.innerHTML = `<strong>${pt.label}:</strong> ${pt.val} Milestone • ${pt.hours} Jam Aktif`;
+          const rect = wrap.getBoundingClientRect();
+          const pctX = (pt.x / width) * 100;
+          const pctY = (pt.y / height) * 100;
+          tooltip.style.left = `${pctX}%`;
+          tooltip.style.top = `${pctY}%`;
+        });
+
+        circle.addEventListener('mouseleave', () => {
+          tooltip.style.display = 'none';
+        });
+
+        pointsGroup.appendChild(circle);
+      });
+
+      // Render Labels
+      const labelsGroup = document.getElementById('chart-labels-group');
+      labelsGroup.innerHTML = '';
+      points.forEach(pt => {
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', pt.x);
+        text.setAttribute('y', height - 20);
+        text.setAttribute('font-size', '12');
+        text.setAttribute('fill', '#64748B');
+        text.setAttribute('font-weight', '600');
+        text.setAttribute('text-anchor', 'middle');
+        text.textContent = pt.label;
+        labelsGroup.appendChild(text);
+      });
+    }
+
+    function switchChartPeriod(period) {
+      document.querySelectorAll('.chart-tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`tab-btn-${period}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderActivityChart(period);
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       const user = window.SkillBridgeAuth.requireAuth('mahasiswa');
       if (user) {
@@ -452,7 +600,10 @@
         const avatarCircle = document.getElementById('student-avatar-circle');
         if (avatarCircle) avatarCircle.innerText = firstName.charAt(0).toUpperCase();
 
-        // Load dynamic stats if available
+        // Render dynamic activity chart
+        renderActivityChart('7d');
+
+        // Dynamic stats integration
         if (window.SkillBridgeDB && window.SkillBridgeDB.getApplications) {
           const apps = (await window.SkillBridgeDB.getApplications()) || [];
           const userApps = apps.filter(a => a.student_id === user.id);
