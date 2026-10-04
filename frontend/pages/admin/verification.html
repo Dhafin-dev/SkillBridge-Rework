@@ -141,6 +141,12 @@
           </svg>
           <span>Categories</span>
         </a>
+        <a href="matching.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <span>AI Matching</span>
+        </a>
         <a href="verification.html" class="sidebar-item active">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -248,7 +254,55 @@
     </div>
   </div>
 
+  <!-- Rejection Modal Dialog -->
+  <div class="modal" id="reject-modal">
+    <div class="modal-content" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 800; color: #DC2626;">Tolak Pengajuan Verifikasi</h3>
+        <button class="modal-close" onclick="closeRejectModal()">&times;</button>
+      </div>
+      <form id="reject-form" onsubmit="handleConfirmReject(event)">
+        <div class="modal-body">
+          <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1.25rem;">
+            Tentukan alasan penolakan dokumen untuk <strong id="reject-entity-name" style="color: #0F172A;"></strong> agar pengguna dapat melakukan perbaikan:
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem;">
+            <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #0F172A; cursor: pointer;">
+              <input type="radio" name="reject_reason" value="Foto KTM / NIB buram atau tidak terbaca" checked>
+              <span>Foto KTM / NIB buram atau tidak terbaca</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #0F172A; cursor: pointer;">
+              <input type="radio" name="reject_reason" value="Nama pada dokumen tidak cocok dengan akun terdaftar">
+              <span>Nama pada dokumen tidak cocok dengan akun terdaftar</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #0F172A; cursor: pointer;">
+              <input type="radio" name="reject_reason" value="Masa berlaku dokumen telah kadaluarsa / tidak aktif">
+              <span>Masa berlaku dokumen telah kadaluarsa / tidak aktif</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #0F172A; cursor: pointer;">
+              <input type="radio" name="reject_reason" value="Bukan dokumen resmi penerbit instansi terkait">
+              <span>Bukan dokumen resmi penerbit instansi terkait</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Catatan Tambahan untuk Pengguna (Opsional)</label>
+            <textarea id="reject-additional-notes" class="form-textarea" rows="2" placeholder="Contoh: Silakan unggah ulang scan KTM beresolusi tinggi..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeRejectModal()">Batal</button>
+          <button type="submit" class="btn" style="background: #DC2626; color: #FFFFFF; border: none; font-weight: 700; border-radius: 0.5rem; padding: 0.6rem 1.25rem;">
+            Konfirmasi Tolak
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script>
     let activeTab = 'student';
@@ -319,7 +373,7 @@
             <button onclick="approveVerif('${item.id}')" class="btn btn-sm" style="background: #10B981; color: #FFFFFF; border-radius: 9999px; justify-content: center; font-weight: 700;">
               ✓ Approve
             </button>
-            <button onclick="rejectVerif('${item.id}')" class="btn btn-sm btn-outline" style="color: #DC2626; border-color: #FCA5A5; border-radius: 9999px; justify-content: center; font-weight: 700;">
+            <button onclick="promptRejectVerif('${item.id}', '${item.name}')" class="btn btn-sm btn-outline" style="color: #DC2626; border-color: #FCA5A5; border-radius: 9999px; justify-content: center; font-weight: 700;">
               ✕ Reject
             </button>
           </div>
@@ -345,12 +399,44 @@
       }
     }
 
-    function rejectVerif(id) {
-      const card = document.getElementById(`card-${id}`);
-      if (card) {
-        window.toast.error('Pengajuan ditolak.');
-        card.remove();
+    let currentRejectId = null;
+    let currentRejectName = '';
+
+    function promptRejectVerif(id, name) {
+      currentRejectId = id;
+      currentRejectName = name;
+      document.getElementById('reject-entity-name').textContent = name;
+      document.getElementById('reject-additional-notes').value = '';
+      document.getElementById('reject-modal').classList.add('active');
+    }
+
+    function closeRejectModal() {
+      document.getElementById('reject-modal').classList.remove('active');
+      currentRejectId = null;
+    }
+
+    function handleConfirmReject(e) {
+      e.preventDefault();
+      const selectedRadio = document.querySelector('input[name="reject_reason"]:checked');
+      const reason = selectedRadio ? selectedRadio.value : 'Dokumen tidak memenuhi persyaratan';
+      const notes = document.getElementById('reject-additional-notes').value.trim();
+      const fullReason = notes ? `${reason} — ${notes}` : reason;
+
+      if (window.SkillBridgeDB && window.SkillBridgeDB.addAuditLog) {
+        window.SkillBridgeDB.addAuditLog({
+          action: 'VERIFICATION_REJECTED',
+          details: `Admin menolak verifikasi ${currentRejectName}. Alasan: ${fullReason}`
+        });
       }
+
+      const card = document.getElementById(`card-${currentRejectId}`);
+      if (card) {
+        card.style.opacity = '0.5';
+        setTimeout(() => card.remove(), 300);
+      }
+
+      closeRejectModal();
+      window.toast.error(`Pengajuan verifikasi ${currentRejectName} ditolak: ${reason}`);
     }
 
     function openOcrModal(name, type) {

@@ -269,7 +269,7 @@
                 </svg>
                 <span>View Profile</span>
               </button>
-              <button onclick="inviteTalent('Budi Santoso')" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+              <button onclick="inviteTalent('Budi Santoso', this)" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="22" y1="2" x2="11" y2="13"/>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -320,7 +320,7 @@
                 </svg>
                 <span>View Profile</span>
               </button>
-              <button onclick="inviteTalent('Maya Lestari')" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+              <button onclick="inviteTalent('Maya Lestari', this)" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="22" y1="2" x2="11" y2="13"/>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -372,7 +372,7 @@
                 </svg>
                 <span>View Profile</span>
               </button>
-              <button onclick="inviteTalent('Ahmad Dhafin Al Farisy')" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+              <button onclick="inviteTalent('Ahmad Dhafin Al Farisy', this)" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="22" y1="2" x2="11" y2="13"/>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -387,6 +387,7 @@
   </div>
 
   <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script>
     function filterTalents() {
@@ -407,8 +408,59 @@
       window.location.href = `../student/profile.html?name=${encodeURIComponent(name)}`;
     }
 
-    function inviteTalent(name) {
+    function getInvitedTalents() {
+      try {
+        return JSON.parse(localStorage.getItem('skillbridge_invited_talents') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function setButtonInvited(btn) {
+      if (!btn) return;
+      btn.disabled = true;
+      btn.style.backgroundColor = '#10B981';
+      btn.style.borderColor = '#10B981';
+      btn.style.color = '#FFFFFF';
+      btn.style.cursor = 'default';
+      btn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span>✓ Terundang</span>
+      `;
+    }
+
+    function inviteTalent(name, btn) {
+      const invited = getInvitedTalents();
+      if (!invited.includes(name)) {
+        invited.push(name);
+        localStorage.setItem('skillbridge_invited_talents', JSON.stringify(invited));
+      }
+      setButtonInvited(btn);
+
+      if (window.SkillBridgeDB && window.SkillBridgeDB.addNotification) {
+        window.SkillBridgeDB.addNotification({
+          recipient_role: 'mahasiswa',
+          title: 'Undangan Kolaborasi Baru! 🚀',
+          message: `UMKM tertarik dengan profil Anda dan mengundang Anda ke proyek kolaborasi.`,
+          link: 'my-projects.html'
+        });
+      }
+
       window.toast.success(`Undangan kolaborasi berhasil dikirimkan ke ${name}! Notifikasi telah dikirim.`);
+    }
+
+    function restoreInvitedState() {
+      const invited = getInvitedTalents();
+      document.querySelectorAll('.talent-card').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        const cardName = titleEl ? titleEl.textContent.trim() : '';
+        if (cardName && invited.includes(cardName)) {
+          const inviteBtn = card.querySelector('.talent-btn-grid button:last-child');
+          setButtonInvited(inviteBtn);
+        }
+      });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -417,6 +469,7 @@
       if (user.company_name || user.name) {
         document.getElementById('umkm-avatar-circle').textContent = (user.company_name || user.name)[0].toUpperCase();
       }
+      restoreInvitedState();
     });
   </script>
 </body>

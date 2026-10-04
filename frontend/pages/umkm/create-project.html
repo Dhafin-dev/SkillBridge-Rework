@@ -14,6 +14,32 @@
       padding: 2rem;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
+
+    .preset-chips-wrap {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .preset-chip {
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .preset-chip:hover, .preset-chip.active {
+      background: #EFF6FF;
+      border-color: #93C5FD;
+      color: #2563EB;
+    }
   </style>
 </head>
 <body class="dashboard-body">
@@ -156,10 +182,22 @@
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label" for="proj-budget">Anggaran Kompensasi (Rp)</label>
                   <input type="number" id="proj-budget" class="form-input" placeholder="Contoh: 3000000" min="500000" step="100000" required>
+                  <div class="preset-chips-wrap">
+                    <span class="preset-chip budget-chip" onclick="setBudgetPreset(1000000, this)">1 Juta</span>
+                    <span class="preset-chip budget-chip" onclick="setBudgetPreset(2000000, this)">2 Juta</span>
+                    <span class="preset-chip budget-chip active" onclick="setBudgetPreset(3000000, this)">3 Juta</span>
+                    <span class="preset-chip budget-chip" onclick="setBudgetPreset(4500000, this)">4.5 Juta</span>
+                  </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label" for="proj-deadline">Batas Waktu Target Selesai</label>
                   <input type="date" id="proj-deadline" class="form-input" required>
+                  <div class="preset-chips-wrap">
+                    <span class="preset-chip deadline-chip" onclick="setDeadlinePreset(14, this)">+2 Minggu</span>
+                    <span class="preset-chip deadline-chip active" onclick="setDeadlinePreset(30, this)">+1 Bulan</span>
+                    <span class="preset-chip deadline-chip" onclick="setDeadlinePreset(60, this)">+2 Bulan</span>
+                    <span class="preset-chip deadline-chip" onclick="setDeadlinePreset(90, this)">+3 Bulan</span>
+                  </div>
                 </div>
               </div>
 
@@ -193,6 +231,7 @@
   </div>
 
   <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script>
     document.getElementById('create-project-form').addEventListener('submit', async (e) => {
@@ -225,12 +264,31 @@
       setTimeout(() => window.location.href = 'my-projects.html', 1000);
     });
 
+    function setBudgetPreset(val, el) {
+      document.getElementById('proj-budget').value = val;
+      document.querySelectorAll('.budget-chip').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function setDeadlinePreset(days, el) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      const formatted = d.toISOString().split('T')[0];
+      document.getElementById('proj-deadline').value = formatted;
+      document.querySelectorAll('.deadline-chip').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       window.SkillBridgeAuth.requireAuth('umkm');
       const user = window.SkillBridgeAuth.getUser() || {};
       if (user.company_name || user.name) {
         document.getElementById('umkm-avatar-circle').textContent = (user.company_name || user.name)[0].toUpperCase();
       }
+
+      // Initialize default values for budget and deadline
+      document.getElementById('proj-budget').value = 3000000;
+      setDeadlinePreset(30, document.querySelector('.deadline-chip.active'));
     });
   </script>
 </body>

@@ -559,13 +559,29 @@
 
   <!-- Add Link / Deliverable Modal -->
   <div class="modal" id="deliverable-modal">
-    <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-content" style="max-width: 520px;">
       <div class="modal-header">
         <h3 style="font-weight: 800;">Submit Project Link / Deliverable</h3>
         <button class="modal-close" onclick="closeDeliverableModal()">&times;</button>
       </div>
       <form id="deliverable-form" onsubmit="handleSubmitDeliverable(event)">
         <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 0.75rem; margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Type / Category</label>
+              <select id="deliv-type" class="form-select">
+                <option value="GitHub">🐙 GitHub Code</option>
+                <option value="Figma">🎨 Figma Design</option>
+                <option value="Live Demo">🌐 Live Demo / Web</option>
+                <option value="Docs">📄 Documentation</option>
+                <option value="Other">📦 Other Deliverable</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Asset Title</label>
+              <input type="text" id="deliv-title" class="form-input" placeholder="e.g. Frontend Codebase" required>
+            </div>
+          </div>
           <div class="form-group">
             <label class="form-label">Asset / Deliverable URL</label>
             <input type="url" id="deliv-url" class="form-input" placeholder="https://github.com/... or https://figma.com/..." required>
@@ -577,23 +593,48 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" onclick="closeDeliverableModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Link</button>
+          <button type="submit" class="btn btn-primary">Save Deliverable Link</button>
         </div>
       </form>
     </div>
   </div>
 
   <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/review.js"></script>
   <script>
     const WORKSPACE_ID = new URLSearchParams(window.location.search).get('id') || 'ws_1';
+    const TASKS_KEY = `skillbridge_workspace_tasks_${WORKSPACE_ID}`;
+    const DELIVS_KEY = `skillbridge_work_links_${WORKSPACE_ID}`;
+    const STAGE_KEY = `skillbridge_workspace_stage_${WORKSPACE_ID}`;
 
-    let tasks = [
-      { id: 't1', title: 'Matching Microservice', due: 'Due 2026-10-11', done: false },
-      { id: 't2', title: 'Swagger API Docs', due: 'Due 2026-10-18', done: false },
-      { id: 't3', title: 'Evaluation Benchmarks', due: 'Due 2026-10-25', done: false }
+    const DEFAULT_TASKS = [
+      { id: 't1', title: 'Matching Microservice & Algorithm Design', due: 'Due 2026-10-11', done: false },
+      { id: 't2', title: 'Swagger API Docs & Schema Contract', due: 'Due 2026-10-18', done: false },
+      { id: 't3', title: 'Evaluation Benchmarks & Client Presentation', due: 'Due 2026-10-25', done: false }
     ];
+
+    let tasks = [];
+    let deliverables = [];
+
+    function loadTasks() {
+      const stored = localStorage.getItem(TASKS_KEY);
+      if (stored) {
+        try {
+          tasks = JSON.parse(stored);
+        } catch (e) {
+          tasks = DEFAULT_TASKS;
+        }
+      } else {
+        tasks = DEFAULT_TASKS;
+        saveTasks();
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+    }
 
     function renderTasks() {
       const container = document.getElementById('tasks-list-container');
@@ -602,7 +643,16 @@
 
       const pct = tasks.length > 0 ? Math.round((finishedCount / tasks.length) * 100) : 0;
       document.getElementById('overall-percent-text').innerHTML = `${pct}% <span style="font-size: 0.75rem; font-weight: 600; color: #64748B; display: block; text-align: right;">Overall Completion</span>`;
-      document.getElementById('overall-progress-bar').style.width = `${Math.max(pct, 10)}%`;
+      document.getElementById('overall-progress-bar').style.width = `${Math.max(pct, 8)}%`;
+
+      if (tasks.length === 0) {
+        container.innerHTML = `
+          <div style="padding: 2rem 1rem; text-align: center; color: #94A3B8; font-size: 0.9rem;">
+            Belum ada tugas atau milestone sprint. Silakan tambahkan tugas baru di bawah.
+          </div>
+        `;
+        return;
+      }
 
       container.innerHTML = tasks.map(t => `
         <div class="task-row-item ${t.done ? 'done' : ''}">
@@ -628,12 +678,19 @@
 
     function toggleTask(id) {
       tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+      saveTasks();
       renderTasks();
+      const updated = tasks.find(t => t.id === id);
+      if (updated && updated.done) {
+        window.toast.success(`Tugas "${updated.title}" ditandai selesai!`);
+      }
     }
 
     function deleteTask(id) {
       tasks = tasks.filter(t => t.id !== id);
+      saveTasks();
       renderTasks();
+      window.toast.info('Tugas dihapus dari checklist sprint.');
     }
 
     document.getElementById('add-task-form').addEventListener('submit', (e) => {
@@ -651,7 +708,9 @@
 
       document.getElementById('new-task-title').value = '';
       document.getElementById('new-task-date').value = '';
+      saveTasks();
       renderTasks();
+      window.toast.success('Tugas baru berhasil ditambahkan!');
     });
 
     function selectStage(num, title) {
@@ -660,6 +719,17 @@
         if (idx + 1 === num) c.classList.add('active');
       });
       document.getElementById('current-stage-title').textContent = title;
+      localStorage.setItem(STAGE_KEY, JSON.stringify({ num, title }));
+    }
+
+    function loadSavedStage() {
+      const saved = localStorage.getItem(STAGE_KEY);
+      if (saved) {
+        try {
+          const { num, title } = JSON.parse(saved);
+          selectStage(num, title);
+        } catch (e) {}
+      }
     }
 
     // Chat Drawer Handlers
@@ -714,29 +784,102 @@
 
     function closeDeliverableModal() {
       document.getElementById('deliverable-modal').classList.remove('active');
+      document.getElementById('deliverable-form').reset();
+    }
+
+    function loadDeliverables() {
+      const stored = localStorage.getItem(DELIVS_KEY);
+      if (stored) {
+        try {
+          deliverables = JSON.parse(stored);
+        } catch (e) {
+          deliverables = [];
+        }
+      } else {
+        deliverables = [];
+      }
+    }
+
+    function saveDeliverables() {
+      localStorage.setItem(DELIVS_KEY, JSON.stringify(deliverables));
     }
 
     async function handleSubmitDeliverable(e) {
       e.preventDefault();
-      const url = document.getElementById('deliv-url').value;
-      const notes = document.getElementById('deliv-notes').value;
-      await window.SkillBridgeDB.submitDeliverable(WORKSPACE_ID, { url, notes });
+      const type = document.getElementById('deliv-type').value;
+      const title = document.getElementById('deliv-title').value.trim();
+      const url = document.getElementById('deliv-url').value.trim();
+      const notes = document.getElementById('deliv-notes').value.trim();
+
+      const newDeliv = {
+        id: 'deliv_' + Date.now(),
+        type,
+        title,
+        url,
+        notes,
+        submitted_at: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+      };
+
+      deliverables.push(newDeliv);
+      saveDeliverables();
+
+      await window.SkillBridgeDB.submitDeliverable(WORKSPACE_ID, { url, notes, title, type });
       closeDeliverableModal();
       window.toast.success('Link hasil kerja berhasil disimpan!');
-      renderAssetsList(url, notes);
+      renderDeliverablesList();
     }
 
-    function renderAssetsList(url, notes) {
-      if (!url) return;
+    function deleteDeliverable(id) {
+      deliverables = deliverables.filter(d => d.id !== id);
+      saveDeliverables();
+      renderDeliverablesList();
+      window.toast.info('Deliverable dihapus dari daftar.');
+    }
+
+    function renderDeliverablesList() {
       const container = document.getElementById('assets-list-container');
-      container.innerHTML = `
-        <div style="width: 100%; text-align: left; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 1rem; padding: 1rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-            <span class="badge" style="background: #ECFDF5; color: #059669; font-weight: 700; border-radius: 9999px; padding: 2px 8px; font-size: 0.75rem;">Deliverable Active</span>
-            <a href="${url}" target="_blank" class="btn btn-sm btn-primary" style="border-radius: 9999px; font-size: 0.75rem;">Open Link ↗</a>
+      if (deliverables.length === 0) {
+        container.innerHTML = `
+          <div style="min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #94A3B8; font-size: 0.9rem; padding: 1.5rem 0;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="1.8" style="margin-bottom: 0.5rem;">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            Belum ada tautan deliverable proyek yang diserahkan.
           </div>
-          <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A; word-break: break-all;">${url}</div>
-          ${notes ? `<div style="font-size: 0.8rem; color: #64748B; margin-top: 4px;">${notes}</div>` : ''}
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+          ${deliverables.map(d => `
+            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 1rem; padding: 1rem; text-align: left;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 700; border-radius: 9999px; padding: 2px 8px; font-size: 0.75rem;">
+                    ${d.type || 'Deliverable'}
+                  </span>
+                  <span style="font-weight: 800; font-size: 0.9rem; color: #0F172A;">${d.title || 'Project Asset'}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <a href="${d.url}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary" style="border-radius: 9999px; font-size: 0.75rem; padding: 3px 10px;">
+                    Open Link ↗
+                  </a>
+                  <button onclick="deleteDeliverable('${d.id}')" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 2px;" title="Delete Link">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div style="font-size: 0.8rem; color: #2563EB; word-break: break-all; margin-bottom: ${d.notes ? '4px' : '0'};">
+                ${d.url}
+              </div>
+              ${d.notes ? `<div style="font-size: 0.8rem; color: #64748B; background: #FFFFFF; border: 1px solid #F1F5F9; border-radius: 0.5rem; padding: 0.5rem; margin-top: 4px;">${d.notes}</div>` : ''}
+              <div style="font-size: 0.7rem; color: #94A3B8; margin-top: 4px;">Submitted: ${d.submitted_at || 'Recently'}</div>
+            </div>
+          `).join('')}
         </div>
       `;
     }
@@ -748,12 +891,27 @@
         document.getElementById('student-avatar-circle').textContent = (user.name || 'A')[0].toUpperCase();
       }
 
+      loadTasks();
       renderTasks();
+      loadSavedStage();
+      loadDeliverables();
 
-      const existingDeliv = await window.SkillBridgeDB.getDeliverable(WORKSPACE_ID);
-      if (existingDeliv) {
-        renderAssetsList(existingDeliv.url, existingDeliv.notes);
+      // Fallback check single deliverable from DB if localStorage list is empty
+      if (deliverables.length === 0) {
+        const existingDeliv = await window.SkillBridgeDB.getDeliverable(WORKSPACE_ID);
+        if (existingDeliv && existingDeliv.url) {
+          deliverables.push({
+            id: 'deliv_seed',
+            type: existingDeliv.type || 'Deliverable',
+            title: existingDeliv.title || 'Project Link',
+            url: existingDeliv.url,
+            notes: existingDeliv.notes,
+            submitted_at: 'Recently'
+          });
+          saveDeliverables();
+        }
       }
+      renderDeliverablesList();
 
       if (new URLSearchParams(window.location.search).get('chat') === '1') {
         toggleChat();

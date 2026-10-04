@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Matchmaking & Compatibility — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .admin-stats-four {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 992px) {
+      .admin-stats-four {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .admin-stats-four {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-stat-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-pills-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab-pill {
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab-pill.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      border-color: #2563EB;
+    }
+
+    .match-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
+    }
+
+    .match-card:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .match-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .match-score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 9999px;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .match-score-badge.high {
+      background: #ECFDF5;
+      color: #059669;
+      border: 1px solid #A7F3D0;
+    }
+
+    .match-score-badge.medium {
+      background: #EFF6FF;
+      color: #2563EB;
+      border: 1px solid #BFDBFE;
+    }
+
+    .match-score-badge.low {
+      background: #FFFBEB;
+      color: #D97706;
+      border: 1px solid #FDE68A;
+    }
+
+    .ai-rationale-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-left: 4px solid #2563EB;
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      font-size: 0.875rem;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .skills-tag-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .skill-tag {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #DBEAFE;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+    <!-- Dark Navy Admin Sidebar -->
+    <aside class="dashboard-sidebar admin-sidebar">
+      <div class="sidebar-header">
+        <a href="../../index.html" class="nav-brand-lockup">
+          <div class="nav-brand-logo-icon" style="background: #2563EB; color: #FFFFFF; font-weight: 800; font-size: 1rem;">
+            A
+          </div>
+          <span class="sidebar-brand-title">Admin Portal</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="sidebar-section-title">MANAGEMENT</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="7" height="7" x="3" y="3" rx="1"/>
+            <rect width="7" height="7" x="14" y="3" rx="1"/>
+            <rect width="7" height="7" x="14" y="14" rx="1"/>
+            <rect width="7" height="7" x="3" y="14" rx="1"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="users.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Users</span>
+        </a>
+        <a href="projects.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          <span>Projects</span>
+        </a>
+        <a href="categories.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Categories</span>
+        </a>
+        <a href="matching.html" class="sidebar-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <span>AI Matching</span>
+        </a>
+        <a href="verification.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Verifications</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <button onclick="window.SkillBridgeAuth.logout()" class="sidebar-item" style="color: #94A3B8; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Canvas -->
+    <main class="dashboard-main">
+      <!-- Topbar -->
+      <header class="dashboard-topbar">
+        <div class="topbar-search">
+          <div class="input-with-icon">
+            <svg class="input-icon-prefix" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input type="text" id="match-search-input" onkeyup="filterMatches()" class="form-input" placeholder="Search candidate, project, or skills..." style="border-radius: var(--radius-full); padding-left: 2.5rem; background-color: #F8FAFC; font-size: 0.85rem;">
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="notif-wrapper">
+            <button class="notif-bell-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              </svg>
+              <span class="notif-badge"></span>
+            </button>
+          </div>
+
+          <div class="topbar-avatar-pill">
+            <div class="avatar-circle" style="background: #2563EB; color: #FFFFFF;">A</div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Canvas -->
+      <div class="dashboard-canvas">
+        <div style="margin-bottom: 2rem;">
+          <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0 0 4px;">
+            AI Matchmaking &amp; Compatibility Center
+          </h1>
+          <p style="color: #64748B; font-size: 0.95rem; margin: 0;">
+            Supervise automated candidate recommendations computed by Google Gemini 3.8 Flash.
+          </p>
+        </div>
+
+        <!-- 4 Stats Bento Row -->
+        <div class="admin-stats-four">
+          <div class="admin-stat-card">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+              EVALUATED APPLICANTS
+            </div>
+            <div style="font-size: 2rem; font-weight: 800; color: #0F172A;">148</div>
+            <div style="font-size: 0.8rem; color: #10B981; font-weight: 600; margin-top: 4px;">+18% from last week</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+              AVG COMPATIBILITY SCORE
+            </div>
+            <div style="font-size: 2rem; font-weight: 800; color: #0F172A;">88.5%</div>
+            <div style="font-size: 0.8rem; color: #2563EB; font-weight: 600; margin-top: 4px;">High precision threshold</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+              ACTIVE LLM ENGINE
+            </div>
+            <div style="font-size: 2rem; font-weight: 800; color: #2563EB;">Gemini 3.8</div>
+            <div style="font-size: 0.8rem; color: #10B981; font-weight: 600; margin-top: 4px;">Zero-latency inference</div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+              COLLABORATION MATCH RATE
+            </div>
+            <div style="font-size: 2rem; font-weight: 800; color: #0F172A;">92.4%</div>
+            <div style="font-size: 0.8rem; color: #10B981; font-weight: 600; margin-top: 4px;">Successful project starts</div>
+          </div>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="filter-pills-row">
+          <button class="filter-tab-pill active" onclick="setMatchFilter('all', this)">All Matches (6)</button>
+          <button class="filter-tab-pill" onclick="setMatchFilter('high', this)">High Compatibility (≥90%)</button>
+          <button class="filter-tab-pill" onclick="setMatchFilter('medium', this)">Moderate Match (75-89%)</button>
+          <button class="filter-tab-pill" onclick="setMatchFilter('review', this)">Needs Review (&lt;75%)</button>
+        </div>
+
+        <!-- Matches Cards Container -->
+        <div id="matches-cards-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Manual Override Modal -->
+  <div class="modal" id="override-modal">
+    <div class="modal-content" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 800;">Manual Override &amp; Score Calibration</h3>
+        <button class="modal-close" onclick="closeOverrideModal()">&times;</button>
+      </div>
+      <form id="override-form" onsubmit="handleSaveOverride(event)">
+        <div class="modal-body">
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.85rem; color: #64748B;">Candidate: <strong id="override-candidate-name" style="color: #0F172A;"></strong></div>
+            <div style="font-size: 0.85rem; color: #64748B;">Target Project: <strong id="override-project-title" style="color: #0F172A;"></strong></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Adjust Compatibility Score (%)</label>
+            <input type="number" id="override-score-input" class="form-input" min="50" max="100" step="1" required>
+            <span style="font-size: 0.75rem; color: #64748B; margin-top: 4px; display: block;">Adjusting this score will re-classify candidate ranking for UMKM review.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Admin Moderator Rationale</label>
+            <textarea id="override-notes-input" class="form-textarea" rows="3" placeholder="Provide reason for score adjustment (e.g. Verified university project portfolio directly)..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeOverrideModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Override</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    let activeFilter = 'all';
+    let currentOverrideId = null;
+
+    let matchesData = [
+      {
+        id: 'm1',
+        student_name: 'Budi Santoso',
+        university: 'Institut Teknologi Bandung',
+        project_title: 'Pembuatan Website Katalog Kopi Nusantara',
+        umkm_name: 'Kopi Nusantara UMKM',
+        score: 96,
+        recommendation: 'Sangat Direkomendasikan',
+        category: 'high',
+        skills: ['HTML/CSS', 'JavaScript', 'Responsive Web', 'Python'],
+        rationale: 'Keahlian kandidat selaras 100% dengan kebutuhan web e-commerce UMKM. Portofolio sebelumnya menunjukkan keberhasilan deploy landing page F&B lokal.'
+      },
+      {
+        id: 'm2',
+        student_name: 'Ahmad Dhafin Al Farisy',
+        university: 'Universitas Indonesia',
+        project_title: 'AI Smart Recommendation & Talent Matching',
+        umkm_name: 'Batik Wastra Nusantara',
+        score: 98,
+        recommendation: 'Sangat Direkomendasikan',
+        category: 'high',
+        skills: ['React', 'TypeScript', 'Python', 'Machine Learning', 'Node.js'],
+        rationale: 'Kandidat memiliki rekam jejak riset ML dan fullstack dashboard arsitektur tinggi. Pemahaman integrasi Gemini API sangat komprehensif.'
+      },
+      {
+        id: 'm3',
+        student_name: 'Siti Rahmawati',
+        university: 'Universitas Indonesia',
+        project_title: 'Redesign UI/UX Aplikasi Mobile Batik Heritage',
+        umkm_name: 'Batik Lestari Solo',
+        score: 92,
+        recommendation: 'Direkomendasikan',
+        category: 'high',
+        skills: ['Figma', 'UI/UX Design', 'Design System', 'User Research'],
+        rationale: 'Portofolio desain antarmuka mobile e-commerce ramah pengguna generasi muda, selaras dengan target peremajaan brand Batik Lestari Solo.'
+      },
+      {
+        id: 'm4',
+        student_name: 'Kevin Wijaya',
+        university: 'Universitas Gadjah Mada',
+        project_title: 'Sistem Pembukuan Kas & Laporan Laba Rugi',
+        umkm_name: 'Keripik Tempe Barokah',
+        score: 84,
+        recommendation: 'Cukup Cocok',
+        category: 'medium',
+        skills: ['JavaScript', 'Node.js', 'PostgreSQL', 'Accounting Logic'],
+        rationale: 'Kandidat menguasai database relational dan backend logic, namun memerlukan sedikit bimbingan pada pelaporan standar akuntansi UMKM.'
+      },
+      {
+        id: 'm5',
+        student_name: 'Maya Lestari',
+        university: 'Universitas Diponegoro',
+        project_title: 'Aplikasi Mobile Katalog Produk Rajut',
+        umkm_name: 'Rajut Indah Semarang',
+        score: 88,
+        recommendation: 'Direkomendasikan',
+        category: 'medium',
+        skills: ['Flutter', 'React Native', 'Firebase', 'UI Design'],
+        rationale: 'Kecakapan cross-platform mobile apps memenuhi spesifikasi produk UMKM. Pengalaman autentikasi Firebase memadai.'
+      },
+      {
+        id: 'm6',
+        student_name: 'Ahmad Fauzi',
+        university: 'Universitas Brawijaya',
+        project_title: 'Strategi Social Media & SEO Ranking',
+        umkm_name: 'Jamu Berkah Alami',
+        score: 72,
+        recommendation: 'Perlu Tinjauan',
+        category: 'review',
+        skills: ['SEO', 'Copywriting', 'Google Analytics'],
+        rationale: 'Kandidat memiliki pemahaman dasar SEO, namun belum melampirkan portofolio metrik konversi campaign organik pada sektor herbal.'
+      }
+    ];
+
+    function renderMatches() {
+      const container = document.getElementById('matches-cards-container');
+      const q = (document.getElementById('match-search-input')?.value || '').toLowerCase().trim();
+
+      const filtered = matchesData.filter(m => {
+        const matchesCat = activeFilter === 'all' || m.category === activeFilter;
+        const matchesQuery = !q || 
+          m.student_name.toLowerCase().includes(q) || 
+          m.project_title.toLowerCase().includes(q) || 
+          m.umkm_name.toLowerCase().includes(q) ||
+          m.skills.some(s => s.toLowerCase().includes(q));
+        return matchesCat && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 1.25rem; padding: 3rem; text-align: center; color: #94A3B8;">
+            Tidak ditemukan data rekomendasi AI untuk filter ini.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(m => {
+        const badgeClass = m.score >= 90 ? 'high' : (m.score >= 75 ? 'medium' : 'low');
+        return `
+          <div class="match-card" id="match-card-${m.id}">
+            <div class="match-header-row">
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                    ${m.student_name[0]}
+                  </div>
+                  <div>
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${m.student_name}</h3>
+                    <div style="font-size: 0.85rem; color: #64748B;">${m.university}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <span class="match-score-badge ${badgeClass}">
+                  ✨ ${m.score}% Match — ${m.recommendation}
+                </span>
+              </div>
+            </div>
+
+            <!-- Target Project Info -->
+            <div style="background: #F8FAFC; border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">PROYEK TUJUAN:</span>
+                <span style="font-size: 0.9rem; font-weight: 700; color: #0F172A; margin-left: 4px;">${m.project_title}</span>
+              </div>
+              <div style="font-size: 0.8rem; color: #64748B;">
+                Mitra: <strong style="color: #2563EB;">${m.umkm_name}</strong>
+              </div>
+            </div>
+
+            <!-- Skills Row -->
+            <div>
+              <div style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">SKILL OVERLAP:</div>
+              <div class="skills-tag-wrap">
+                ${m.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}
+              </div>
+            </div>
+
+            <!-- AI Rationale -->
+            <div class="ai-rationale-box">
+              <strong style="color: #1E40AF; display: block; margin-bottom: 3px;">Analisis Gemini 3.8 Flash:</strong>
+              ${m.rationale}
+            </div>
+
+            <!-- Moderator Actions -->
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem; border-top: 1px solid #F1F5F9; padding-top: 1rem;">
+              <button onclick="dismissMatch('${m.id}')" class="btn btn-sm btn-outline" style="border-radius: 9999px; color: #64748B; border-color: #CBD5E1;">
+                Dismiss
+              </button>
+              <button onclick="openOverrideModal('${m.id}')" class="btn btn-sm btn-outline" style="border-radius: 9999px; color: #2563EB; border-color: #BFDBFE;">
+                ⚙️ Manual Override
+              </button>
+              <button onclick="approveRecommendation('${m.id}')" class="btn btn-sm btn-primary" style="border-radius: 9999px; font-weight: 700;">
+                ✓ Approve Recommendation
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setMatchFilter(filter, el) {
+      activeFilter = filter;
+      document.querySelectorAll('.filter-tab-pill').forEach(p => p.classList.remove('active'));
+      if (el) el.classList.add('active');
+      renderMatches();
+    }
+
+    function filterMatches() {
+      renderMatches();
+    }
+
+    function approveRecommendation(id) {
+      const match = matchesData.find(m => m.id === id);
+      if (match) {
+        if (window.SkillBridgeDB && window.SkillBridgeDB.addAuditLog) {
+          window.SkillBridgeDB.addAuditLog({
+            action: 'AI_MATCH_APPROVED',
+            details: `Admin menyetujui rekomendasi AI: ${match.student_name} (${match.score}%) untuk proyek ${match.project_title}.`
+          });
+        }
+        window.toast.success(`Rekomendasi untuk ${match.student_name} disetujui! Notifikasi diteruskan ke UMKM.`);
+        const card = document.getElementById(`match-card-${id}`);
+        if (card) {
+          card.style.opacity = '0.6';
+          card.style.borderColor = '#10B981';
+        }
+      }
+    }
+
+    function dismissMatch(id) {
+      matchesData = matchesData.filter(m => m.id !== id);
+      renderMatches();
+      window.toast.info('Rekomendasi diabaikan.');
+    }
+
+    function openOverrideModal(id) {
+      currentOverrideId = id;
+      const match = matchesData.find(m => m.id === id);
+      if (!match) return;
+
+      document.getElementById('override-candidate-name').textContent = match.student_name;
+      document.getElementById('override-project-title').textContent = match.project_title;
+      document.getElementById('override-score-input').value = match.score;
+      document.getElementById('override-notes-input').value = '';
+      document.getElementById('override-modal').classList.add('active');
+    }
+
+    function closeOverrideModal() {
+      document.getElementById('override-modal').classList.remove('active');
+      currentOverrideId = null;
+    }
+
+    function handleSaveOverride(e) {
+      e.preventDefault();
+      const newScore = parseInt(document.getElementById('override-score-input').value, 10);
+      const notes = document.getElementById('override-notes-input').value.trim();
+
+      const match = matchesData.find(m => m.id === currentOverrideId);
+      if (match) {
+        match.score = newScore;
+        match.category = newScore >= 90 ? 'high' : (newScore >= 75 ? 'medium' : 'review');
+        match.recommendation = newScore >= 90 ? 'Sangat Direkomendasikan' : (newScore >= 75 ? 'Direkomendasikan' : 'Perlu Tinjauan');
+        if (notes) {
+          match.rationale = `[Manual Override oleh Admin]: ${notes} (Evaluasi awal: ${match.rationale})`;
+        }
+
+        if (window.SkillBridgeDB && window.SkillBridgeDB.addAuditLog) {
+          window.SkillBridgeDB.addAuditLog({
+            action: 'AI_MATCH_OVERRIDE',
+            details: `Admin mengkalibrasi skor ${match.student_name} menjadi ${newScore}%. Catatan: ${notes}`
+          });
+        }
+
+        closeOverrideModal();
+        renderMatches();
+        window.toast.success(`Skor kompatibilitas ${match.student_name} berhasil diperbarui menjadi ${newScore}%!`);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.SkillBridgeAuth.requireAuth('admin');
+      renderMatches();
+    });
+  </script>
+</body>
+</html>

@@ -304,8 +304,17 @@
     async function handleDecision(appId, decision) {
       await window.SkillBridgeDB.updateApplicationStatus(appId, decision);
       if (decision === 'accepted') {
+        const projId = currentProject ? currentProject.id : 'p1';
+        if (window.SkillBridgeDB && window.SkillBridgeDB.addNotification) {
+          window.SkillBridgeDB.addNotification({
+            recipient_role: 'mahasiswa',
+            title: 'Lamaran Anda Diterima! 🎉',
+            message: `UMKM menerima lamaran Anda pada proyek ${currentProject?.title || 'Kemitraan'}. Silakan masuk ke Workspace Kolaborasi.`,
+            link: `workspace.html?id=${projId}`
+          });
+        }
         window.toast.success('Lamaran diterima! Membuka Workspace Kolaborasi...');
-        setTimeout(() => window.location.href = '../student/workspace.html', 1000);
+        setTimeout(() => window.location.href = `../student/workspace.html?id=${projId}`, 1000);
       } else {
         window.toast.info('Lamaran ditolak.');
         loadApplicants(currentProject.id);

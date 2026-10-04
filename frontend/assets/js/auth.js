@@ -352,6 +352,30 @@
   };
 
   window.SkillBridgeAuth = Auth;
+  
+  // Universal Toast Fallback Safeguard (Guarantees window.toast is never undefined)
+  if (!window.toast) {
+    window.toast = {
+      show: function(msg, type = 'info') {
+        const c = document.querySelector('.toast-container') || (() => {
+          const el = document.createElement('div');
+          el.className = 'toast-container';
+          document.body.appendChild(el);
+          return el;
+        })();
+        const t = document.createElement('div');
+        t.className = `toast toast-${type}`;
+        t.innerHTML = `<span class="toast-text">${msg}</span>`;
+        c.appendChild(t);
+        setTimeout(() => { t.remove(); }, 3500);
+      },
+      success: function(msg) { this.show(msg, 'success'); },
+      error: function(msg) { this.show(msg, 'error'); },
+      warning: function(msg) { this.show(msg, 'warning'); },
+      info: function(msg) { this.show(msg, 'info'); }
+    };
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     Auth.updateNavbar();
   });

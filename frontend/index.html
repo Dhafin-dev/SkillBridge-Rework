@@ -50,11 +50,21 @@
     }
 
     /* Seamless Hero & Sections (no color mismatch or borders between Home & About) */
+    @keyframes floatBadge {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
     .hero-section {
       text-align: center;
-      padding: 5rem 1rem 4rem 1rem;
-      background: radial-gradient(circle at 50% 10%, rgba(37, 99, 235, 0.05) 0%, transparent 65%), #FFFFFF;
+      padding: 5.5rem 1rem 4.5rem 1rem;
+      background: radial-gradient(circle at 50% 12%, rgba(37, 99, 235, 0.08) 0%, rgba(59, 130, 246, 0.03) 45%, transparent 72%), #FFFFFF;
       border: none;
+      position: relative;
     }
 
     .hero-badge-pill {
@@ -69,6 +79,14 @@
       font-size: var(--font-size-xs);
       font-weight: 700;
       margin-bottom: var(--space-6);
+      animation: floatBadge 3.5s ease-in-out infinite;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hero-badge-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
     }
 
     .hero-headline {
@@ -82,14 +100,17 @@
     }
 
     .hero-headline .text-blue {
-      color: #2563EB;
-      display: block;
+      background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
     }
 
     .hero-subtext {
       font-size: 1.125rem;
       line-height: 1.65;
       color: #475569;
+      font-weight: 500;
       max-width: 700px;
       margin: 0 auto var(--space-8) auto;
     }
@@ -137,6 +158,13 @@
       border-radius: 1.5rem;
       padding: 2.5rem 2rem;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+    }
+
+    .mv-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 30px -4px rgba(15, 23, 42, 0.08);
+      border-color: #CBD5E1;
     }
 
     .mv-icon-circle {
@@ -147,6 +175,12 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 1.5rem;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mv-card:hover .mv-icon-circle {
+      transform: scale(1.12) rotate(3deg);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
     }
 
     .mv-icon-blue { background-color: #EFF6FF; color: #2563EB; }
@@ -162,6 +196,7 @@
     .mv-text {
       font-size: 0.95rem;
       color: #475569;
+      font-weight: 500;
       line-height: 1.65;
     }
 
@@ -174,10 +209,18 @@
     }
 
     .pillar-card {
-      padding: 1.5rem 1rem;
+      padding: 1.75rem 1.25rem;
       display: flex;
       flex-direction: column;
       align-items: center;
+      border-radius: 1.25rem;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-4px);
+      background-color: #F8FAFC;
+      box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.05);
     }
 
     .pillar-icon-box {
@@ -188,6 +231,12 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 1.25rem;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pillar-card:hover .pillar-icon-box {
+      transform: scale(1.14) rotate(4deg);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
     }
 
     .pillar-icon-purple { background-color: #EEF2FF; color: #4F46E5; }
@@ -204,6 +253,7 @@
     .pillar-text {
       font-size: 0.875rem;
       color: #64748B;
+      font-weight: 500;
       line-height: 1.5;
     }
 
@@ -284,7 +334,7 @@
 
     /* Contact Banner */
     .contact-banner-card {
-      background: #2563EB;
+      background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 55%, #3B82F6 100%);
       border-radius: 2rem;
       padding: 3.5rem 3rem;
       color: #FFFFFF;
@@ -293,6 +343,37 @@
       gap: 3rem;
       align-items: center;
       box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-banner-card::before {
+      content: "";
+      position: absolute;
+      top: -90px;
+      right: -90px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .contact-banner-card::after {
+      content: "";
+      position: absolute;
+      bottom: -80px;
+      left: 20%;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .contact-banner-card > * {
+      position: relative;
+      z-index: 1;
     }
 
     .contact-form-inner {
@@ -300,7 +381,7 @@
       border-radius: 1.5rem;
       padding: 2rem;
       color: #0F172A;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     }
 
     @media (max-width: 900px) {
@@ -589,7 +670,7 @@
       </div>
 
       <div class="contact-form-inner">
-        <form id="contactForm" onsubmit="event.preventDefault(); alert('Terima kasih! Pesan Anda telah terkirim.');">
+        <form id="contactForm" onsubmit="handleContactSubmit(event)">
           <div class="form-group">
             <label class="form-label">YOUR NAME</label>
             <input type="text" class="form-input form-input-tint" placeholder="e.g. Ahmad Dhafin" required>
@@ -602,7 +683,7 @@
             <label class="form-label">MESSAGE</label>
             <textarea class="form-input form-input-tint" rows="3" placeholder="How can we assist you?" required></textarea>
           </div>
-          <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+          <button type="submit" id="btn-contact-submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
             Send Message
           </button>
         </form>
@@ -714,8 +795,27 @@
 
     window.addEventListener('resize', updateScrollSpy);
     window.addEventListener('DOMContentLoaded', updateScrollSpy);
-    // Run on initial load
     updateScrollSpy();
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-contact-submit');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '✓ Pesan Terkirim!';
+        btn.style.backgroundColor = '#10B981';
+        btn.style.borderColor = '#10B981';
+      }
+      setTimeout(() => {
+        e.target.reset();
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Send Message';
+          btn.style.backgroundColor = '';
+          btn.style.borderColor = '';
+        }
+      }, 3000);
+    }
   </script>
 </body>
 </html>
