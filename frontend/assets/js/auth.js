@@ -174,8 +174,12 @@
     },
 
     getUser: function () {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : null;
+      try {
+        const data = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('skillbridge_user');
+        return data ? JSON.parse(data) : null;
+      } catch (e) {
+        return null;
+      }
     },
 
     setUser: function (user) {
@@ -306,10 +310,50 @@
       }, 350);
     },
 
+    enforceUniversalGuard: function () {
+      const rawPath = (window.location.pathname || '').replace(/\\/g, '/');
+      const path = rawPath.toLowerCase();
+
+      // Check if current page is within /pages/
+      const isInsidePages = path.includes('/pages/');
+      if (!isInsidePages) {
+        return true; // Root or index.html is freely accessible
+      }
+
+      // Check if current page is an auth page (login or register)
+      const isAuthPage = path.includes('/pages/auth/') || path.endsWith('/login.html') || path.endsWith('/register.html');
+      if (isAuthPage) {
+        return true; // Login & register are freely accessible
+      }
+
+      // Every other page inside /pages/ requires active authentication!
+      const user = this.getUser();
+      if (!user) {
+        // Accessing Market (projects.html or project-detail.html) -> direct immediately to register
+        if (path.includes('projects.html') || path.includes('project-detail.html')) {
+          const target = this.getPathTo('register');
+          window.location.replace(target);
+          return false;
+        }
+
+        // Accessing other protected pages (student, umkm, admin) -> direct to login
+        const target = this.getPathTo('login');
+        window.location.replace(target);
+        return false;
+      }
+
+      return true;
+    },
+
     requireAuth: function (allowedRoles = []) {
       const user = this.getUser();
       if (!user) {
-        window.location.href = this.getPathTo('login');
+        const rawPath = (window.location.pathname || '').replace(/\\/g, '/').toLowerCase();
+        if (rawPath.includes('projects.html') || rawPath.includes('project-detail.html')) {
+          window.location.replace(this.getPathTo('register'));
+        } else {
+          window.location.replace(this.getPathTo('login'));
+        }
         return false;
       }
 
@@ -338,34 +382,49 @@
     updateNavbar: function () {
       const user = this.getUser();
       const authContainer = document.getElementById('navbar-auth-actions');
-      if (!authContainer) return;
+      const marketLink = document.getElementById('nav-link-market');
+      const heroCta = document.getElementById('hero-cta-btn');
 
       if (user) {
-        const dashboardLink = user.role === 'umkm' 
-          ? this.getPathTo('umkm_dashboard')
-          : (user.role === 'admin' ? this.getPathTo('admin_dashboard') : this.getPathTo('student_dashboard'));
+        if (marketLink) {
+          marketLink.href = this.getPathTo('projects');
+        }
+        if (heroCta) {
+          heroCta.href = this.getPathTo('projects');
+        }
+        if (authContainer) {
+          const dashboardLink = user.role === 'umkm' 
+            ? this.getPathTo('umkm_dashboard')
+            : (user.role === 'admin' ? this.getPathTo('admin_dashboard') : this.getPathTo('student_dashboard'));
 
-        const roleLabel = user.role === 'umkm' ? 'UMKM' : (user.role === 'admin' ? 'Admin' : 'Mahasiswa');
+          const roleLabel = user.role === 'umkm' ? 'UMKM' : (user.role === 'admin' ? 'Admin' : 'Mahasiswa');
 
-        authContainer.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <a href="${dashboardLink}" class="btn btn-outline btn-sm">
-              Dashboard (${roleLabel})
-            </a>
-            <button onclick="window.SkillBridgeAuth.logout()" class="btn btn-ghost btn-sm" style="color: var(--color-danger);">
-              Keluar
-            </button>
-          </div>
-        `;
+          authContainer.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <a href="${dashboardLink}" class="btn btn-outline btn-sm">
+                Dashboard (${roleLabel})
+              </a>
+              <button onclick="window.SkillBridgeAuth.logout(true)" class="btn btn-ghost btn-sm" style="color: var(--color-danger);">
+                Keluar
+              </button>
+            </div>
+          `;
+        }
       } else {
-        const loginLink = this.getPathTo('login');
-        const regLink = this.getPathTo('register');
-        authContainer.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <a href="${loginLink}" class="btn btn-ghost btn-sm">Masuk</a>
-            <a href="${regLink}" class="btn btn-primary btn-sm">Daftar Akun</a>
-          </div>
-        `;
+        if (marketLink) {
+          marketLink.href = this.getPathTo('register');
+        }
+        if (heroCta) {
+          heroCta.href = this.getPathTo('register');
+        }
+        if (authContainer) {
+          const loginLink = this.getPathTo('login');
+          const regLink = this.getPathTo('register');
+          authContainer.innerHTML = `
+            <a href="${loginLink}" class="nav-login-btn">Login</a>
+            <a href="${regLink}" class="nav-register-btn">Register</a>
+          `;
+        }
       }
     }
   };
@@ -394,6 +453,21 @@
       info: function(msg) { this.show(msg, 'info'); }
     };
   }
+
+  // Enforce universal route guard immediately on script evaluation
+  Auth.enforceUniversalGuard();
+
+  // Intercept click on market links for unauthenticated visitors
+  document.addEventListener('click', (e) => {
+    const marketEl = e.target.closest('#nav-link-market, .market-direct-link');
+    if (marketEl) {
+      const u = Auth.getUser();
+      if (!u) {
+        e.preventDefault();
+        window.location.href = Auth.getPathTo('register');
+      }
+    }
+  });
 
   document.addEventListener('DOMContentLoaded', () => {
     Auth.updateNavbar();

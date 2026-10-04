@@ -6,6 +6,18 @@
   <title>Student Dashboard — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <script>
+    (function () {
+      try {
+        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
+        if (!user) {
+          window.location.replace('../auth/login.html');
+        }
+      } catch (e) {
+        window.location.replace('../auth/login.html');
+      }
+    })();
+  </script>
   <style>
     /* Student Dashboard specific styles matching Figma 04_student_dashboard.png */
     .activity-metrics-row {
@@ -363,7 +375,7 @@
               <!-- Dynamic Grid & Elements populated by renderActivityChart() -->
               <g id="chart-grid-group"></g>
               <path id="chart-area-path" fill="url(#actGradient)"></path>
-              <path id="chart-line-path" fill="none" stroke="#2563EB" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path id="chart-line-path" fill="none" stroke="#2563EB" stroke-width="3" stroke-linejoin="miter" stroke-miterlimit="10"></path>
               <g id="chart-points-group"></g>
               <g id="chart-labels-group"></g>
             </svg>
@@ -516,14 +528,10 @@
         return { x, y, val, label: data.labels[idx], hours: data.hours[idx] };
       });
 
-      // Build Bezier Smooth Path
+      // Build Linear Segmented Path (Garis patah-patah antar titik)
       let pathD = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 0; i < points.length - 1; i++) {
-        const p0 = points[i];
-        const p1 = points[i + 1];
-        const cpX1 = p0.x + (p1.x - p0.x) * 0.45;
-        const cpX2 = p0.x + (p1.x - p0.x) * 0.55;
-        pathD += ` C ${cpX1} ${p0.y}, ${cpX2} ${p1.y}, ${p1.x} ${p1.y}`;
+      for (let i = 1; i < points.length; i++) {
+        pathD += ` L ${points[i].x} ${points[i].y}`;
       }
 
       document.getElementById('chart-line-path').setAttribute('d', pathD);

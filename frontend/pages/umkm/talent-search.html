@@ -6,6 +6,18 @@
   <title>Talent Search — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <script>
+    (function () {
+      try {
+        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
+        if (!user) {
+          window.location.replace('../auth/login.html');
+        }
+      } catch (e) {
+        window.location.replace('../auth/login.html');
+      }
+    })();
+  </script>
   <style>
     .talent-card {
       background: #FFFFFF;
