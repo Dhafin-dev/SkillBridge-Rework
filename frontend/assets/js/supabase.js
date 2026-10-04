@@ -89,25 +89,128 @@
     }
   ];
 
+  const INITIAL_APPLICATIONS = [
+    {
+      id: 'app1',
+      project_id: 'p1',
+      student_id: 'std1',
+      student_name: 'Budi Santoso',
+      student_university: 'Institut Teknologi Bandung',
+      student_skills: ['HTML/CSS', 'JavaScript', 'Python', 'UI/UX Design'],
+      cover_letter: 'Saya berpengalaman membangun landing page UMKM dan siap menyelesaikan dalam 3 minggu.',
+      status: 'accepted',
+      created_at: '2026-10-02T11:00:00Z'
+    },
+    {
+      id: 'app2',
+      project_id: 'p1',
+      student_id: 'std2',
+      student_name: 'Siti Rahmawati',
+      student_university: 'Universitas Indonesia',
+      student_skills: ['Frontend', 'React', 'Tailwind CSS', 'Figma'],
+      cover_letter: 'Saya memiliki portofolio e-commerce katalog produk dan ingin mengimplementasikannya untuk Kopi Nusantara.',
+      status: 'pending',
+      created_at: '2026-10-02T14:30:00Z'
+    },
+    {
+      id: 'app3',
+      project_id: 'p1',
+      student_id: 'std3',
+      student_name: 'Kevin Wijaya',
+      student_university: 'Universitas Gadjah Mada',
+      student_skills: ['Fullstack Web', 'JavaScript', 'Node.js', 'PostgreSQL'],
+      cover_letter: 'Portofolio web app katalog interaktif responsif siap disesuaikan dengan kebutuhan Kopi Nusantara.',
+      status: 'pending',
+      created_at: '2026-10-03T09:15:00Z'
+    },
+    {
+      id: 'app4',
+      project_id: 'p1',
+      student_id: 'std4',
+      student_name: 'Rina Puspita',
+      student_university: 'Telkom University',
+      student_skills: ['UI/UX Design', 'Figma', 'Web Design', 'HTML/CSS'],
+      cover_letter: 'Fokus saya adalah menyajikan desain UI modern yang ramah pengguna mobile untuk meningkatkan penjualan UMKM.',
+      status: 'pending',
+      created_at: '2026-10-03T16:40:00Z'
+    },
+    {
+      id: 'app5',
+      project_id: 'p2',
+      student_id: 'std5',
+      student_name: 'Ahmad Fauzi',
+      student_university: 'Universitas Brawijaya',
+      student_skills: ['SEO', 'Copywriting', 'Social Media Marketing', 'Google Analytics'],
+      cover_letter: 'Saya telah mengelola campaign media sosial dengan peningkatan reach 150% untuk produk F&B lokal.',
+      status: 'pending',
+      created_at: '2026-10-02T10:20:00Z'
+    },
+    {
+      id: 'app6',
+      project_id: 'p2',
+      student_id: 'std6',
+      student_name: 'Dimas Pratama',
+      student_university: 'Universitas Negeri Malang',
+      student_skills: ['Content Creation', 'TikTok Ads', 'Instagram Reels', 'SEO On-Page'],
+      cover_letter: 'Siap membantu Keripik Tempe Barokah membuat konten viral dan optimasi kata kunci pencarian lokal.',
+      status: 'pending',
+      created_at: '2026-10-03T13:00:00Z'
+    },
+    {
+      id: 'app7',
+      project_id: 'p3',
+      student_id: 'std7',
+      student_name: 'Jessica Tan',
+      student_university: 'Institut Seni Indonesia',
+      student_skills: ['Packaging Design', '3D Mockup', 'Adobe Illustrator', 'Brand Identity'],
+      cover_letter: 'Portofolio desain kemasan pangan higienis dan modern dengan nilai estetika tinggi khas kuliner Jawa Timur.',
+      status: 'pending',
+      created_at: '2026-10-01T15:00:00Z'
+    },
+    {
+      id: 'app8',
+      project_id: 'p3',
+      student_id: 'std8',
+      student_name: 'Farhan Syahputra',
+      student_university: 'Universitas Airlangga',
+      student_skills: ['Brand Identity', 'Typography', 'Adobe Illustrator', 'Photoshop'],
+      cover_letter: 'Tertarik meremajakan visual Sambal Bu Rudy agar menarik konsumen generasi muda tanpa meninggalkan ciri khas.',
+      status: 'pending',
+      created_at: '2026-10-02T11:45:00Z'
+    },
+    {
+      id: 'app9',
+      project_id: 'p3',
+      student_id: 'std9',
+      student_name: 'Nadia Utami',
+      student_university: 'Institut Teknologi Sepuluh Nopember',
+      student_skills: ['Packaging Eco-Friendly', 'Graphic Design', 'Figma', 'Illustrator'],
+      cover_letter: 'Membantu riset kemasan ramah lingkungan dan desain label botol yang siap bersaing di supermarket modern.',
+      status: 'pending',
+      created_at: '2026-10-03T08:30:00Z'
+    },
+    {
+      id: 'app10',
+      project_id: 'p4',
+      student_id: 'std10',
+      student_name: 'Bagas Wicaksono',
+      student_university: 'Universitas Diponegoro',
+      student_skills: ['Python', 'FastAPI', 'SQL', 'Accounting Logic', 'JavaScript'],
+      cover_letter: 'Memiliki keahlian ganda di bidang akuntansi dan software engineering untuk menyusun web buku kas UMKM.',
+      status: 'pending',
+      created_at: '2026-10-03T17:10:00Z'
+    }
+  ];
+
   // Initialize LocalStorage Database for Persistence during Mock Session
   function initMockStorage() {
     if (!localStorage.getItem('SB_MOCK_PROJECTS')) {
       localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(MOCK_PROJECTS));
     }
-    if (!localStorage.getItem('SB_MOCK_APPLICATIONS')) {
-      localStorage.setItem('SB_MOCK_APPLICATIONS', JSON.stringify([
-        {
-          id: 'app1',
-          project_id: 'p1',
-          student_id: 'std1',
-          student_name: 'Budi Santoso',
-          student_university: 'Institut Teknologi Bandung',
-          student_skills: ['HTML/CSS', 'JavaScript', 'Python', 'UI/UX Design'],
-          cover_letter: 'Saya berpengalaman membangun landing page UMKM dan siap menyelesaikan dalam 3 minggu.',
-          status: 'pending',
-          created_at: '2026-10-02T11:00:00Z'
-        }
-      ]));
+    const currentApps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+    // Seed full set if empty or previously only seeded with 1 applicant
+    if (currentApps.length < 10) {
+      localStorage.setItem('SB_MOCK_APPLICATIONS', JSON.stringify(INITIAL_APPLICATIONS));
     }
     if (!localStorage.getItem('SB_MOCK_TASKS')) {
       localStorage.setItem('SB_MOCK_TASKS', JSON.stringify([
@@ -133,6 +236,14 @@
 
     getProjects: async function (filterCategory = null, searchQuery = '') {
       let list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
+      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+
+      // Always synchronize applicants_count directly from actual applications!
+      list = list.map(p => ({
+        ...p,
+        applicants_count: apps.filter(a => a.project_id === p.id).length
+      }));
+
       if (filterCategory && filterCategory !== 'all') {
         list = list.filter(p => p.category_id === filterCategory);
       }
@@ -149,7 +260,12 @@
 
     getProjectById: async function (id) {
       const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
-      return list.find(p => p.id === id) || null;
+      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      const target = list.find(p => p.id === id);
+      if (target) {
+        target.applicants_count = apps.filter(a => a.project_id === target.id).length;
+      }
+      return target || null;
     },
 
     createProject: async function (projectData) {
@@ -177,11 +293,11 @@
       apps.push(newApp);
       localStorage.setItem('SB_MOCK_APPLICATIONS', JSON.stringify(apps));
 
-      // Increment applicants count on project
+      // Synchronize applicants count on project
       const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
       const project = list.find(p => p.id === applicationData.project_id);
       if (project) {
-        project.applicants_count = (project.applicants_count || 0) + 1;
+        project.applicants_count = apps.filter(a => a.project_id === project.id).length;
         localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(list));
       }
       return newApp;

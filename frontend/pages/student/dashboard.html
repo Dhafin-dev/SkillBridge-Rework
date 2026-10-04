@@ -142,6 +142,44 @@
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/notifications.js"></script>
   <script>
+    async function loadStudentApplications() {
+      const user = window.SkillBridgeAuth.getUser() || { name: 'Budi Santoso' };
+      const allApps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      const projects = await window.SkillBridgeDB.getProjects();
+      const myApps = allApps.filter(a => a.student_name === user.name || a.student_id === user.id);
+      const tbody = document.getElementById('applications-table-body');
+
+      if (myApps.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: var(--space-6); color: var(--color-text-muted);">Belum ada riwayat lamaran.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = myApps.map(app => {
+        const proj = projects.find(p => p.id === app.project_id) || { title: 'Proyek UMKM', umkm_name: 'Mitra UMKM' };
+        const statusBadge = app.status === 'accepted'
+          ? '<span class="badge badge-success">Diterima (Aktif)</span>'
+          : app.status === 'rejected'
+          ? '<span class="badge badge-danger">Ditolak</span>'
+          : '<span class="badge badge-warning">Menunggu</span>';
+
+        const action = app.status === 'accepted'
+          ? `<a href="workspace.html" class="btn btn-outline btn-sm">Buka Workspace</a>`
+          : `<a href="../project-detail.html?id=${app.project_id}" class="btn btn-ghost btn-sm">Lihat Detail</a>`;
+
+        return `
+          <tr style="border-bottom: 1px solid var(--color-border-subtle);">
+            <td style="padding: var(--space-4);">
+              <div style="font-weight: 600;">${proj.title}</div>
+              <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">${proj.umkm_name}</div>
+            </td>
+            <td style="padding: var(--space-4); color: var(--color-text-secondary);">${app.created_at ? new Date(app.created_at).toLocaleDateString('id-ID') : '02 Okt 2026'}</td>
+            <td style="padding: var(--space-4);">${statusBadge}</td>
+            <td style="padding: var(--space-4);">${action}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       if (!window.SkillBridgeAuth.requireAuth(['mahasiswa'])) return;
 
@@ -150,6 +188,8 @@
         document.getElementById('user-display-name').textContent = user.name;
         document.getElementById('user-display-uni').textContent = user.university || 'Perguruan Tinggi Indonesia';
       }
+
+      loadStudentApplications();
     });
   </script>
 </body>

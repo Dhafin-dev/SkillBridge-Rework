@@ -91,9 +91,10 @@
       </div>
 
       <!-- Quick Demo Login Helpers -->
-      <div class="quick-fill">
+      <div class="quick-fill" style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
         <button type="button" class="btn btn-outline btn-sm" id="btn-demo-std">Demo: Mahasiswa</button>
         <button type="button" class="btn btn-outline btn-sm" id="btn-demo-umkm">Demo: UMKM</button>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-demo-admin" style="color: var(--color-danger); border-color: rgba(239,68,68,0.3);">Demo: Admin</button>
       </div>
 
       <form id="login-form">
@@ -151,6 +152,14 @@
       tabUmkm.click();
     });
 
+    document.getElementById('btn-demo-admin').addEventListener('click', () => {
+      currentRole = 'admin';
+      tabMhs.classList.remove('active');
+      tabUmkm.classList.remove('active');
+      emailInput.value = 'admin@skillbridge.id';
+      window.toast.info('Mode login Administrator dipilih.');
+    });
+
     document.getElementById('login-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const email = emailInput.value;
@@ -160,8 +169,17 @@
       window.toast.success(`Berhasil masuk sebagai ${user.name}!`);
 
       setTimeout(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        if (redirect) {
+          window.location.href = redirect;
+          return;
+        }
+
         if (user.role === 'umkm') {
           window.location.href = '../umkm/dashboard.html';
+        } else if (user.role === 'admin') {
+          window.location.href = '../admin/dashboard.html';
         } else {
           window.location.href = '../student/dashboard.html';
         }

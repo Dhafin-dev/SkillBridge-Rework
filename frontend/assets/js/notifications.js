@@ -109,7 +109,18 @@
       this.loadNotifications();
 
       if (link && link !== '#') {
-        window.location.href = link;
+        let target = link;
+        if (window.SkillBridgeAuth) {
+          if (link.includes('workspace.html')) {
+            target = window.SkillBridgeAuth.getPathTo('workspace');
+          } else if (link.includes('applicants.html')) {
+            const query = link.includes('?') ? link.substring(link.indexOf('?')) : '';
+            target = window.SkillBridgeAuth.getPathTo('umkm/applicants.html') + query;
+          } else if (link.includes('projects.html')) {
+            target = window.SkillBridgeAuth.getPathTo('projects');
+          }
+        }
+        window.location.href = target;
       }
     },
 

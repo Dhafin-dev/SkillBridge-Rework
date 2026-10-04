@@ -257,7 +257,8 @@
 
       if (!user) {
         window.toast.warning('Silakan masuk sebagai Mahasiswa untuk menghitung kecocokan AI.');
-        setTimeout(() => window.location.href = 'auth/login.html', 1200);
+        const target = window.SkillBridgeAuth ? window.SkillBridgeAuth.getPathTo('login') : 'auth/login.html';
+        setTimeout(() => window.location.href = `${target}?redirect=${encodeURIComponent(window.location.href)}`, 1200);
         return;
       }
 
@@ -310,7 +311,8 @@
       const user = window.SkillBridgeAuth.getUser();
       if (!user) {
         window.toast.warning('Silakan masuk terlebih dahulu untuk melamar.');
-        setTimeout(() => window.location.href = 'auth/login.html', 1000);
+        const target = window.SkillBridgeAuth ? window.SkillBridgeAuth.getPathTo('login') : 'auth/login.html';
+        setTimeout(() => window.location.href = `${target}?redirect=${encodeURIComponent(window.location.href)}`, 1000);
         return;
       }
       if (user.role === 'umkm') {

@@ -59,8 +59,9 @@
               Gunakan evaluasi AI Gemini 3.8 Flash untuk menyaring kandidat terbaik untuk proyek Anda.
             </p>
           </div>
-          <div>
-            <select id="project-selector" class="form-select" style="min-width: 300px;">
+          <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;">
+            <span class="badge badge-primary" id="applicants-count-badge" style="font-size: var(--font-size-sm); padding: 6px 12px;">0 Pelamar</span>
+            <select id="project-selector" class="form-select" style="min-width: 320px;">
               <!-- Populated by JS -->
             </select>
           </div>
@@ -93,7 +94,7 @@
 
       selector.innerHTML = projects.map(p => `
         <option value="${p.id}" ${p.id === targetProjectId ? 'selected' : ''}>
-          ${p.title}
+          ${p.title} (${p.applicants_count || 0} Pelamar)
         </option>
       `).join('');
 
@@ -101,13 +102,17 @@
         loadApplicants(selector.value);
       });
 
-      await loadApplicants(selector.value);
+      await loadApplicants(selector.value || targetProjectId);
     }
 
     async function loadApplicants(projectId) {
       currentProject = await window.SkillBridgeDB.getProjectById(projectId);
       const applicants = await window.SkillBridgeDB.getApplicationsForProject(projectId);
       const container = document.getElementById('applicants-list-container');
+      const badge = document.getElementById('applicants-count-badge');
+      if (badge) {
+        badge.textContent = `${applicants.length} Pelamar Terdaftar`;
+      }
 
       if (applicants.length === 0) {
         container.innerHTML = `
