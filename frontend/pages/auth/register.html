@@ -3,128 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Akun Baru — SkillBridge</title>
+  <title>Create Account — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
   <style>
-    .auth-page {
+    .register-container {
       min-height: calc(100vh - 72px);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--space-8) var(--space-4);
-      background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 40%),
-                  radial-gradient(circle at 90% 80%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
-                  var(--color-bg-app);
+      padding: 3rem 1rem;
+      background-color: #F8FAFC;
     }
-    .auth-card {
+
+    .register-card {
       width: 100%;
-      max-width: 520px;
-      padding: var(--space-8);
-      background: var(--color-surface-card);
-      border: 1px solid var(--color-border-subtle);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
+      max-width: 480px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 2rem;
+      padding: 2.75rem 2.25rem;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04);
+      text-align: center;
     }
-    .role-toggle {
+
+    .cap-badge {
+      width: 54px;
+      height: 54px;
+      background-color: #EFF6FF;
+      color: #2563EB;
+      border-radius: var(--radius-full);
       display: flex;
-      background-color: var(--color-surface-muted);
-      padding: 4px;
-      border-radius: var(--radius-lg);
-      margin-bottom: var(--space-5);
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem auto;
     }
-    .role-tab {
-      flex: 1;
-      padding: 0.5rem;
-      border: none;
-      background: transparent;
-      border-radius: var(--radius-md);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-secondary);
+
+    .reg-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .reg-subtitle {
+      font-size: 0.875rem;
+      color: #64748B;
+      margin-bottom: 1.75rem;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .role-section-label {
+      text-align: left;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1E293B;
+      margin-bottom: 0.6rem;
+    }
+
+    .role-option-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.25rem;
+      border: 1px solid #E2E8F0;
+      border-radius: 1rem;
+      background-color: #FFFFFF;
       cursor: pointer;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .role-option-card:hover {
+      border-color: #93C5FD;
+      background-color: #F8FAFC;
+    }
+
+    .role-option-card.active {
+      border: 1.5px solid #2563EB;
+      background-color: #EFF6FF;
+    }
+
+    .role-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .role-icon {
+      color: #2563EB;
+      display: flex;
+      align-items: center;
+    }
+
+    .role-option-card.umkm-card .role-icon {
+      color: #EA580C;
+    }
+
+    .role-text-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .role-text-desc {
+      font-size: 0.75rem;
+      color: #64748B;
+    }
+
+    .role-radio-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .role-option-card.active .role-radio-dot {
+      border-color: #2563EB;
+      background-color: #2563EB;
+    }
+
+    .role-option-card.active .role-radio-dot::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background-color: #FFFFFF;
+    }
+
+    .reg-input-group {
+      position: relative;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .reg-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1E293B;
+      margin-bottom: 0.35rem;
+    }
+
+    .reg-input-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .reg-input-box svg {
+      position: absolute;
+      left: 1rem;
+      color: #94A3B8;
+      pointer-events: none;
+    }
+
+    .reg-input {
+      width: 100%;
+      background-color: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 0.875rem;
+      padding: 0.8rem 1rem 0.8rem 2.85rem;
+      font-family: var(--font-family-base);
+      font-size: 0.9rem;
+      color: #0F172A;
+      outline: none;
       transition: all 0.2s ease;
     }
-    .role-tab.active {
+
+    .reg-input:focus {
       background-color: #FFFFFF;
-      color: var(--color-primary);
-      box-shadow: var(--shadow-sm);
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
+
+  <!-- Top Navigation (Figma Navbar) -->
   <header class="navbar">
     <div class="container nav-container">
-      <a href="../../index.html" class="nav-brand">
-        ⚡ Skill<span>Bridge</span>
+      <a href="../../index.html" class="nav-brand-lockup">
+        <div class="nav-brand-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="nav-brand-text">
+          <span class="nav-brand-title">SkillBridge</span>
+          <span class="nav-brand-sub">Academia × Enterprise</span>
+        </div>
       </a>
-      <div id="navbar-auth-actions"></div>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="../../index.html">Home</a></li>
+          <li><a href="../../index.html#about">About</a></li>
+          <li><a href="../../index.html#help">Help &amp; FAQ</a></li>
+          <li><a href="../projects.html">Market</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="nav-login-btn">Login</a>
+        <a href="register.html" class="nav-register-btn">Register</a>
+      </div>
     </div>
   </header>
 
-  <main class="auth-page">
-    <div class="auth-card">
-      <div style="text-align: center; margin-bottom: var(--space-6);">
-        <h1 style="font-size: var(--font-size-2xl); font-weight: 800; margin-bottom: 0.5rem;">Buat Akun SkillBridge</h1>
-        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Bergabunglah dengan ekosistem kolaborasi nyata</p>
+  <!-- Register Main Canvas -->
+  <main class="register-container">
+    <div class="register-card">
+      <div class="cap-badge">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
       </div>
 
-      <!-- Role Selector -->
-      <div class="role-toggle" role="tablist">
-        <button class="role-tab active" id="tab-mahasiswa" type="button">👨‍🎓 Mahasiswa</button>
-        <button class="role-tab" id="tab-umkm" type="button">🏪 Pemilik UMKM</button>
+      <h1 class="reg-title">Create your account</h1>
+      <p class="reg-subtitle">Join SkillBridge to connect academia with enterprise.</p>
+
+      <div class="role-section-label">I am a...</div>
+
+      <!-- Role Selection Cards -->
+      <div class="role-option-card active student-card" id="roleStudent">
+        <div class="role-left">
+          <div class="role-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div>
+            <div class="role-text-title">Student</div>
+            <div class="role-text-desc">Looking for projects</div>
+          </div>
+        </div>
+        <div class="role-radio-dot"></div>
       </div>
 
-      <form id="register-form">
-        <!-- Common fields -->
-        <div class="form-group">
-          <label class="form-label" for="reg-name">Nama Lengkap</label>
-          <input type="text" id="reg-name" class="form-control" placeholder="Contoh: Sarah Az-Zahra" required>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="reg-email">Alamat Email</label>
-          <input type="email" id="reg-email" class="form-control" placeholder="nama@email.com" required>
-        </div>
-
-        <!-- Student specific -->
-        <div id="student-fields">
-          <div class="form-group">
-            <label class="form-label" for="reg-university">Perguruan Tinggi / Kampus</label>
-            <input type="text" id="reg-university" class="form-control" placeholder="Contoh: Universitas Indonesia">
+      <div class="role-option-card umkm-card" id="roleUmkm">
+        <div class="role-left">
+          <div class="role-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+              <path d="M2 7h20"/>
+            </svg>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="reg-skills">Keahlian (Pisahkan dengan koma)</label>
-            <input type="text" id="reg-skills" class="form-control" placeholder="Contoh: Figma, UI/UX, React, JavaScript">
-            <span class="form-hint">Digunakan oleh AI Gemini untuk pencocokan proyek otomatis</span>
+          <div>
+            <div class="role-text-title">UMKM</div>
+            <div class="role-text-desc">Looking for talent</div>
           </div>
         </div>
+        <div class="role-radio-dot"></div>
+      </div>
 
-        <!-- UMKM specific -->
-        <div id="umkm-fields" style="display: none;">
-          <div class="form-group">
-            <label class="form-label" for="reg-business">Nama Usaha / Brand UMKM</label>
-            <input type="text" id="reg-business" class="form-control" placeholder="Contoh: Kripik Buah Sejahtera">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="reg-city">Kota Domisili Usaha</label>
-            <input type="text" id="reg-city" class="form-control" placeholder="Contoh: Surabaya">
+      <form id="registerForm" style="margin-top: 1.5rem;">
+        <div class="reg-input-group">
+          <label class="reg-label" for="regName">Full Name</label>
+          <div class="reg-input-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="regName" class="reg-input" placeholder="e.g. Ahmad Dhafin" required>
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="reg-password">Kata Sandi</label>
-          <input type="password" id="reg-password" class="form-control" placeholder="Minimal 8 karakter" required>
+        <div class="reg-input-group">
+          <label class="reg-label" for="regEmail">Email Address</label>
+          <div class="reg-input-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <input type="email" id="regEmail" class="reg-input" placeholder="johnkerja@gmail.com" required value="johnkerja@gmail.com">
+          </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-4);">
-          Daftar Sekarang
+        <div class="reg-input-group">
+          <label class="reg-label" for="regPassword">Password</label>
+          <div class="reg-input-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="regPassword" class="reg-input" placeholder="••••••••" required value="1234567890">
+          </div>
+        </div>
+
+        <div class="reg-input-group">
+          <label class="reg-label" for="regConfirmPassword">Confirm Password</label>
+          <div class="reg-input-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="regConfirmPassword" class="reg-input" placeholder="••••••••" required value="1234567890">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1.25rem; border-radius: 0.875rem;">
+          Create Account
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
         </button>
       </form>
 
-      <p style="text-align: center; font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-6);">
-        Sudah memiliki akun? <a href="login.html" style="color: var(--color-primary); font-weight: 600;">Masuk di Sini</a>
+      <p style="margin-top: 1.75rem; font-size: 0.85rem; color: #64748B;">
+        Already have an account? <a href="login.html" style="color: #2563EB; font-weight: 700;">Log in</a>
       </p>
     </div>
   </main>
@@ -132,54 +328,45 @@
   <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script>
-    let currentRole = 'mahasiswa';
-    const tabMhs = document.getElementById('tab-mahasiswa');
-    const tabUmkm = document.getElementById('tab-umkm');
-    const stdFields = document.getElementById('student-fields');
-    const umkmFields = document.getElementById('umkm-fields');
+    let selectedRole = 'mahasiswa';
+    const roleStudentCard = document.getElementById('roleStudent');
+    const roleUmkmCard = document.getElementById('roleUmkm');
 
-    tabMhs.addEventListener('click', () => {
-      currentRole = 'mahasiswa';
-      tabMhs.classList.add('active');
-      tabUmkm.classList.remove('active');
-      stdFields.style.display = 'block';
-      umkmFields.style.display = 'none';
+    roleStudentCard.addEventListener('click', () => {
+      selectedRole = 'mahasiswa';
+      roleStudentCard.classList.add('active');
+      roleUmkmCard.classList.remove('active');
     });
 
-    tabUmkm.addEventListener('click', () => {
-      currentRole = 'umkm';
-      tabUmkm.classList.add('active');
-      tabMhs.classList.remove('active');
-      stdFields.style.display = 'none';
-      umkmFields.style.display = 'block';
+    roleUmkmCard.addEventListener('click', () => {
+      selectedRole = 'umkm';
+      roleUmkmCard.classList.add('active');
+      roleStudentCard.classList.remove('active');
     });
 
-    document.getElementById('register-form').addEventListener('submit', (e) => {
+    document.getElementById('registerForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value;
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
 
-      let formData = {
-        name,
-        email,
-        role: currentRole
-      };
-
-      if (currentRole === 'mahasiswa') {
-        const uni = document.getElementById('reg-university').value || 'Universitas Indonesia';
-        const rawSkills = document.getElementById('reg-skills').value || 'HTML, CSS, JavaScript';
-        formData.university = uni;
-        formData.skills = rawSkills.split(',').map(s => s.trim()).filter(Boolean);
-      } else {
-        formData.business_name = document.getElementById('reg-business').value || 'UMKM Lokal';
-        formData.city = document.getElementById('reg-city').value || 'Jakarta';
+      if (password !== confirmPassword) {
+        window.toast.error('Konfirmasi kata sandi tidak cocok!');
+        return;
       }
 
-      const user = window.SkillBridgeAuth.register(formData);
-      window.toast.success('Pendaftaran berhasil! Mengarahkan ke dashboard...');
+      const newUser = window.SkillBridgeAuth.register({
+        name,
+        email,
+        password,
+        role: selectedRole
+      });
+
+      window.toast.success(`Akun ${newUser.name} berhasil didaftarkan! Mengalihkan...`);
 
       setTimeout(() => {
-        if (user.role === 'umkm') {
+        if (selectedRole === 'umkm') {
           window.location.href = '../umkm/dashboard.html';
         } else {
           window.location.href = '../student/dashboard.html';

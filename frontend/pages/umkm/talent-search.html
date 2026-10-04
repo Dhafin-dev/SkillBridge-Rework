@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Search — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .talent-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-top: 4px solid #10B981;
+      border-radius: 1.5rem;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .talent-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .talent-header-lockup {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .talent-avatar-img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #EFF6FF;
+      color: #2563EB;
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .talent-stats-row {
+      display: flex;
+      gap: 3rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid #F1F5F9;
+      margin-bottom: 1.25rem;
+    }
+
+    .talent-stat-item-lbl {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+
+    .talent-stat-item-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .skills-pills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .skill-tag-pill {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid #DBEAFE;
+    }
+
+    .talent-btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .talent-btn-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-header">
+        <a href="../../index.html" class="nav-brand-lockup">
+          <div class="nav-brand-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span class="sidebar-brand-title">SkillBridge</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="sidebar-section-title">UMKM MENU</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="talent-search.html" class="sidebar-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Talent Search</span>
+        </a>
+        <a href="my-projects.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          <span>Projects</span>
+        </a>
+        <a href="../student/workspace.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Messages</span>
+        </a>
+        <a href="profile.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>Profile</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="settings.html" class="sidebar-item" style="color: #64748B;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Canvas -->
+    <main class="dashboard-main">
+      <!-- Topbar -->
+      <header class="dashboard-topbar">
+        <div class="topbar-search">
+          <div class="input-with-icon">
+            <svg class="input-icon-prefix" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input type="text" class="form-input" placeholder="Search..." style="border-radius: var(--radius-full); padding-left: 2.5rem; background-color: #F8FAFC; font-size: 0.85rem;">
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="notif-wrapper">
+            <button class="notif-bell-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              </svg>
+              <span class="notif-badge"></span>
+            </button>
+          </div>
+
+          <div class="topbar-avatar-pill" onclick="window.location.href='profile.html'">
+            <div class="avatar-circle" id="umkm-avatar-circle" style="background: #2563EB; color: #FFFFFF;">L</div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Canvas -->
+      <div class="dashboard-canvas">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <a href="dashboard.html" style="width: 40px; height: 40px; border-radius: 50%; background: #FFFFFF; border: 1px solid #E2E8F0; display: flex; align-items: center; justify-content: center; color: #64748B; text-decoration: none;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          </a>
+          <div>
+            <h1 style="font-size: 1.85rem; font-weight: 800; color: #0F172A; margin: 0; letter-spacing: -0.01em;">
+              Talent Search
+            </h1>
+            <p style="font-size: 0.85rem; color: #64748B; margin: 2px 0 0;">
+              Discover verified student developers, designers, and marketers for your projects
+            </p>
+          </div>
+        </div>
+
+        <!-- Search Input Bar (Matching 10_umkm_talent_search.png) -->
+        <div style="margin-bottom: 2rem;">
+          <div class="input-with-icon" style="position: relative;">
+            <svg class="input-icon-prefix" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" style="position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%);">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input type="text" id="talent-search-input" oninput="filterTalents()" class="form-input" placeholder="Search skills or name..." style="width: 100%; border-radius: 9999px; padding: 0.9rem 1.25rem 0.9rem 3.25rem; font-size: 0.95rem; border: 1.5px solid #E2E8F0; background: #FFFFFF;">
+          </div>
+        </div>
+
+        <!-- Talent Cards Container -->
+        <div id="talents-container">
+          <!-- Card 1: Budi Santoso -->
+          <div class="talent-card" data-name="budi santoso" data-skills="seo content strategy google analytics meta ads">
+            <div class="talent-header-lockup">
+              <div class="talent-avatar-img">
+                B
+              </div>
+              <div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">Budi Santoso</h3>
+                <div style="font-size: 0.85rem; color: #64748B; font-weight: 500;">Institut Teknologi Bandung</div>
+              </div>
+            </div>
+
+            <div class="talent-stats-row">
+              <div>
+                <div class="talent-stat-item-lbl">PORTFOLIO SCORE</div>
+                <div class="talent-stat-item-val">88</div>
+              </div>
+              <div>
+                <div class="talent-stat-item-lbl">PROJECTS COMPLETED</div>
+                <div class="talent-stat-item-val">8</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">RELEVANT SKILLS</div>
+              <div class="skills-pills-wrap">
+                <span class="skill-tag-pill">SEO</span>
+                <span class="skill-tag-pill">Content Strategy</span>
+                <span class="skill-tag-pill">Google Analytics</span>
+                <span class="skill-tag-pill">Meta Ads</span>
+              </div>
+            </div>
+
+            <div class="talent-btn-grid">
+              <button onclick="viewTalentProfile('Budi Santoso', 'Institut Teknologi Bandung')" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>View Profile</span>
+              </button>
+              <button onclick="inviteTalent('Budi Santoso')" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>Invite Student</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Maya Lestari -->
+          <div class="talent-card" data-name="maya lestari" data-skills="flutter react native firebase ui design">
+            <div class="talent-header-lockup">
+              <div class="talent-avatar-img" style="background: #FDF2F8; color: #DB2777;">
+                M
+              </div>
+              <div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">Maya Lestari</h3>
+                <div style="font-size: 0.85rem; color: #64748B; font-weight: 500;">Universitas Diponegoro</div>
+              </div>
+            </div>
+
+            <div class="talent-stats-row">
+              <div>
+                <div class="talent-stat-item-lbl">PORTFOLIO SCORE</div>
+                <div class="talent-stat-item-val">79</div>
+              </div>
+              <div>
+                <div class="talent-stat-item-lbl">PROJECTS COMPLETED</div>
+                <div class="talent-stat-item-val">4</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">RELEVANT SKILLS</div>
+              <div class="skills-pills-wrap">
+                <span class="skill-tag-pill">Flutter</span>
+                <span class="skill-tag-pill">React Native</span>
+                <span class="skill-tag-pill">Firebase</span>
+                <span class="skill-tag-pill">UI Design</span>
+              </div>
+            </div>
+
+            <div class="talent-btn-grid">
+              <button onclick="viewTalentProfile('Maya Lestari', 'Universitas Diponegoro')" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>View Profile</span>
+              </button>
+              <button onclick="inviteTalent('Maya Lestari')" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>Invite Student</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Ahmad Dhafin Al Farisy -->
+          <div class="talent-card" data-name="ahmad dhafin al farisy" data-skills="react typescript python machine learning node.js">
+            <div class="talent-header-lockup">
+              <div class="talent-avatar-img" style="background: #EFF6FF; color: #2563EB;">
+                A
+              </div>
+              <div>
+                <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">Ahmad Dhafin Al Farisy</h3>
+                <div style="font-size: 0.85rem; color: #64748B; font-weight: 500;">Universitas Indonesia</div>
+              </div>
+            </div>
+
+            <div class="talent-stats-row">
+              <div>
+                <div class="talent-stat-item-lbl">PORTFOLIO SCORE</div>
+                <div class="talent-stat-item-val">98</div>
+              </div>
+              <div>
+                <div class="talent-stat-item-lbl">PROJECTS COMPLETED</div>
+                <div class="talent-stat-item-val">12</div>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em;">RELEVANT SKILLS</div>
+              <div class="skills-pills-wrap">
+                <span class="skill-tag-pill">React</span>
+                <span class="skill-tag-pill">TypeScript</span>
+                <span class="skill-tag-pill">Python</span>
+                <span class="skill-tag-pill">Machine Learning</span>
+                <span class="skill-tag-pill">Node.js</span>
+              </div>
+            </div>
+
+            <div class="talent-btn-grid">
+              <button onclick="viewTalentProfile('Ahmad Dhafin Al Farisy', 'Universitas Indonesia')" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>View Profile</span>
+              </button>
+              <button onclick="inviteTalent('Ahmad Dhafin Al Farisy')" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.75rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>Invite Student</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    function filterTalents() {
+      const q = document.getElementById('talent-search-input').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.talent-card');
+      cards.forEach(c => {
+        const name = c.getAttribute('data-name') || '';
+        const skills = c.getAttribute('data-skills') || '';
+        if (name.includes(q) || skills.includes(q)) {
+          c.style.display = 'block';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    function viewTalentProfile(name, uni) {
+      window.location.href = `../student/profile.html?name=${encodeURIComponent(name)}`;
+    }
+
+    function inviteTalent(name) {
+      window.toast.success(`Undangan kolaborasi berhasil dikirimkan ke ${name}! Notifikasi telah dikirim.`);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.SkillBridgeAuth.requireAuth('umkm');
+      const user = window.SkillBridgeAuth.getUser() || {};
+      if (user.company_name || user.name) {
+        document.getElementById('umkm-avatar-circle').textContent = (user.company_name || user.name)[0].toUpperCase();
+      }
+    });
+  </script>
+</body>
+</html>

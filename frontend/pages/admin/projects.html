@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .admin-stats-four {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 992px) {
+      .admin-stats-four {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .admin-stats-four {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-stat-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-pills-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab-pill {
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab-pill.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      border-color: #2563EB;
+    }
+
+    .admin-proj-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.25rem;
+      padding: 1.25rem 1.75rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .admin-proj-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+    <!-- Dark Navy Admin Sidebar -->
+    <aside class="dashboard-sidebar admin-sidebar">
+      <div class="sidebar-header">
+        <a href="../../index.html" class="nav-brand-lockup">
+          <div class="nav-brand-logo-icon" style="background: #2563EB; color: #FFFFFF; font-weight: 800; font-size: 1rem;">
+            A
+          </div>
+          <span class="sidebar-brand-title">Admin Portal</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="sidebar-section-title">MANAGEMENT</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="7" height="7" x="3" y="3" rx="1"/>
+            <rect width="7" height="7" x="14" y="3" rx="1"/>
+            <rect width="7" height="7" x="14" y="14" rx="1"/>
+            <rect width="7" height="7" x="3" y="14" rx="1"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="users.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Users</span>
+        </a>
+        <a href="projects.html" class="sidebar-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          <span>Projects</span>
+        </a>
+        <a href="categories.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Categories</span>
+        </a>
+        <a href="verification.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Verifications</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <button onclick="window.SkillBridgeAuth.logout()" class="sidebar-item" style="color: #94A3B8; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Canvas -->
+    <main class="dashboard-main">
+      <!-- Topbar -->
+      <header class="dashboard-topbar">
+        <div style="flex: 1;"></div>
+        <div class="topbar-actions">
+          <div class="notif-wrapper">
+            <button class="notif-bell-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              </svg>
+              <span class="notif-badge"></span>
+            </button>
+          </div>
+
+          <div class="topbar-avatar-pill">
+            <div class="avatar-circle" style="background: #2563EB; color: #FFFFFF;">A</div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Canvas -->
+      <div class="dashboard-canvas">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0 0 4px;">
+              Project Management
+            </h1>
+            <p style="color: #64748B; font-size: 0.95rem; margin: 0;">
+              Oversee UMKM listings, active student collaboration workspaces, and deliverables.
+            </p>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <div style="position: relative;">
+              <input type="text" id="project-admin-search" oninput="filterAdminProjects()" placeholder="Search projects or business..." class="form-input" style="padding-left: 2.25rem; border-radius: 9999px; min-width: 240px; font-size: 0.85rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+            </div>
+            <a href="../projects.html" class="btn btn-primary" style="border-radius: 9999px; padding: 0.65rem 1.25rem; font-weight: 700;">
+              View Marketplace
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 Stats Cards (Matching 16_admin_projects.png) -->
+        <div class="admin-stats-four">
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">TOTAL PROJECTS</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              20
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">DRAFT / PENDING</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              1
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">IN PROGRESS</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+                <path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>
+              </svg>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              6
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">COMPLETED</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <div style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              4
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-pills-row">
+          <button class="filter-tab-pill active" data-status="all" onclick="setAdminStatusFilter('all')">All</button>
+          <button class="filter-tab-pill" data-status="in-progress" onclick="setAdminStatusFilter('in-progress')">In Progress</button>
+          <button class="filter-tab-pill" data-status="pending" onclick="setAdminStatusFilter('pending')">Pending</button>
+          <button class="filter-tab-pill" data-status="completed" onclick="setAdminStatusFilter('completed')">Completed</button>
+        </div>
+
+        <!-- Projects Cards Container -->
+        <div id="admin-projects-container">
+          <!-- Card 1 -->
+          <div class="admin-proj-card" data-status="in-progress" data-title="full lifecycle test project lumina beans roastery">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0 0 4px;">Full Lifecycle Test Project</h3>
+              <div style="font-size: 0.825rem; color: #64748B;">Business Owner: <strong>Lumina Beans Roastery</strong></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+              <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 800; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">ACTIVE</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; color: #64748B; font-size: 0.8rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                  <line x1="16" x2="16" y1="2" y2="6"/>
+                  <line x1="8" x2="8" y1="2" y2="6"/>
+                  <line x1="3" x2="21" y1="10" y2="10"/>
+                </svg>
+                <span>2026-08-26</span>
+              </div>
+              <a href="../project-detail.html?id=p_full_test" class="btn btn-sm btn-outline" style="border-radius: 9999px; font-size: 0.8rem; font-weight: 700; color: #2563EB; border-color: #BFDBFE;">
+                ↗ Details
+              </a>
+              <button onclick="deleteAdminProject(this)" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="admin-proj-card" data-status="in-progress" data-title="ar furniture visualization web app jepara woodcraft studio">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0 0 4px;">AR Furniture Visualization Web App</h3>
+              <div style="font-size: 0.825rem; color: #64748B;">Business Owner: <strong>Jepara Woodcraft Studio</strong></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+              <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 800; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">ACTIVE</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; color: #64748B; font-size: 0.8rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                  <line x1="16" x2="16" y1="2" y2="6"/>
+                  <line x1="8" x2="8" y1="2" y2="6"/>
+                  <line x1="3" x2="21" y1="10" y2="10"/>
+                </svg>
+                <span>2026-08-27</span>
+              </div>
+              <a href="../project-detail.html?id=p_ar_wood" class="btn btn-sm btn-outline" style="border-radius: 9999px; font-size: 0.8rem; font-weight: 700; color: #2563EB; border-color: #BFDBFE;">
+                ↗ Details
+              </a>
+              <button onclick="deleteAdminProject(this)" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="admin-proj-card" data-status="pending" data-title="solar roi calculator mobile app greentech solutions id">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0 0 4px;">Solar ROI Calculator Mobile App</h3>
+              <div style="font-size: 0.825rem; color: #64748B;">Business Owner: <strong>GreenTech Solutions ID</strong></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+              <span class="badge" style="background: #FFFBEB; color: #D97706; font-weight: 800; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">DRAFT</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; color: #64748B; font-size: 0.8rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                  <line x1="16" x2="16" y1="2" y2="6"/>
+                  <line x1="8" x2="8" y1="2" y2="6"/>
+                  <line x1="3" x2="21" y1="10" y2="10"/>
+                </svg>
+                <span>2026-08-26</span>
+              </div>
+              <a href="../project-detail.html?id=p_solar" class="btn btn-sm btn-outline" style="border-radius: 9999px; font-size: 0.8rem; font-weight: 700; color: #2563EB; border-color: #BFDBFE;">
+                ↗ Details
+              </a>
+              <button onclick="deleteAdminProject(this)" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="admin-proj-card" data-status="completed" data-title="coffee subscription app & checkout platform lumina beans roastery">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0 0 4px;">Coffee Subscription App & Checkout Platform</h3>
+              <div style="font-size: 0.825rem; color: #64748B;">Business Owner: <strong>Lumina Beans Roastery</strong></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+              <span class="badge" style="background: #ECFDF5; color: #059669; font-weight: 800; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">COMPLETED</span>
+              <div style="display: flex; align-items: center; gap: 0.4rem; color: #64748B; font-size: 0.8rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                  <line x1="16" x2="16" y1="2" y2="6"/>
+                  <line x1="8" x2="8" y1="2" y2="6"/>
+                  <line x1="3" x2="21" y1="10" y2="10"/>
+                </svg>
+                <span>2026-09-23</span>
+              </div>
+              <a href="../project-detail.html?id=p_coffee_sub" class="btn btn-sm btn-outline" style="border-radius: 9999px; font-size: 0.8rem; font-weight: 700; color: #2563EB; border-color: #BFDBFE;">
+                ↗ Details
+              </a>
+              <button onclick="deleteAdminProject(this)" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    let currentStatus = 'all';
+
+    function setAdminStatusFilter(st) {
+      currentStatus = st;
+      document.querySelectorAll('.filter-tab-pill').forEach(b => {
+        b.classList.remove('active');
+        if (b.getAttribute('data-status') === st) b.classList.add('active');
+      });
+      filterAdminProjects();
+    }
+
+    function filterAdminProjects() {
+      const q = document.getElementById('project-admin-search').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.admin-proj-card');
+      cards.forEach(c => {
+        const matchesStatus = currentStatus === 'all' || c.getAttribute('data-status') === currentStatus;
+        const matchesSearch = c.getAttribute('data-title').includes(q);
+        if (matchesStatus && matchesSearch) {
+          c.style.display = 'flex';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    function deleteAdminProject(btn) {
+      if (confirm('Moderator: Hapus proyek ini dari platform?')) {
+        const card = btn.closest('.admin-proj-card');
+        if (card) {
+          card.remove();
+          window.toast.success('Proyek berhasil dimoderasi dan dihapus');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.SkillBridgeAuth.requireAuth('admin');
+    });
+  </script>
+</body>
+</html>

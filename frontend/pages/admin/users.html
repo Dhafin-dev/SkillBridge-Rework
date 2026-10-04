@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .admin-stats-four {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 992px) {
+      .admin-stats-four {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .admin-stats-four {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-stat-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .users-table-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.5rem;
+      padding: 1.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      overflow-x: auto;
+    }
+
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .user-table th {
+      padding: 1rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .user-table td {
+      padding: 1.15rem 1rem;
+      border-bottom: 1px solid #F1F5F9;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    .user-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .role-filter-btn {
+      padding: 0.5rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .role-filter-btn.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      border-color: #2563EB;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+    <!-- Dark Navy Admin Sidebar -->
+    <aside class="dashboard-sidebar admin-sidebar">
+      <div class="sidebar-header">
+        <a href="../../index.html" class="nav-brand-lockup">
+          <div class="nav-brand-logo-icon" style="background: #2563EB; color: #FFFFFF; font-weight: 800; font-size: 1rem;">
+            A
+          </div>
+          <span class="sidebar-brand-title">Admin Portal</span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="sidebar-section-title">MANAGEMENT</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="7" height="7" x="3" y="3" rx="1"/>
+            <rect width="7" height="7" x="14" y="3" rx="1"/>
+            <rect width="7" height="7" x="14" y="14" rx="1"/>
+            <rect width="7" height="7" x="3" y="14" rx="1"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="users.html" class="sidebar-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Users</span>
+        </a>
+        <a href="projects.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+          <span>Projects</span>
+        </a>
+        <a href="categories.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Categories</span>
+        </a>
+        <a href="verification.html" class="sidebar-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Verifications</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <button onclick="window.SkillBridgeAuth.logout()" class="sidebar-item" style="color: #94A3B8; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Canvas -->
+    <main class="dashboard-main">
+      <!-- Topbar -->
+      <header class="dashboard-topbar">
+        <div style="flex: 1;"></div>
+        <div class="topbar-actions">
+          <div class="notif-wrapper">
+            <button class="notif-bell-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              </svg>
+              <span class="notif-badge"></span>
+            </button>
+          </div>
+
+          <div class="topbar-avatar-pill">
+            <div class="avatar-circle" style="background: #2563EB; color: #FFFFFF;">A</div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Canvas -->
+      <div class="dashboard-canvas">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0 0 4px;">
+              User Management
+            </h1>
+            <p style="color: #64748B; font-size: 0.95rem; margin: 0;">
+              Oversee platform members, university students, and verified business clients.
+            </p>
+          </div>
+
+          <button onclick="promptInviteUser()" class="btn btn-primary" style="border-radius: 9999px; padding: 0.75rem 1.5rem; font-weight: 700;">
+            + Invite Member
+          </button>
+        </div>
+
+        <!-- 4 Stats Cards (Matching 15_admin_users.png) -->
+        <div class="admin-stats-four">
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">TOTAL USERS</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div id="stat-total-users" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              29
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">STUDENTS</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div id="stat-students" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              15
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">UMKM CLIENTS</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2">
+                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
+                <path d="M9 22v-4h6v4"/>
+              </svg>
+            </div>
+            <div id="stat-umkms" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              13
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">VERIFIED ACCOUNTS</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div id="stat-verified" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
+              9
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Row (Matching 15_admin_users.png) -->
+        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 260px; position: relative;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input type="text" id="users-search" oninput="filterUsers()" class="form-input" placeholder="Search by name, email, or role..." style="padding-left: 2.75rem; border-radius: 9999px;">
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="role-filter-btn active" data-role="all" onclick="setRoleFilter('all')">All Roles</button>
+            <button class="role-filter-btn" data-role="student" onclick="setRoleFilter('student')">STUDENT</button>
+            <button class="role-filter-btn" data-role="umkm" onclick="setRoleFilter('umkm')">UMKM</button>
+            <button class="role-filter-btn" data-role="admin" onclick="setRoleFilter('admin')">ADMIN</button>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="users-table-card">
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>MEMBER INFO</th>
+                <th>ROLE</th>
+                <th>VERIFICATION TOGGLE</th>
+                <th style="text-align: right;">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    let usersList = [
+      { id: 'u1', name: 'Budi Santoso', email: 'budi.santoso@university.edu', role: 'student', verified: true },
+      { id: 'u2', name: 'Rawul', email: 'rawul_test_1787814556195@gmail.com', role: 'umkm', verified: false },
+      { id: 'u3', name: 'GreenTech Solutions ID', email: 'info@greentechid.com', role: 'umkm', verified: false },
+      { id: 'u4', name: 'Maya Lestari', email: 'maya.lestari@university.edu', role: 'student', verified: true },
+      { id: 'u5', name: 'Batik Wastra Nusantara', email: 'partner@batikwastra.id', role: 'umkm', verified: true },
+      { id: 'u6', name: 'Ahmad Dhafin Al Farisy', email: 'student.dhafin@skillbridge.edu', role: 'student', verified: true },
+      { id: 'u7', name: 'Lumina Beans Roastery', email: 'hello@luminabeans.com', role: 'umkm', verified: true },
+      { id: 'u8', name: 'Platform Administrator', email: 'admin@skillbridge.edu', role: 'admin', verified: true },
+      { id: 'u9', name: 'Reza Putra', email: 'reza.putra@university.edu', role: 'student', verified: false },
+      { id: 'u10', name: 'Dimas Pratama', email: 'dimas.pratama@univ.ac.id', role: 'student', verified: false },
+      { id: 'u11', name: 'Jepara Woodcraft Studio', email: 'craft@woodcraft.id', role: 'umkm', verified: false }
+    ];
+
+    let currentRoleFilter = 'all';
+
+    function renderUsers() {
+      const q = document.getElementById('users-search').value.toLowerCase().trim();
+      const tbody = document.getElementById('users-tbody');
+
+      const filtered = usersList.filter(u => {
+        const matchesRole = currentRoleFilter === 'all' || u.role.toLowerCase() === currentRoleFilter;
+        const matchesSearch = u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+        return matchesRole && matchesSearch;
+      });
+
+      tbody.innerHTML = filtered.map(u => {
+        const rolePill = u.role === 'student'
+          ? '<span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 800; border-radius: 9999px; padding: 3px 10px; font-size: 0.75rem;">STUDENT</span>'
+          : u.role === 'umkm'
+          ? '<span class="badge" style="background: #ECFDF5; color: #059669; font-weight: 800; border-radius: 9999px; padding: 3px 10px; font-size: 0.75rem;">UMKM</span>'
+          : '<span class="badge" style="background: #FDF4FF; color: #A855F7; font-weight: 800; border-radius: 9999px; padding: 3px 10px; font-size: 0.75rem;">ADMIN</span>';
+
+        const verifToggle = u.verified
+          ? `<button onclick="toggleVerification('${u.id}')" style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">✓ Verified (Click to Revoke)</button>`
+          : `<button onclick="toggleVerification('${u.id}')" style="background: #FFFBEB; border: 1px solid #FDE68A; color: #D97706; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">⏱ Pending (Click to Verify)</button>`;
+
+        return `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 38px; height: 38px; border-radius: 50%; background: #F1F5F9; color: #334155; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
+                  ${u.name.charAt(0)}
+                </div>
+                <div>
+                  <div style="font-weight: 800; color: #0F172A;">${u.name}</div>
+                  <div style="font-size: 0.75rem; color: #64748B;">${u.email}</div>
+                </div>
+              </div>
+            </td>
+            <td>${rolePill}</td>
+            <td>${verifToggle}</td>
+            <td style="text-align: right;">
+              <button onclick="viewUserDetail('${u.id}')" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px; margin-right: 4px;" title="View Details">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+              <button onclick="deleteUserRow('${u.id}')" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px;" title="Delete User">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleVerification(id) {
+      usersList = usersList.map(u => {
+        if (u.id === id) {
+          const next = !u.verified;
+          window.toast.success(`Status ${u.name} diubah menjadi: ${next ? 'Verified' : 'Pending'}`);
+          return { ...u, verified: next };
+        }
+        return u;
+      });
+      renderUsers();
+    }
+
+    function setRoleFilter(role) {
+      currentRoleFilter = role;
+      document.querySelectorAll('.role-filter-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.getAttribute('data-role') === role) b.classList.add('active');
+      });
+      renderUsers();
+    }
+
+    function filterUsers() {
+      renderUsers();
+    }
+
+    function deleteUserRow(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+        usersList = usersList.filter(u => u.id !== id);
+        window.toast.success('User berhasil dihapus');
+        renderUsers();
+      }
+    }
+
+    function viewUserDetail(id) {
+      const u = usersList.find(x => x.id === id);
+      if (u) {
+        alert(`Detail Pengguna:\n\nNama: ${u.name}\nEmail: ${u.email}\nPeran: ${u.role}\nStatus Verifikasi: ${u.verified ? 'Terverifikasi' : 'Pending'}`);
+      }
+    }
+
+    function promptInviteUser() {
+      const email = prompt('Masukkan alamat email anggota baru:');
+      if (email && email.trim()) {
+        window.toast.success(`Undangan telah dikirim ke ${email.trim()}`);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.SkillBridgeAuth.requireAuth('admin');
+      renderUsers();
+    });
+  </script>
+</body>
+</html>

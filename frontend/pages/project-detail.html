@@ -9,172 +9,202 @@
   <style>
     .project-detail-layout {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: var(--space-8);
-      margin-top: var(--space-8);
-      margin-bottom: var(--space-16);
+      grid-template-columns: 2fr 1.1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      margin-bottom: 4rem;
     }
+
     @media (max-width: 900px) {
       .project-detail-layout {
         grid-template-columns: 1fr;
       }
     }
+
+    .detail-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
     .skill-chip {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--radius-full);
-      font-size: var(--font-size-xs);
-      font-weight: 600;
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      color: #334155;
     }
+
     .skill-chip.matched {
-      background-color: var(--color-success-bg);
+      background-color: #ECFDF5;
       color: #065F46;
-      border: 1px solid #A7F3D0;
+      border-color: #A7F3D0;
     }
+
     .skill-chip.missing {
-      background-color: var(--color-danger-bg);
+      background-color: #FEF2F2;
       color: #991B1B;
-      border: 1px solid #FECACA;
+      border-color: #FECACA;
+    }
+
+    .ai-smart-box {
+      background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%);
+      border: 1.5px solid #BFDBFE;
+      border-radius: 1.5rem;
+      padding: 1.75rem;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
     }
   </style>
 </head>
-<body style="background-color: var(--color-bg-app);">
+<body style="background-color: #F8FAFC;">
   <!-- Navbar -->
   <header class="navbar">
     <div class="container nav-container">
-      <a href="../index.html" class="nav-brand">
-        ⚡ Skill<span>Bridge</span>
+      <a href="../index.html" class="nav-brand-lockup">
+        <div class="nav-brand-logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <span class="sidebar-brand-title" style="color: #0F172A;">SkillBridge</span>
       </a>
 
       <nav class="nav-links">
         <a href="../index.html" class="nav-link">Beranda</a>
-        <a href="projects.html" class="nav-link">Eksplorasi Proyek</a>
+        <a href="projects.html" class="nav-link active">Market Proyek</a>
       </nav>
 
       <div id="navbar-auth-actions"></div>
     </div>
   </header>
 
-  <main class="container">
-    <div style="margin-top: var(--space-6);">
-      <a href="projects.html" style="font-size: var(--font-size-sm); color: var(--color-text-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
-        ← Kembali ke Daftar Proyek
+  <main class="container" style="padding-top: 1.5rem;">
+    <div>
+      <a href="projects.html" style="font-size: 0.875rem; font-weight: 700; color: #2563EB; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #EFF6FF; border-radius: 9999px;">
+        ← Kembali ke Market Proyek
       </a>
     </div>
 
     <div class="project-detail-layout" id="project-detail-container">
       <!-- Left Column: Details -->
       <div>
-        <div class="card" style="margin-bottom: var(--space-6);">
-          <div class="card-body">
-            <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-4);">
-              <span class="badge badge-primary" id="detail-category">Kategori</span>
-              <span class="badge badge-success" id="detail-status">Terbuka</span>
-            </div>
+        <div class="detail-card">
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap;">
+            <span class="badge" id="detail-category" style="background: #EFF6FF; color: #2563EB; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.8rem;">Kategori</span>
+            <span class="badge" id="detail-status" style="background: #ECFDF5; color: #059669; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.8rem;">Terbuka</span>
+          </div>
 
-            <h1 id="detail-title" style="font-size: var(--font-size-2xl); font-weight: 800; line-height: 1.25; margin-bottom: var(--space-4);">
-              Memuat judul proyek...
-            </h1>
+          <h1 id="detail-title" style="font-size: 1.85rem; font-weight: 800; line-height: 1.25; margin-bottom: 1rem; color: #0F172A; letter-spacing: -0.01em;">
+            Memuat judul proyek...
+          </h1>
 
-            <div style="display: flex; align-items: center; gap: var(--space-4); color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-6); flex-wrap: wrap;">
-              <span id="detail-city">📍 Lokasi</span>
-              <span>•</span>
-              <span id="detail-deadline">📅 Batas Waktu</span>
-              <span>•</span>
-              <span id="detail-applicants">👥 0 Pelamar</span>
-            </div>
+          <div style="display: flex; align-items: center; gap: 1rem; color: #64748B; font-size: 0.875rem; font-weight: 600; margin-bottom: 1.75rem; flex-wrap: wrap;">
+            <span id="detail-city">📍 Lokasi</span>
+            <span>•</span>
+            <span id="detail-deadline">📅 Batas Waktu</span>
+            <span>•</span>
+            <span id="detail-applicants">👥 0 Pelamar</span>
+          </div>
 
-            <div style="border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-6);">
-              <h2 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-3);">Deskripsi & Kebutuhan Proyek</h2>
-              <p id="detail-desc" style="font-size: var(--font-size-sm); line-height: 1.7; color: var(--color-text-secondary); white-space: pre-line;">
-                Memuat deskripsi...
-              </p>
-            </div>
+          <div style="border-top: 1px solid #F1F5F9; padding-top: 1.5rem;">
+            <h2 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 0.75rem;">Deskripsi & Kebutuhan Proyek</h2>
+            <p id="detail-desc" style="font-size: 0.95rem; line-height: 1.7; color: #475569; white-space: pre-line; margin: 0;">
+              Memuat deskripsi...
+            </p>
+          </div>
 
-            <div style="border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-6); margin-top: var(--space-6);">
-              <h2 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-3);">Keahlian yang Dibutuhkan</h2>
-              <div id="detail-skills" style="display: flex; flex-wrap: wrap; gap: var(--space-2);">
-                <!-- Skills badges -->
-              </div>
+          <div style="border-top: 1px solid #F1F5F9; padding-top: 1.5rem; margin-top: 1.5rem;">
+            <h2 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 0.75rem;">Keahlian yang Dibutuhkan</h2>
+            <div id="detail-skills" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <!-- Skills badges -->
             </div>
           </div>
         </div>
 
         <!-- UMKM Profile Card -->
-        <div class="card">
-          <div class="card-body" style="display: flex; align-items: center; gap: var(--space-4);">
-            <div class="umkm-avatar" id="detail-umkm-avatar" style="width: 54px; height: 54px; font-size: 1.5rem; border-radius: var(--radius-full); background: var(--color-primary-light); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-weight: 800;">
-              U
+        <div class="detail-card">
+          <h2 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 1rem;">Tentang Mitra UMKM</h2>
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <div style="width: 52px; height: 52px; border-radius: 1rem; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800;">
+              🏪
             </div>
             <div>
-              <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Pemberi Proyek</div>
-              <h3 id="detail-umkm-name" style="font-size: var(--font-size-base); font-weight: 700;">Nama UMKM</h3>
-              <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary);">Mitra Terverifikasi SkillBridge</p>
+              <div id="detail-umkm-name" style="font-weight: 800; font-size: 1.15rem; color: #0F172A;">Nama UMKM</div>
+              <div id="detail-umkm-meta" style="font-size: 0.85rem; color: #64748B;">Sektor Usaha • Kota</div>
             </div>
           </div>
+          <p id="detail-umkm-desc" style="font-size: 0.9rem; color: #475569; line-height: 1.6; margin: 0;">
+            Deskripsi profil UMKM...
+          </p>
         </div>
       </div>
 
-      <!-- Right Column: Budget & AI Matcher -->
+      <!-- Right Column: Budget, AI Match & Apply Action -->
       <div>
-        <!-- Budget Card -->
-        <div class="card" style="margin-bottom: var(--space-6);">
-          <div class="card-body">
-            <div style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: 4px;">Budget Kompensasi</div>
-            <div id="detail-budget" style="font-size: var(--font-size-2xl); font-weight: 800; color: var(--color-primary); margin-bottom: var(--space-4);">
-              Rp 0
-            </div>
+        <div class="detail-card" style="margin-bottom: 1.5rem;">
+          <div style="font-size: 0.75rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">
+            INSENTIF / IMBALAN PROYEK
+          </div>
+          <div id="detail-budget" style="font-size: 1.85rem; font-weight: 800; color: #0F172A; margin-bottom: 1.25rem;">
+            Rp 0
+          </div>
 
-            <button id="btn-apply-modal" class="btn btn-primary" style="width: 100%;">
-              🚀 Ajukan Lamaran Proyek
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <button id="btn-apply-modal" class="btn btn-primary" style="width: 100%; justify-content: center; border-radius: 0.875rem; padding: 0.9rem; font-size: 1rem;">
+              🚀 Ajukan Lamaran Sekarang
             </button>
+            <div style="font-size: 0.75rem; color: #94A3B8; text-align: center;">
+              Gratis untuk mahasiswa • Proteksi transparansi SkillBridge
+            </div>
           </div>
         </div>
 
-        <!-- AI Matchmaker Card -->
-        <div class="card ai-match-card" id="ai-match-section">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <span style="font-size: 1.25rem;">✨</span>
-              <h3 style="font-size: var(--font-size-base); font-weight: 800;">Gemini 3.8 Matchmaker</h3>
+        <!-- AI Matchmaker Card with Gemini 3.8 Flash -->
+        <div class="ai-smart-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 800; color: #1E40AF; font-size: 1rem;">
+              <span>✨ Gemini 3.8 Flash Matchmaker</span>
             </div>
-            <span class="badge badge-primary">Model: 3.8 Flash</span>
           </div>
-
-          <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-4);">
-            Analisis keselarasan keahlian akun Anda dengan spesifikasi proyek ini secara objektif.
+          <p style="font-size: 0.85rem; color: #3B82F6; margin-bottom: 1rem; line-height: 1.5;">
+            Hitung kecocokan keahlian Anda dengan algoritma Semantic Embeddings & Reasoner SkillBridge.
           </p>
 
-          <button id="btn-run-ai" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: var(--space-4);">
-            ⚡ Hitung Kecocokan AI
+          <button id="btn-run-ai" class="btn btn-outline" style="width: 100%; justify-content: center; background: #FFFFFF; color: #2563EB; border-color: #93C5FD; border-radius: 0.875rem; font-weight: 700; padding: 0.75rem;">
+            ⚡ Hitung Kecocokan AI Saya
           </button>
 
-          <!-- AI Results Box (Initially hidden) -->
-          <div id="ai-results-box" style="display: none;">
-            <div style="text-align: center; margin-bottom: var(--space-4);">
-              <div id="ai-score-badge" class="match-score-badge match-high" style="font-size: 1.25rem;">
-                🎯 88% Cocok
-              </div>
-              <div id="ai-recommendation-text" style="font-size: var(--font-size-xs); font-weight: 700; margin-top: 4px; color: var(--color-primary);">
-                Sangat Direkomendasikan
-              </div>
+          <!-- Result box -->
+          <div id="ai-results-box" style="display: none; margin-top: 1.25rem; border-top: 1px solid #BFDBFE; padding-top: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.8rem; font-weight: 800; color: #1E40AF; text-transform: uppercase;">SKOR KECOCOKAN</span>
+              <span id="ai-score-badge" style="font-weight: 800; font-size: 0.95rem; padding: 4px 10px; border-radius: 9999px; background: #2563EB; color: #FFFFFF;">
+                🎯 0% Cocok
+              </span>
             </div>
 
-            <div style="margin-bottom: var(--space-4);">
-              <div style="font-size: var(--font-size-xs); font-weight: 700; margin-bottom: var(--space-2);">Keahlian Sesuai:</div>
-              <div id="ai-matched-skills" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+            <div style="background: #FFFFFF; border-radius: 1rem; padding: 1rem; border: 1px solid #DBEAFE; margin-bottom: 1rem;">
+              <div id="ai-recommendation-text" style="font-weight: 800; font-size: 0.875rem; color: #0F172A; margin-bottom: 4px;"></div>
+              <div id="ai-reasoning-text" style="font-size: 0.8rem; color: #475569; line-height: 1.5;"></div>
             </div>
 
-            <div style="margin-bottom: var(--space-4);">
-              <div style="font-size: var(--font-size-xs); font-weight: 700; margin-bottom: var(--space-2);">Keahlian Perlu Dipelajari:</div>
-              <div id="ai-missing-skills" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+            <div style="margin-bottom: 0.75rem;">
+              <div style="font-size: 0.75rem; font-weight: 800; color: #059669; text-transform: uppercase; margin-bottom: 0.35rem;">Keahlian Cocok</div>
+              <div id="ai-matched-skills" style="display: flex; flex-wrap: wrap; gap: 0.35rem;"></div>
             </div>
 
-            <div style="background: rgba(255,255,255,0.7); padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--color-border-subtle); font-size: var(--font-size-xs); line-height: 1.5; color: var(--color-text-secondary);">
-              <strong>Analisis AI:</strong>
-              <div id="ai-reasoning-text" style="margin-top: 4px;"></div>
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 800; color: #DC2626; text-transform: uppercase; margin-bottom: 0.35rem;">Keahlian yang Perlu Dipelajari</div>
+              <div id="ai-missing-skills" style="display: flex; flex-wrap: wrap; gap: 0.35rem;"></div>
             </div>
           </div>
         </div>
@@ -182,26 +212,30 @@
     </div>
   </main>
 
-  <!-- Application Modal Dialog -->
-  <div class="modal-backdrop" id="application-modal">
-    <div class="modal-container">
+  <!-- Application Modal -->
+  <div class="modal" id="application-modal">
+    <div class="modal-content" style="max-width: 560px;">
       <div class="modal-header">
-        <h3 class="modal-title">Ajukan Lamaran Proyek</h3>
+        <h3 style="font-weight: 800;">Formulir Pengajuan Lamaran Proyek</h3>
         <button class="modal-close" id="modal-close-btn">&times;</button>
       </div>
       <form id="application-form">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" for="app-letter">Surat Motivasi & Rencana Solusi</label>
-            <textarea id="app-letter" class="form-textarea" placeholder="Jelaskan mengapa Anda kandidat yang tepat dan rencana penyelesaian proyek ini..." required></textarea>
+            <label class="form-label">Cover Letter / Perkenalan Diri</label>
+            <textarea id="app-letter" class="form-textarea" rows="4" placeholder="Jelaskan alasan Anda tertarik dan bagaimana Anda dapat membantu UMKM ini..." required></textarea>
           </div>
           <div class="form-group">
-            <label class="form-label" for="app-portfolio">Link Portofolio / GitHub / Behance</label>
-            <input type="url" id="app-portfolio" class="form-control" placeholder="https://github.com/username atau https://behance.net/..." required>
+            <label class="form-label">Tautan Portofolio / GitHub / CV</label>
+            <input type="url" id="app-portfolio" class="form-input" placeholder="https://github.com/username atau https://linkedin.com/in/..." required>
           </div>
           <div class="form-group">
-            <label class="form-label" for="app-timeline">Estimasi Durasi Pengerjaan</label>
-            <input type="text" id="app-timeline" class="form-control" placeholder="Contoh: 3 minggu (15 hari kerja)" required>
+            <label class="form-label">Estimasi Waktu Penyelesaian</label>
+            <select id="app-timeline" class="form-select" required>
+              <option value="1-2 minggu">1 - 2 Minggu</option>
+              <option value="3-4 minggu" selected>3 - 4 Minggu</option>
+              <option value="5-8 minggu">5 - 8 Minggu</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">
@@ -212,41 +246,44 @@
     </div>
   </div>
 
-  <script src="../assets/js/toast.js"></script>
   <script src="../assets/js/supabase.js"></script>
   <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/notifications.js"></script>
-  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ai.js"></script>
   <script>
     let currentProject = null;
 
     async function loadProjectDetail() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const projectId = urlParams.get('id') || 'p1';
+      const params = new URLSearchParams(window.location.search);
+      const projectId = params.get('id') || 'p1';
 
-      currentProject = await window.SkillBridgeDB.getProjectById(projectId);
+      const projects = await window.SkillBridgeDB.getProjects();
+      currentProject = projects.find(p => p.id === projectId) || projects[0];
+
       if (!currentProject) {
-        window.toast.error('Proyek tidak ditemukan.');
-        setTimeout(() => window.location.href = 'projects.html', 1500);
+        document.getElementById('project-detail-container').innerHTML = `
+          <div class="card"><div class="card-body">Proyek tidak ditemukan. <a href="projects.html">Kembali</a></div></div>
+        `;
         return;
       }
 
       document.title = `${currentProject.title} — SkillBridge`;
       document.getElementById('detail-title').textContent = currentProject.title;
-      document.getElementById('detail-category').textContent = currentProject.category_name;
-      document.getElementById('detail-city').textContent = `📍 ${currentProject.umkm_city}`;
-      document.getElementById('detail-deadline').textContent = `📅 Batas: ${currentProject.deadline}`;
-      document.getElementById('detail-applicants').textContent = `👥 ${currentProject.applicants_count || 0} Pelamar`;
+      document.getElementById('detail-category').textContent = currentProject.category;
+      document.getElementById('detail-city').textContent = `📍 ${currentProject.location || 'Indonesia'}`;
+      document.getElementById('detail-deadline').textContent = `📅 Batas: ${currentProject.deadline || '1 Bulan'}`;
+      document.getElementById('detail-applicants').textContent = `👥 ${currentProject.applicants_count || 3} Pelamar`;
       document.getElementById('detail-desc').textContent = currentProject.description;
-      document.getElementById('detail-umkm-name').textContent = currentProject.umkm_name;
-      document.getElementById('detail-umkm-avatar').textContent = currentProject.umkm_name.charAt(0);
+      document.getElementById('detail-budget').textContent = typeof currentProject.budget === 'number' 
+        ? `Rp ${currentProject.budget.toLocaleString('id-ID')}` 
+        : (currentProject.budget || 'Rp 2.500.000');
 
-      const formattedBudget = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(currentProject.budget);
-      document.getElementById('detail-budget').textContent = formattedBudget;
+      document.getElementById('detail-umkm-name').textContent = currentProject.umkm_name;
+      document.getElementById('detail-umkm-meta').textContent = `${currentProject.category} • ${currentProject.location || 'Indonesia'}`;
+      document.getElementById('detail-umkm-desc').textContent = currentProject.umkm_desc || 'Mitra UMKM terpercaya terdaftar di platform kolaborasi SkillBridge.';
 
       const skillsContainer = document.getElementById('detail-skills');
-      skillsContainer.innerHTML = currentProject.required_skills.map(s => `
-        <span class="badge badge-neutral" style="font-size: var(--font-size-sm);">${s}</span>
+      skillsContainer.innerHTML = (currentProject.skills || ['React', 'Node.js', 'UI/UX']).map(s => `
+        <span class="skill-chip">${s}</span>
       `).join('');
     }
 
@@ -274,23 +311,18 @@
         const scoreBadge = document.getElementById('ai-score-badge');
         scoreBadge.textContent = `🎯 ${result.match_score}% Cocok`;
 
-        scoreBadge.className = 'match-score-badge ' + (
-          result.match_score >= 75 ? 'match-high' :
-          result.match_score >= 50 ? 'match-medium' : 'match-low'
-        );
-
         document.getElementById('ai-recommendation-text').textContent = result.recommendation;
         document.getElementById('ai-reasoning-text').textContent = result.reasoning;
 
         const matchedContainer = document.getElementById('ai-matched-skills');
         matchedContainer.innerHTML = (result.matched_skills.length > 0) 
           ? result.matched_skills.map(s => `<span class="skill-chip matched">✓ ${s}</span>`).join('')
-          : '<span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Belum ada keahlian yang cocok</span>';
+          : '<span style="font-size: 0.8rem; color: #94A3B8;">Belum ada keahlian yang cocok</span>';
 
         const missingContainer = document.getElementById('ai-missing-skills');
         missingContainer.innerHTML = (result.missing_skills.length > 0)
           ? result.missing_skills.map(s => `<span class="skill-chip missing">⚠ ${s}</span>`).join('')
-          : '<span style="font-size: var(--font-size-xs); color: var(--color-success);">Semua keahlian terpenuhi! 🎉</span>';
+          : '<span style="font-size: 0.8rem; color: #059669;">Semua keahlian terpenuhi! 🎉</span>';
 
         window.toast.success(`Analisis AI Selesai: Skor ${result.match_score}%!`);
       } catch (err) {
