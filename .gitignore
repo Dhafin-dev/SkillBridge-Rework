@@ -31,6 +31,8 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+**/.obsidian/workspace.json
+workspace.json
 
 # Temporary uploads
 uploads/

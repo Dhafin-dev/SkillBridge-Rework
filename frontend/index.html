@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillBridge — Platform Kolaborasi Talenta Mahasiswa & Digitalisasi UMKM</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <style>
+    .hero {
+      padding: var(--space-16) 0 var(--space-12) 0;
+      background: radial-gradient(circle at 80% 20%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 10% 90%, rgba(13, 148, 136, 0.08) 0%, transparent 50%),
+                  #FFFFFF;
+      border-bottom: 1px solid var(--color-border-subtle);
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      margin-bottom: var(--space-4);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+    .hero-title {
+      font-size: 3.25rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--color-text-main);
+      margin-bottom: var(--space-4);
+      max-width: 820px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+      max-width: 640px;
+      line-height: 1.6;
+      margin-bottom: var(--space-8);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: center;
+    }
+    .stats-strip {
+      padding: var(--space-8) 0;
+      background-color: var(--color-bg-app);
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-6);
+      text-align: center;
+    }
+    .stat-number {
+      font-size: var(--font-size-3xl);
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 1;
+      margin-bottom: var(--space-1);
+    }
+    .stat-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+    .section-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto var(--space-8) auto;
+    }
+    .feature-card {
+      padding: var(--space-8);
+      border-radius: var(--radius-xl);
+      background: #FFFFFF;
+      border: 1px solid var(--color-border-subtle);
+      transition: all 0.2s ease;
+    }
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: var(--space-4);
+    }
+    .footer {
+      background-color: #0F172A;
+      color: #94A3B8;
+      padding: var(--space-12) 0 var(--space-8) 0;
+      font-size: var(--font-size-sm);
+    }
+    .footer-title {
+      color: #FFFFFF;
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      margin-bottom: var(--space-4);
+    }
+    .footer-link {
+      color: #94A3B8;
+      text-decoration: none;
+      display: block;
+      margin-bottom: var(--space-2);
+      transition: color 0.15s ease;
+    }
+    .footer-link:hover {
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link active">Beranda</a>
+        <a href="pages/projects.html" class="nav-link">Eksplorasi Proyek</a>
+        <a href="#cara-kerja" class="nav-link">Cara Kerja</a>
+        <a href="#fitur-ai" class="nav-link">AI Matchmaker</a>
+      </nav>
+
+      <div id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        ✨ Powered by Gemini 3.8 Flash & Supabase RDBMS
+      </div>
+      <h1 class="hero-title">
+        Jembatani Talenta Mahasiswa dengan <span>Digitalisasi Nyata UMKM</span>
+      </h1>
+      <p class="hero-desc">
+        SkillBridge menghubungkan mahasiswa berkeahlian tinggi dengan pelaku UMKM Indonesia. Dapatkan portofolio nyata terverifikasi dan akselerasi transformasi bisnis mikro secara saling menguntungkan.
+      </p>
+      <div class="hero-actions">
+        <a href="pages/projects.html" class="btn btn-primary btn-lg">
+          🔍 Cari Proyek Nyata
+        </a>
+        <a href="pages/auth/register.html" class="btn btn-outline btn-lg">
+          🏪 Pasang Kebutuhan UMKM
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Stats Strip -->
+  <section class="stats-strip">
+    <div class="container">
+      <div class="stats-grid">
+        <div>
+          <div class="stat-number">1,250+</div>
+          <div class="stat-label">Mahasiswa Berbakat</div>
+        </div>
+        <div>
+          <div class="stat-number">480+</div>
+          <div class="stat-label">Mitra UMKM Terdaftar</div>
+        </div>
+        <div>
+          <div class="stat-number">98.4%</div>
+          <div class="stat-label">Tingkat Sukses Kolaborasi</div>
+        </div>
+        <div>
+          <div class="stat-number">Gemini 3.8</div>
+          <div class="stat-label">Algoritma AI Matchmaker</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects -->
+  <section style="padding: var(--space-12) 0; background-color: var(--color-bg-app);">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-6);">
+        <div>
+          <h2 style="font-size: var(--font-size-2xl); font-weight: 800; color: var(--color-text-main);">Proyek UMKM Unggulan</h2>
+          <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: 4px;">Peluang kerja nyata terbaru siap dikerjakan oleh mahasiswa</p>
+        </div>
+        <a href="pages/projects.html" class="btn btn-outline btn-sm">Lihat Semua Proyek →</a>
+      </div>
+
+      <div class="grid grid-cols-2" id="featured-projects-container" style="gap: var(--space-6);">
+        <!-- Dynamically rendered via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="cara-kerja" style="padding: var(--space-12) 0; background-color: #FFFFFF; border-top: 1px solid var(--color-border-subtle);">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge badge-teal" style="margin-bottom: var(--space-2);">Alur Kolaborasi</div>
+        <h2 style="font-size: var(--font-size-2xl); font-weight: 800;">Bagaimana SkillBridge Bekerja?</h2>
+        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Empat langkah terarah dari pencocokan cerdas hingga serah terima hasil proyek</p>
+      </div>
+
+      <div class="grid grid-cols-4" style="gap: var(--space-6);">
+        <div class="feature-card">
+          <div class="feature-icon" style="background-color: var(--color-primary-light); color: var(--color-primary);">1</div>
+          <h3 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-2);">UMKM Buat Proyek</h3>
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); line-height: 1.5;">Pemilik usaha membagikan kebutuhan digitalisasi, anggaran santunan, serta kriteria keahlian.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background-color: var(--color-secondary-light); color: var(--color-secondary);">2</div>
+          <h3 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-2);">AI Matchmaking</h3>
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); line-height: 1.5;">Model Gemini 3.8 Flash menganalisis profil mahasiswa dan memberikan skor kecocokan objektif.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background-color: #FEF3C7; color: #D97706;">3</div>
+          <h3 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-2);">Workspace Interaktif</h3>
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); line-height: 1.5;">Kolaborasi transparan dengan Kanban task board, timeline milestone, dan pesan langsung.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background-color: #ECFDF5; color: #059669;">4</div>
+          <h3 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-2);">Review & Portofolio</h3>
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); line-height: 1.5;">UMKM menerima deliverables, memberikan rating ulasan bintang, dan mahasiswa memperoleh sertifikasi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="grid grid-cols-4" style="gap: var(--space-8); margin-bottom: var(--space-8);">
+        <div>
+          <div style="font-size: 1.25rem; font-weight: 800; color: #FFFFFF; margin-bottom: var(--space-3);">
+            ⚡ SkillBridge
+          </div>
+          <p style="font-size: var(--font-size-xs); line-height: 1.6;">
+            Platform modern pemberdayaan UMKM lokal melalui sinergi keahlian talenta muda perguruan tinggi di seluruh Indonesia.
+          </p>
+        </div>
+        <div>
+          <h4 class="footer-title">Navigasi</h4>
+          <a href="pages/projects.html" class="footer-link">Eksplorasi Proyek</a>
+          <a href="pages/auth/login.html" class="footer-link">Masuk Akun</a>
+          <a href="pages/auth/register.html" class="footer-link">Daftar Akun Baru</a>
+        </div>
+        <div>
+          <h4 class="footer-title">Tech Stack Rework</h4>
+          <span class="footer-link">• Frontend: HTML5, CSS3, Vanilla JS</span>
+          <span class="footer-link">• AI Backend: Python FastAPI</span>
+          <span class="footer-link">• AI Engine: Gemini 3.8 Flash</span>
+          <span class="footer-link">• Database: Supabase PostgreSQL</span>
+        </div>
+        <div>
+          <h4 class="footer-title">Repositori & Dokumen</h4>
+          <a href="https://github.com/Dhafin-dev/SkillBridge-Rework.git" target="_blank" class="footer-link">GitHub Repository ↗</a>
+          <a href="SkillBridge-KnowledgeBase/00 - SkillBridge Map of Content (MOC).md" class="footer-link">Obsidian Knowledge Base ↗</a>
+          <span class="footer-link">Versi: 2.0.0-rework</span>
+        </div>
+      </div>
+      <div style="border-top: 1px solid #1E293B; padding-top: var(--space-6); text-align: center; font-size: var(--font-size-xs);">
+        © 2026 SkillBridge Rework. Dikembangkan untuk kemajuan UMKM dan talenta muda Indonesia.
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/toast.js"></script>
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script>
+    // Render Featured Projects
+    async function loadFeaturedProjects() {
+      const container = document.getElementById('featured-projects-container');
+      const projects = await window.SkillBridgeDB.getProjects();
+      const currentUser = window.SkillBridgeAuth.getUser();
+
+      container.innerHTML = projects.slice(0, 4).map(p => {
+        const formattedBudget = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(p.budget);
+        const skillsBadges = p.required_skills.map(s => `<span class="badge badge-neutral">${s}</span>`).join('');
+
+        return `
+          <div class="card card-interactive project-card" onclick="window.location.href='pages/project-detail.html?id=${p.id}'">
+            <div class="card-body">
+              <div class="project-meta">
+                <span class="badge badge-primary">${p.category_name}</span>
+                <span>•</span>
+                <span>📍 ${p.umkm_city}</span>
+                <span>•</span>
+                <span>📅 Batas: ${p.deadline}</span>
+              </div>
+              <h3 class="project-title">${p.title}</h3>
+              <p class="project-desc">${p.description}</p>
+              <div class="project-tags">
+                ${skillsBadges}
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle);">
+                <div>
+                  <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Budget Santunan</div>
+                  <div style="font-weight: 800; color: var(--color-primary); font-size: var(--font-size-base);">${formattedBudget}</div>
+                </div>
+                <div class="project-umkm">
+                  <div class="umkm-avatar">${p.umkm_name.charAt(0)}</div>
+                  <span style="font-size: var(--font-size-xs); font-weight: 600; color: var(--color-text-main);">${p.umkm_name}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadFeaturedProjects);
+  </script>
+</body>
+</html>

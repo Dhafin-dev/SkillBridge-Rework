@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk ke SkillBridge — Kolaborasi Talenta Mahasiswa & UMKM</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .auth-page {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8) var(--space-4);
+      background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 80%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
+                  var(--color-bg-app);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      padding: var(--space-8);
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--space-6);
+    }
+    .role-toggle {
+      display: flex;
+      background-color: var(--color-surface-muted);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-5);
+    }
+    .role-tab {
+      flex: 1;
+      padding: 0.5rem;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .role-tab.active {
+      background-color: #FFFFFF;
+      color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    .quick-fill {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-5);
+    }
+    .quick-fill button {
+      flex: 1;
+      padding: 0.375rem;
+      font-size: var(--font-size-xs);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="../../index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+      <div id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1 style="font-size: var(--font-size-2xl); font-weight: 800; margin-bottom: 0.5rem;">Selamat Datang Kembali</h1>
+        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Masuk ke akun SkillBridge Anda</p>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="role-toggle" role="tablist">
+        <button class="role-tab active" id="tab-mahasiswa" type="button">👨‍🎓 Mahasiswa</button>
+        <button class="role-tab" id="tab-umkm" type="button">🏪 Pemilik UMKM</button>
+      </div>
+
+      <!-- Quick Demo Login Helpers -->
+      <div class="quick-fill">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-demo-std">Demo: Mahasiswa</button>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-demo-umkm">Demo: UMKM</button>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="email">Alamat Email</label>
+          <input type="email" id="email" class="form-control" placeholder="nama@email.com" required value="budi.santoso@itb.ac.id">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">
+            <span>Kata Sandi</span>
+            <a href="#" style="font-size: var(--font-size-xs); color: var(--color-primary);">Lupa sandi?</a>
+          </label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required value="password123">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-4);">
+          Masuk Sekarang
+        </button>
+      </form>
+
+      <p style="text-align: center; font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-6);">
+        Belum memiliki akun? <a href="register.html" style="color: var(--color-primary); font-weight: 600;">Daftar Akun Baru</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    let currentRole = 'mahasiswa';
+    const tabMhs = document.getElementById('tab-mahasiswa');
+    const tabUmkm = document.getElementById('tab-umkm');
+    const emailInput = document.getElementById('email');
+
+    tabMhs.addEventListener('click', () => {
+      currentRole = 'mahasiswa';
+      tabMhs.classList.add('active');
+      tabUmkm.classList.remove('active');
+      emailInput.value = 'budi.santoso@itb.ac.id';
+    });
+
+    tabUmkm.addEventListener('click', () => {
+      currentRole = 'umkm';
+      tabUmkm.classList.add('active');
+      tabMhs.classList.remove('active');
+      emailInput.value = 'bambang@kopinusantara.id';
+    });
+
+    document.getElementById('btn-demo-std').addEventListener('click', () => {
+      tabMhs.click();
+    });
+
+    document.getElementById('btn-demo-umkm').addEventListener('click', () => {
+      tabUmkm.click();
+    });
+
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = emailInput.value;
+      const password = document.getElementById('password').value;
+
+      const user = window.SkillBridgeAuth.login(email, password, currentRole);
+      window.toast.success(`Berhasil masuk sebagai ${user.name}!`);
+
+      setTimeout(() => {
+        if (user.role === 'umkm') {
+          window.location.href = '../umkm/dashboard.html';
+        } else {
+          window.location.href = '../student/dashboard.html';
+        }
+      }, 700);
+    });
+  </script>
+</body>
+</html>

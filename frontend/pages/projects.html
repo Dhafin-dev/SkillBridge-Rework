@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eksplorasi Proyek UMKM — SkillBridge</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <style>
+    .filter-bar {
+      background-color: #FFFFFF;
+      border-bottom: 1px solid var(--color-border-subtle);
+      padding: var(--space-6) 0;
+    }
+    .category-pills {
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      padding-bottom: var(--space-2);
+      margin-top: var(--space-4);
+    }
+    .pill {
+      padding: 0.375rem 0.875rem;
+      border-radius: var(--radius-full);
+      background-color: var(--color-surface-muted);
+      border: 1px solid var(--color-border-subtle);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .pill:hover {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+    .pill.active {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body style="background-color: var(--color-bg-app);">
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-link">Beranda</a>
+        <a href="projects.html" class="nav-link active">Eksplorasi Proyek</a>
+      </nav>
+
+      <div id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <!-- Filter & Search Bar -->
+  <section class="filter-bar">
+    <div class="container">
+      <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: center; justify-content: space-between;">
+        <div>
+          <h1 style="font-size: var(--font-size-2xl); font-weight: 800; color: var(--color-text-main);">Daftar Proyek Digitalisasi UMKM</h1>
+          <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: 2px;">Temukan proyek nyata yang sesuai dengan keahlian Anda</p>
+        </div>
+
+        <div style="display: flex; gap: var(--space-3); width: 100%; max-width: 440px;">
+          <input type="text" id="search-input" class="form-control" placeholder="Cari judul, keahlian (misal: Figma, Python)...">
+          <button id="btn-search" class="btn btn-primary">Cari</button>
+        </div>
+      </div>
+
+      <!-- Categories Pills -->
+      <div class="category-pills" id="category-pills-container">
+        <button class="pill active" data-cat="all">Semua Kategori</button>
+        <button class="pill" data-cat="1">🌐 Web Development</button>
+        <button class="pill" data-cat="2">📱 Mobile App</button>
+        <button class="pill" data-cat="3">🎨 Graphic Design & UI/UX</button>
+        <button class="pill" data-cat="4">📈 Digital Marketing</button>
+        <button class="pill" data-cat="5">💰 Sistem Pembukuan</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Grid -->
+  <main class="container" style="padding: var(--space-8) 0 var(--space-16) 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+      <div id="projects-count-text" style="font-size: var(--font-size-sm); color: var(--color-text-secondary); font-weight: 600;">
+        Memuat proyek...
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--space-2);">
+        <label for="sort-select" style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Urutkan:</label>
+        <select id="sort-select" class="form-select" style="width: auto; padding: 0.25rem 0.5rem; font-size: var(--font-size-xs);">
+          <option value="newest">Terbaru</option>
+          <option value="budget-high">Budget Tertinggi</option>
+          <option value="deadline">Batas Waktu</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2" id="projects-grid" style="gap: var(--space-6);">
+      <!-- Rendered via JS -->
+    </div>
+  </main>
+
+  <script src="../assets/js/toast.js"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script>
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    async function renderProjects() {
+      const grid = document.getElementById('projects-grid');
+      const countText = document.getElementById('projects-count-text');
+      
+      let projects = await window.SkillBridgeDB.getProjects(activeCategory, searchQuery);
+      const sortBy = document.getElementById('sort-select').value;
+      if (sortBy === 'budget-high') {
+        projects.sort((a, b) => b.budget - a.budget);
+      } else if (sortBy === 'deadline') {
+        projects.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+      }
+
+      countText.textContent = `Menampilkan ${projects.length} proyek aktif`;
+
+      if (projects.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: var(--space-16); background: #FFFFFF; border-radius: var(--radius-xl); border: 1px dashed var(--color-border-subtle);">
+            <div style="font-size: 2.5rem; margin-bottom: var(--space-3);">🔍</div>
+            <h3 style="font-size: var(--font-size-lg); font-weight: 700;">Tidak ada proyek ditemukan</h3>
+            <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: 4px;">Coba gunakan kata kunci lain atau pilih kategori Semua.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = projects.map(p => {
+        const formattedBudget = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(p.budget);
+        const tags = p.required_skills.map(s => `<span class="badge badge-neutral">${s}</span>`).join('');
+
+        return `
+          <div class="card card-interactive project-card" onclick="window.location.href='project-detail.html?id=${p.id}'">
+            <div class="card-body">
+              <div class="project-meta">
+                <span class="badge badge-primary">${p.category_name}</span>
+                <span>•</span>
+                <span>📍 ${p.umkm_city}</span>
+                <span>•</span>
+                <span>📅 Batas: ${p.deadline}</span>
+              </div>
+              <h3 class="project-title">${p.title}</h3>
+              <p class="project-desc">${p.description}</p>
+              <div class="project-tags">
+                ${tags}
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle);">
+                <div>
+                  <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Budget Santunan</div>
+                  <div style="font-weight: 800; color: var(--color-primary); font-size: var(--font-size-base);">${formattedBudget}</div>
+                </div>
+                <div class="project-umkm">
+                  <div class="umkm-avatar">${p.umkm_name.charAt(0)}</div>
+                  <span style="font-size: var(--font-size-xs); font-weight: 600; color: var(--color-text-main);">${p.umkm_name}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Category pills click handler
+    document.getElementById('category-pills-container').addEventListener('click', (e) => {
+      if (e.target.classList.contains('pill')) {
+        document.querySelectorAll('.category-pills .pill').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        activeCategory = e.target.getAttribute('data-cat');
+        renderProjects();
+      }
+    });
+
+    // Search events
+    const searchInput = document.getElementById('search-input');
+    document.getElementById('btn-search').addEventListener('click', () => {
+      searchQuery = searchInput.value;
+      renderProjects();
+    });
+    searchInput.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        searchQuery = searchInput.value;
+        renderProjects();
+      }
+    });
+
+    document.getElementById('sort-select').addEventListener('change', renderProjects);
+
+    document.addEventListener('DOMContentLoaded', renderProjects);
+  </script>
+</body>
+</html>

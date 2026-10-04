@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Pelamar Mahasiswa — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .applicant-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="../../index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+
+      <div style="display: flex; align-items: center; gap: var(--space-4);">
+        <span class="badge badge-teal">🏪 Portal Pemilik UMKM</span>
+        <div id="navbar-auth-actions"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <a href="dashboard.html" class="sidebar-item">📊 Manajemen Proyek</a>
+      <a href="create-project.html" class="sidebar-item">➕ Buat Proyek Baru</a>
+      <a href="applicants.html" class="sidebar-item active">👥 Review Pelamar</a>
+      <a href="../student/workspace.html" class="sidebar-item">💼 Ruang Kerja Aktif</a>
+      <div style="margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle);">
+        <button onclick="window.SkillBridgeAuth.logout()" class="sidebar-item" style="color: var(--color-danger); width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
+          🚪 Keluar Akun
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-content">
+      <div style="margin-bottom: var(--space-6);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+          <div>
+            <h1 style="font-size: var(--font-size-2xl); font-weight: 800; color: var(--color-text-main);">
+              Evaluasi Pelamar Mahasiswa
+            </h1>
+            <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: 2px;">
+              Gunakan evaluasi AI Gemini 3.8 Flash untuk menyaring kandidat terbaik untuk proyek Anda.
+            </p>
+          </div>
+          <div>
+            <select id="project-selector" class="form-select" style="min-width: 300px;">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Applicants List Container -->
+      <div id="applicants-list-container">
+        <!-- Rendered via JS -->
+      </div>
+    </main>
+  </div>
+
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/api.js"></script>
+  <script>
+    let currentProject = null;
+
+    async function initPage() {
+      if (!window.SkillBridgeAuth.requireAuth(['umkm'])) return;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetProjectId = urlParams.get('projectId') || 'p1';
+
+      const projects = await window.SkillBridgeDB.getProjects();
+      const selector = document.getElementById('project-selector');
+
+      selector.innerHTML = projects.map(p => `
+        <option value="${p.id}" ${p.id === targetProjectId ? 'selected' : ''}>
+          ${p.title}
+        </option>
+      `).join('');
+
+      selector.addEventListener('change', () => {
+        loadApplicants(selector.value);
+      });
+
+      await loadApplicants(selector.value);
+    }
+
+    async function loadApplicants(projectId) {
+      currentProject = await window.SkillBridgeDB.getProjectById(projectId);
+      const applicants = await window.SkillBridgeDB.getApplicationsForProject(projectId);
+      const container = document.getElementById('applicants-list-container');
+
+      if (applicants.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: var(--space-16); background: #FFFFFF; border-radius: var(--radius-xl); border: 1px dashed var(--color-border-subtle);">
+            <div style="font-size: 2.5rem; margin-bottom: var(--space-3);">📭</div>
+            <h3 style="font-size: var(--font-size-lg); font-weight: 700;">Belum Ada Pelamar untuk Proyek Ini</h3>
+            <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: 4px;">Mahasiswa akan segera melihat dan mengajukan lamaran ke proyek Anda.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = applicants.map((app, idx) => {
+        const skillsBadges = (app.student_skills || []).map(s => `<span class="badge badge-neutral">${s}</span>`).join('');
+        const statusBadge = app.status === 'accepted' 
+          ? '<span class="badge badge-success">Diterima</span>'
+          : app.status === 'rejected'
+          ? '<span class="badge badge-danger">Ditolak</span>'
+          : '<span class="badge badge-warning">Menunggu Keputusan</span>';
+
+        return `
+          <div class="applicant-card" id="app-card-${app.id}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-4);">
+              <div style="display: flex; gap: var(--space-4); align-items: center;">
+                <div class="umkm-avatar" style="width: 48px; height: 48px; font-size: 1.25rem;">
+                  ${app.student_name.charAt(0)}
+                </div>
+                <div>
+                  <h3 style="font-size: var(--font-size-base); font-weight: 800;">${app.student_name}</h3>
+                  <div style="font-size: var(--font-size-xs); color: var(--color-text-secondary);">
+                    🎓 ${app.student_university}
+                  </div>
+                </div>
+              </div>
+              <div>${statusBadge}</div>
+            </div>
+
+            <div style="margin-bottom: var(--space-4);">
+              <div style="font-size: var(--font-size-xs); font-weight: 700; color: var(--color-text-muted); margin-bottom: 4px;">Keahlian yang Dimiliki:</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">${skillsBadges}</div>
+            </div>
+
+            <div style="background-color: var(--color-bg-app); padding: var(--space-4); border-radius: var(--radius-md); margin-bottom: var(--space-4); font-size: var(--font-size-sm); line-height: 1.6;">
+              <strong style="color: var(--color-text-main);">Surat Pengantar & Solusi:</strong>
+              <p style="color: var(--color-text-secondary); margin-top: 4px;">"${app.cover_letter}"</p>
+            </div>
+
+            <!-- AI Assessment Box -->
+            <div id="ai-box-${app.id}" style="border: 1px solid rgba(79, 70, 229, 0.2); background: rgba(79, 70, 229, 0.03); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-4); display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                <div style="font-weight: 800; font-size: var(--font-size-sm); color: var(--color-primary);">✨ Evaluasi Gemini 3.8 Flash</div>
+                <div id="ai-badge-${app.id}" class="match-score-badge match-high" style="font-size: var(--font-size-xs); padding: 2px 8px;"></div>
+              </div>
+              <div id="ai-reason-${app.id}" style="font-size: var(--font-size-xs); color: var(--color-text-secondary); line-height: 1.5;"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-3); border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-4);">
+              <button onclick="evaluateApplicant('${app.id}', '${encodeURIComponent(JSON.stringify(app))}')" class="btn btn-outline btn-sm" id="btn-eval-${app.id}">
+                ⚡ Analisis Kecocokan AI
+              </button>
+
+              <div style="display: flex; gap: var(--space-2);">
+                <button onclick="handleDecision('${app.id}', 'rejected')" class="btn btn-ghost btn-sm" style="color: var(--color-danger);">
+                  Tolak
+                </button>
+                <button onclick="handleDecision('${app.id}', 'accepted')" class="btn btn-primary btn-sm">
+                  ✅ Terima & Mulai Kolaborasi
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function evaluateApplicant(appId, appJsonEncoded) {
+      const app = JSON.parse(decodeURIComponent(appJsonEncoded));
+      const btn = document.getElementById(`btn-eval-${appId}`);
+      btn.disabled = true;
+      btn.textContent = '⏳ Menganalisis...';
+
+      const studentProfile = {
+        name: app.student_name,
+        university: app.student_university,
+        skills: app.student_skills || [],
+        bio: app.cover_letter
+      };
+
+      const result = await window.SkillBridgeAI.calculateMatch(studentProfile, currentProject);
+
+      const aiBox = document.getElementById(`ai-box-${appId}`);
+      aiBox.style.display = 'block';
+
+      const badge = document.getElementById(`ai-badge-${appId}`);
+      badge.textContent = `🎯 Skor: ${result.match_score}% (${result.recommendation})`;
+      badge.className = 'match-score-badge ' + (
+        result.match_score >= 75 ? 'match-high' :
+        result.match_score >= 50 ? 'match-medium' : 'match-low'
+      );
+
+      document.getElementById(`ai-reason-${appId}`).textContent = result.reasoning;
+      btn.textContent = '🔄 Analisis Ulang AI';
+      btn.disabled = false;
+      window.toast.success(`Evaluasi selesai: Skor ${result.match_score}%`);
+    }
+
+    async function handleDecision(appId, decision) {
+      await window.SkillBridgeDB.updateApplicationStatus(appId, decision);
+      if (decision === 'accepted') {
+        window.toast.success('Lamaran diterima! Anda dapat mulai berkolaborasi di Workspace.');
+        setTimeout(() => window.location.href = '../student/workspace.html', 1200);
+      } else {
+        window.toast.info('Lamaran ditolak.');
+        loadApplicants(currentProject.id);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

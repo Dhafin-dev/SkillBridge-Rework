@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace Kolaborasi — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-6);
+      height: calc(100vh - 180px);
+    }
+    @media (max-width: 992px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      height: 100%;
+      overflow-x: auto;
+    }
+    .kanban-col {
+      background-color: var(--color-surface-muted);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      max-height: 100%;
+      overflow-y: auto;
+    }
+    .kanban-col-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--font-size-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-secondary);
+      padding-bottom: var(--space-2);
+      border-bottom: 2px solid var(--color-border-subtle);
+    }
+    .kanban-item {
+      background: #FFFFFF;
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border-subtle);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .kanban-item-title {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      color: var(--color-text-main);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="../../index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+
+      <div style="display: flex; align-items: center; gap: var(--space-4);">
+        <a href="dashboard.html" class="btn btn-outline btn-sm">← Kembali ke Dashboard</a>
+        <div id="navbar-auth-actions"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: var(--space-6); padding-bottom: var(--space-8);">
+    <!-- Project Header Bar -->
+    <div class="card" style="margin-bottom: var(--space-6);">
+      <div class="card-body" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); padding: var(--space-4) var(--space-6);">
+        <div>
+          <div style="display: flex; align-items: center; gap: var(--space-2);">
+            <span class="badge badge-primary">Workspace Aktif</span>
+            <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">ID: WS-2026-001</span>
+          </div>
+          <h1 style="font-size: var(--font-size-lg); font-weight: 800; margin-top: 4px;">
+            Pembuatan Website Katalog & Pemesanan Online Kopi Nusantara
+          </h1>
+          <div style="font-size: var(--font-size-xs); color: var(--color-text-secondary);">
+            Mitra: <strong>Kopi Nusantara UMKM (Pak Bambang)</strong> • Mahasiswa: <strong>Budi Santoso</strong>
+          </div>
+        </div>
+
+        <div style="min-width: 200px;">
+          <div style="display: flex; justify-content: space-between; font-size: var(--font-size-xs); margin-bottom: 4px;">
+            <span style="font-weight: 600;">Progres Proyek</span>
+            <span id="progress-percent-label" style="font-weight: 800; color: var(--color-primary);">66%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar-fill" style="width: 66%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workspace Main Split: Kanban (Left) & Chat (Right) -->
+    <div class="workspace-grid">
+      <!-- Left: Kanban Board -->
+      <div class="card" style="display: flex; flex-direction: column;">
+        <div class="card-header">
+          <div style="display: flex; align-items: center; gap: var(--space-2);">
+            <span style="font-size: 1.1rem;">📋</span>
+            <h2 style="font-size: var(--font-size-sm); font-weight: 700;">Task Management (Kanban Board)</h2>
+          </div>
+          <button id="btn-add-task-modal" class="btn btn-primary btn-sm">+ Tambah Tugas</button>
+        </div>
+
+        <div class="card-body" style="padding: var(--space-4); flex: 1; overflow: hidden;">
+          <div class="kanban-board">
+            <!-- Col 1: To Do -->
+            <div class="kanban-col" id="col-todo">
+              <div class="kanban-col-header">
+                <span>Rencana (To Do)</span>
+                <span class="badge badge-neutral" id="count-todo">0</span>
+              </div>
+              <div class="kanban-items" id="items-todo" style="display: flex; flex-direction: column; gap: var(--space-2);"></div>
+            </div>
+
+            <!-- Col 2: In Progress -->
+            <div class="kanban-col" id="col-in_progress">
+              <div class="kanban-col-header">
+                <span>Dikerjakan (In Progress)</span>
+                <span class="badge badge-primary" id="count-in_progress">0</span>
+              </div>
+              <div class="kanban-items" id="items-in_progress" style="display: flex; flex-direction: column; gap: var(--space-2);"></div>
+            </div>
+
+            <!-- Col 3: Done -->
+            <div class="kanban-col" id="col-done">
+              <div class="kanban-col-header">
+                <span>Selesai (Done)</span>
+                <span class="badge badge-success" id="count-done">0</span>
+              </div>
+              <div class="kanban-items" id="items-done" style="display: flex; flex-direction: column; gap: var(--space-2);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Real-time Chat Box -->
+      <div class="chat-container">
+        <div class="chat-header">
+          <div>
+            <h3 style="font-size: var(--font-size-sm); font-weight: 700;">Diskusi & Kolaborasi</h3>
+            <span style="font-size: var(--font-size-xs); color: var(--color-success);">● Online</span>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages-container">
+          <!-- Rendered messages -->
+        </div>
+
+        <form id="chat-input-form" class="chat-input-bar">
+          <input type="text" id="chat-text-input" class="form-control" placeholder="Tulis pesan ke Pak Bambang..." required style="flex: 1;">
+          <button type="submit" class="btn btn-primary btn-sm">Kirim</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Task Modal -->
+  <div class="modal-backdrop" id="task-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Tambah Tugas Baru</h3>
+        <button class="modal-close" id="task-modal-close">&times;</button>
+      </div>
+      <form id="task-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="task-title">Judul Tugas</label>
+            <input type="text" id="task-title" class="form-control" placeholder="Contoh: Integrasi payment gateway" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="task-status">Status Awal</label>
+            <select id="task-status" class="form-select">
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="task-modal-cancel">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Tugas</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    const WORKSPACE_ID = 'ws1';
+
+    async function loadTasks() {
+      const tasks = await window.SkillBridgeDB.getTasks(WORKSPACE_ID);
+      const cols = {
+        todo: document.getElementById('items-todo'),
+        in_progress: document.getElementById('items-in_progress'),
+        done: document.getElementById('items-done')
+      };
+
+      cols.todo.innerHTML = '';
+      cols.in_progress.innerHTML = '';
+      cols.done.innerHTML = '';
+
+      let counts = { todo: 0, in_progress: 0, done: 0 };
+
+      tasks.forEach(task => {
+        counts[task.status] = (counts[task.status] || 0) + 1;
+        const targetContainer = cols[task.status] || cols.todo;
+
+        const nextAction = task.status === 'todo' 
+          ? `<button class="btn btn-outline btn-sm" onclick="moveTask('${task.id}', 'in_progress')" style="font-size: 10px; padding: 2px 6px;">Kerjakan →</button>`
+          : task.status === 'in_progress'
+          ? `<button class="btn btn-primary btn-sm" onclick="moveTask('${task.id}', 'done')" style="font-size: 10px; padding: 2px 6px;">Selesaikan ✓</button>`
+          : `<span class="badge badge-success" style="font-size: 10px;">Selesai</span>`;
+
+        const card = document.createElement('div');
+        card.className = 'kanban-item';
+        card.innerHTML = `
+          <div class="kanban-item-title">${task.title}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+            <span class="badge badge-neutral" style="font-size: 10px;">${task.priority || 'medium'}</span>
+            ${nextAction}
+          </div>
+        `;
+        targetContainer.appendChild(card);
+      });
+
+      document.getElementById('count-todo').textContent = counts.todo;
+      document.getElementById('count-in_progress').textContent = counts.in_progress;
+      document.getElementById('count-done').textContent = counts.done;
+
+      // Update progress bar
+      const total = tasks.length || 1;
+      const pct = Math.round((counts.done / total) * 100);
+      document.getElementById('progress-bar-fill').style.width = pct + '%';
+      document.getElementById('progress-percent-label').textContent = pct + '%';
+    }
+
+    async function moveTask(taskId, newStatus) {
+      await window.SkillBridgeDB.updateTaskStatus(taskId, newStatus);
+      window.toast.success(`Status tugas berhasil diubah ke ${newStatus}!`);
+      loadTasks();
+    }
+
+    // Chat functionality
+    async function loadChat() {
+      const messages = await window.SkillBridgeDB.getMessages(WORKSPACE_ID);
+      const container = document.getElementById('chat-messages-container');
+      const currentUser = window.SkillBridgeAuth.getUser() || { role: 'mahasiswa' };
+
+      container.innerHTML = messages.map(m => {
+        const isMe = m.sender_role === currentUser.role;
+        return `
+          <div class="chat-bubble ${isMe ? 'chat-bubble-outgoing' : 'chat-bubble-incoming'}">
+            <div style="font-size: 10px; opacity: 0.8; margin-bottom: 2px; font-weight: 700;">
+              ${m.sender_name} (${m.sender_role})
+            </div>
+            <div>${m.content}</div>
+            <div class="chat-meta">${m.created_at}</div>
+          </div>
+        `;
+      }).join('');
+
+      container.scrollTop = container.scrollHeight;
+    }
+
+    document.getElementById('chat-input-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('chat-text-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const user = window.SkillBridgeAuth.getUser() || { name: 'Budi Santoso', role: 'mahasiswa' };
+      await window.SkillBridgeDB.sendMessage({
+        workspace_id: WORKSPACE_ID,
+        sender_name: user.name,
+        sender_role: user.role,
+        content: text
+      });
+
+      input.value = '';
+      await loadChat();
+    });
+
+    // Task Modal
+    const taskModal = document.getElementById('task-modal');
+    document.getElementById('btn-add-task-modal').addEventListener('click', () => taskModal.classList.add('active'));
+    document.getElementById('task-modal-close').addEventListener('click', () => taskModal.classList.remove('active'));
+    document.getElementById('task-modal-cancel').addEventListener('click', () => taskModal.classList.remove('active'));
+
+    document.getElementById('task-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('task-title').value;
+      const status = document.getElementById('task-status').value;
+
+      await window.SkillBridgeDB.createTask({
+        workspace_id: WORKSPACE_ID,
+        title: title,
+        status: status,
+        priority: 'high'
+      });
+
+      taskModal.classList.remove('active');
+      document.getElementById('task-title').value = '';
+      window.toast.success('Tugas baru ditambahkan ke papan Kanban!');
+      await loadTasks();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.SkillBridgeAuth.requireAuth();
+      loadTasks();
+      loadChat();
+    });
+  </script>
+</body>
+</html>

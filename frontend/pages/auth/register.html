@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Akun Baru — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .auth-page {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8) var(--space-4);
+      background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 80%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
+                  var(--color-bg-app);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 520px;
+      padding: var(--space-8);
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+    }
+    .role-toggle {
+      display: flex;
+      background-color: var(--color-surface-muted);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-5);
+    }
+    .role-tab {
+      flex: 1;
+      padding: 0.5rem;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .role-tab.active {
+      background-color: #FFFFFF;
+      color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="../../index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+      <div id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <div style="text-align: center; margin-bottom: var(--space-6);">
+        <h1 style="font-size: var(--font-size-2xl); font-weight: 800; margin-bottom: 0.5rem;">Buat Akun SkillBridge</h1>
+        <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">Bergabunglah dengan ekosistem kolaborasi nyata</p>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="role-toggle" role="tablist">
+        <button class="role-tab active" id="tab-mahasiswa" type="button">👨‍🎓 Mahasiswa</button>
+        <button class="role-tab" id="tab-umkm" type="button">🏪 Pemilik UMKM</button>
+      </div>
+
+      <form id="register-form">
+        <!-- Common fields -->
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Nama Lengkap</label>
+          <input type="text" id="reg-name" class="form-control" placeholder="Contoh: Sarah Az-Zahra" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Alamat Email</label>
+          <input type="email" id="reg-email" class="form-control" placeholder="nama@email.com" required>
+        </div>
+
+        <!-- Student specific -->
+        <div id="student-fields">
+          <div class="form-group">
+            <label class="form-label" for="reg-university">Perguruan Tinggi / Kampus</label>
+            <input type="text" id="reg-university" class="form-control" placeholder="Contoh: Universitas Indonesia">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-skills">Keahlian (Pisahkan dengan koma)</label>
+            <input type="text" id="reg-skills" class="form-control" placeholder="Contoh: Figma, UI/UX, React, JavaScript">
+            <span class="form-hint">Digunakan oleh AI Gemini untuk pencocokan proyek otomatis</span>
+          </div>
+        </div>
+
+        <!-- UMKM specific -->
+        <div id="umkm-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="reg-business">Nama Usaha / Brand UMKM</label>
+            <input type="text" id="reg-business" class="form-control" placeholder="Contoh: Kripik Buah Sejahtera">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-city">Kota Domisili Usaha</label>
+            <input type="text" id="reg-city" class="form-control" placeholder="Contoh: Surabaya">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Kata Sandi</label>
+          <input type="password" id="reg-password" class="form-control" placeholder="Minimal 8 karakter" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-4);">
+          Daftar Sekarang
+        </button>
+      </form>
+
+      <p style="text-align: center; font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-6);">
+        Sudah memiliki akun? <a href="login.html" style="color: var(--color-primary); font-weight: 600;">Masuk di Sini</a>
+      </p>
+    </div>
+  </main>
+
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    let currentRole = 'mahasiswa';
+    const tabMhs = document.getElementById('tab-mahasiswa');
+    const tabUmkm = document.getElementById('tab-umkm');
+    const stdFields = document.getElementById('student-fields');
+    const umkmFields = document.getElementById('umkm-fields');
+
+    tabMhs.addEventListener('click', () => {
+      currentRole = 'mahasiswa';
+      tabMhs.classList.add('active');
+      tabUmkm.classList.remove('active');
+      stdFields.style.display = 'block';
+      umkmFields.style.display = 'none';
+    });
+
+    tabUmkm.addEventListener('click', () => {
+      currentRole = 'umkm';
+      tabUmkm.classList.add('active');
+      tabMhs.classList.remove('active');
+      stdFields.style.display = 'none';
+      umkmFields.style.display = 'block';
+    });
+
+    document.getElementById('register-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+
+      let formData = {
+        name,
+        email,
+        role: currentRole
+      };
+
+      if (currentRole === 'mahasiswa') {
+        const uni = document.getElementById('reg-university').value || 'Universitas Indonesia';
+        const rawSkills = document.getElementById('reg-skills').value || 'HTML, CSS, JavaScript';
+        formData.university = uni;
+        formData.skills = rawSkills.split(',').map(s => s.trim()).filter(Boolean);
+      } else {
+        formData.business_name = document.getElementById('reg-business').value || 'UMKM Lokal';
+        formData.city = document.getElementById('reg-city').value || 'Jakarta';
+      }
+
+      const user = window.SkillBridgeAuth.register(formData);
+      window.toast.success('Pendaftaran berhasil! Mengarahkan ke dashboard...');
+
+      setTimeout(() => {
+        if (user.role === 'umkm') {
+          window.location.href = '../umkm/dashboard.html';
+        } else {
+          window.location.href = '../student/dashboard.html';
+        }
+      }, 700);
+    });
+  </script>
+</body>
+</html>

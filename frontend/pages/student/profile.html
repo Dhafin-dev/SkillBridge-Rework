@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Mahasiswa & Keahlian — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="../../index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+
+      <div style="display: flex; align-items: center; gap: var(--space-4);">
+        <span class="badge badge-primary">👨‍🎓 Portal Mahasiswa</span>
+        <div id="navbar-auth-actions"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <a href="dashboard.html" class="sidebar-item">📊 Ringkasan Dashboard</a>
+      <a href="workspace.html" class="sidebar-item">💼 Workspace Kolaborasi</a>
+      <a href="profile.html" class="sidebar-item active">👤 Profil & Keahlian</a>
+      <a href="../projects.html" class="sidebar-item">🔍 Cari Proyek Baru</a>
+      <div style="margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle);">
+        <button onclick="window.SkillBridgeAuth.logout()" class="sidebar-item" style="color: var(--color-danger); width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
+          🚪 Keluar Akun
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-content">
+      <div style="max-width: 720px;">
+        <div style="margin-bottom: var(--space-6);">
+          <h1 style="font-size: var(--font-size-2xl); font-weight: 800; color: var(--color-text-main);">
+            Profil Talenta Mahasiswa
+          </h1>
+          <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-top: 2px;">
+            Perbarui data diri dan daftar keahlian agar model Gemini 3.8 Flash mencocokkan Anda dengan proyek terbaik.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <form id="profile-form">
+              <div class="form-group">
+                <label class="form-label" for="prof-name">Nama Lengkap</label>
+                <input type="text" id="prof-name" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prof-email">Email Terdaftar</label>
+                <input type="email" id="prof-email" class="form-control" readonly style="background-color: var(--color-surface-muted);">
+              </div>
+
+              <div class="grid grid-cols-2" style="gap: var(--space-4);">
+                <div class="form-group">
+                  <label class="form-label" for="prof-uni">Universitas / Kampus</label>
+                  <input type="text" id="prof-uni" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prof-major">Program Studi / Jurusan</label>
+                  <input type="text" id="prof-major" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prof-bio">Bio Ringkas & Minat Karier</label>
+                <textarea id="prof-bio" class="form-textarea" placeholder="Tuliskan pengalaman atau ketertarikan Anda..."></textarea>
+              </div>
+
+              <!-- Skills Manager -->
+              <div class="form-group" style="border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-4); margin-top: var(--space-4);">
+                <label class="form-label" for="new-skill-input">
+                  <span>Daftar Keahlian (Skills)</span>
+                  <span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Tekan Enter atau klik Tambah</span>
+                </label>
+                <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-3);">
+                  <input type="text" id="new-skill-input" class="form-control" placeholder="Contoh: Flutter, Docker, Laravel, SEO...">
+                  <button type="button" id="btn-add-skill" class="btn btn-outline btn-sm">Tambah</button>
+                </div>
+
+                <div id="skills-chip-container" style="display: flex; flex-wrap: wrap; gap: var(--space-2); min-height: 40px; padding: var(--space-3); background-color: var(--color-bg-app); border-radius: var(--radius-md); border: 1px dashed var(--color-border-subtle);">
+                  <!-- Skill chips -->
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-top: var(--space-6);">
+                <button type="submit" class="btn btn-primary">
+                  💾 Simpan Perubahan Profil
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script>
+    let currentSkills = [];
+
+    function renderSkills() {
+      const container = document.getElementById('skills-chip-container');
+      if (currentSkills.length === 0) {
+        container.innerHTML = '<span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Belum ada keahlian ditambahkan.</span>';
+        return;
+      }
+      container.innerHTML = currentSkills.map((s, idx) => `
+        <span class="badge badge-primary" style="padding: 0.35rem 0.65rem; font-size: var(--font-size-xs); display: inline-flex; align-items: center; gap: 0.35rem;">
+          ${s}
+          <span onclick="removeSkill(${idx})" style="cursor: pointer; font-weight: bold; margin-left: 2px;">&times;</span>
+        </span>
+      `).join('');
+    }
+
+    function addSkill(name) {
+      name = name.trim();
+      if (!name) return;
+      if (!currentSkills.includes(name)) {
+        currentSkills.push(name);
+        renderSkills();
+      }
+    }
+
+    window.removeSkill = function (idx) {
+      currentSkills.splice(idx, 1);
+      renderSkills();
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.SkillBridgeAuth.requireAuth(['mahasiswa'])) return;
+
+      const user = window.SkillBridgeAuth.getUser();
+      if (user) {
+        document.getElementById('prof-name').value = user.name || '';
+        document.getElementById('prof-email').value = user.email || '';
+        document.getElementById('prof-uni').value = user.university || '';
+        document.getElementById('prof-major').value = user.major || '';
+        document.getElementById('prof-bio').value = user.bio || '';
+        currentSkills = [...(user.skills || [])];
+        renderSkills();
+      }
+
+      const skillInput = document.getElementById('new-skill-input');
+      document.getElementById('btn-add-skill').addEventListener('click', () => {
+        addSkill(skillInput.value);
+        skillInput.value = '';
+      });
+      skillInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addSkill(skillInput.value);
+          skillInput.value = '';
+        }
+      });
+
+      document.getElementById('profile-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const updated = {
+          ...user,
+          name: document.getElementById('prof-name').value,
+          university: document.getElementById('prof-uni').value,
+          major: document.getElementById('prof-major').value,
+          bio: document.getElementById('prof-bio').value,
+          skills: currentSkills
+        };
+        window.SkillBridgeAuth.setUser(updated);
+        window.toast.success('Profil berhasil diperbarui!');
+      });
+    });
+  </script>
+</body>
+</html>

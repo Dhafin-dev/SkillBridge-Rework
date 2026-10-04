@@ -9,7 +9,7 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B_Modular-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Python](https://img.shields.io/badge/Python-3.10%2B_FastAPI-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL_15-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.5_Flash-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.8_Flash-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
 
 *Bridging higher-education students seeking verified production-grade experience with Indonesian UMKM / MSMEs through AI matchmaking, collaborative milestone workspaces, and verified endorsements.*
 
@@ -22,7 +22,7 @@
 **SkillBridge Rework** adalah platform web kolaborasi proyek industri antara mahasiswa dan pelaku UMKM yang dibangun ulang menggunakan arsitektur **Decoupled Client-BaaS-AI**:
 - **Bebas Kompilasi Rumit:** Menggunakan standar web murni (HTML5, Modern CSS, Vanilla JS ES6+) tanpa beban bundler yang berat.
 - **Fondasi DBMS Relasional Sejati:** Memanfaatkan **PostgreSQL 15+** via Supabase, lengkap dengan 12 tabel ternormalisasi, Foreign Keys, dan Row-Level Security (RLS).
-- **Mesin AI Generatif (Google Gemini 2.5 Flash):** Evaluasi kecocokan kandidat mahasiswa terhadap kebutuhan brief proyek industri via microservice Python FastAPI.
+- **Mesin AI Generatif (Google Gemini 3.8 Flash):** Evaluasi kecocokan kandidat mahasiswa terhadap kebutuhan brief proyek industri via microservice Python FastAPI.
 - **Kolaborasi Real-Time Sub-300ms:** Fitur chat ruang kerja dan checklist target tugas sinkron secara langsung melalui Supabase Realtime CDC.
 
 ---
@@ -43,7 +43,7 @@
 │       Python AI Microservice         │ │       Supabase Platform       │
 │        (FastAPI / Uvicorn)           │ │         (PostgreSQL)          │
 ├──────────────────────────────────────┤ ├───────────────────────────────┤
-│ • Google Gemini 2.5 Flash SDK        │ │ 🔐 Supabase Auth (JWT & Roles)│
+│ • Google Gemini 3.8 Flash SDK        │ │ 🔐 Supabase Auth (JWT & Roles)│
 │ • Talent Suitability Algorithm       │ │ 🗄️ PostgreSQL 15+ RDBMS      │
 │ • CORS & Payload Validation          │ │ 🛡️ Row-Level Security (RLS)   │
 │ • supabase-py (Admin Service Key)    │ │ ⚡ Realtime Engine (CDC Chat)  │

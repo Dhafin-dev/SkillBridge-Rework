@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Proyek — SkillBridge</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <style>
+    .project-detail-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-8);
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-16);
+    }
+    @media (max-width: 900px) {
+      .project-detail-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .skill-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+    }
+    .skill-chip.matched {
+      background-color: var(--color-success-bg);
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+    }
+    .skill-chip.missing {
+      background-color: var(--color-danger-bg);
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+  </style>
+</head>
+<body style="background-color: var(--color-bg-app);">
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-brand">
+        ⚡ Skill<span>Bridge</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-link">Beranda</a>
+        <a href="projects.html" class="nav-link">Eksplorasi Proyek</a>
+      </nav>
+
+      <div id="navbar-auth-actions"></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div style="margin-top: var(--space-6);">
+      <a href="projects.html" style="font-size: var(--font-size-sm); color: var(--color-text-secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
+        ← Kembali ke Daftar Proyek
+      </a>
+    </div>
+
+    <div class="project-detail-layout" id="project-detail-container">
+      <!-- Left Column: Details -->
+      <div>
+        <div class="card" style="margin-bottom: var(--space-6);">
+          <div class="card-body">
+            <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-4);">
+              <span class="badge badge-primary" id="detail-category">Kategori</span>
+              <span class="badge badge-success" id="detail-status">Terbuka</span>
+            </div>
+
+            <h1 id="detail-title" style="font-size: var(--font-size-2xl); font-weight: 800; line-height: 1.25; margin-bottom: var(--space-4);">
+              Memuat judul proyek...
+            </h1>
+
+            <div style="display: flex; align-items: center; gap: var(--space-4); color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-6); flex-wrap: wrap;">
+              <span id="detail-city">📍 Lokasi</span>
+              <span>•</span>
+              <span id="detail-deadline">📅 Batas Waktu</span>
+              <span>•</span>
+              <span id="detail-applicants">👥 0 Pelamar</span>
+            </div>
+
+            <div style="border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-6);">
+              <h2 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-3);">Deskripsi & Kebutuhan Proyek</h2>
+              <p id="detail-desc" style="font-size: var(--font-size-sm); line-height: 1.7; color: var(--color-text-secondary); white-space: pre-line;">
+                Memuat deskripsi...
+              </p>
+            </div>
+
+            <div style="border-top: 1px solid var(--color-border-subtle); padding-top: var(--space-6); margin-top: var(--space-6);">
+              <h2 style="font-size: var(--font-size-base); font-weight: 700; margin-bottom: var(--space-3);">Keahlian yang Dibutuhkan</h2>
+              <div id="detail-skills" style="display: flex; flex-wrap: wrap; gap: var(--space-2);">
+                <!-- Skills badges -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UMKM Profile Card -->
+        <div class="card">
+          <div class="card-body" style="display: flex; align-items: center; gap: var(--space-4);">
+            <div class="umkm-avatar" id="detail-umkm-avatar" style="width: 54px; height: 54px; font-size: 1.5rem; border-radius: var(--radius-full); background: var(--color-primary-light); color: var(--color-primary); display: flex; align-items: center; justify-content: center; font-weight: 800;">
+              U
+            </div>
+            <div>
+              <div style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Pemberi Proyek</div>
+              <h3 id="detail-umkm-name" style="font-size: var(--font-size-base); font-weight: 700;">Nama UMKM</h3>
+              <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary);">Mitra Terverifikasi SkillBridge</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Budget & AI Matcher -->
+      <div>
+        <!-- Budget Card -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+          <div class="card-body">
+            <div style="font-size: var(--font-size-xs); color: var(--color-text-muted); margin-bottom: 4px;">Budget Kompensasi</div>
+            <div id="detail-budget" style="font-size: var(--font-size-2xl); font-weight: 800; color: var(--color-primary); margin-bottom: var(--space-4);">
+              Rp 0
+            </div>
+
+            <button id="btn-apply-modal" class="btn btn-primary" style="width: 100%;">
+              🚀 Ajukan Lamaran Proyek
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Matchmaker Card -->
+        <div class="card ai-match-card" id="ai-match-section">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.25rem;">✨</span>
+              <h3 style="font-size: var(--font-size-base); font-weight: 800;">Gemini 3.8 Matchmaker</h3>
+            </div>
+            <span class="badge badge-primary">Model: 3.8 Flash</span>
+          </div>
+
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-4);">
+            Analisis keselarasan keahlian akun Anda dengan spesifikasi proyek ini secara objektif.
+          </p>
+
+          <button id="btn-run-ai" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: var(--space-4);">
+            ⚡ Hitung Kecocokan AI
+          </button>
+
+          <!-- AI Results Box (Initially hidden) -->
+          <div id="ai-results-box" style="display: none;">
+            <div style="text-align: center; margin-bottom: var(--space-4);">
+              <div id="ai-score-badge" class="match-score-badge match-high" style="font-size: 1.25rem;">
+                🎯 88% Cocok
+              </div>
+              <div id="ai-recommendation-text" style="font-size: var(--font-size-xs); font-weight: 700; margin-top: 4px; color: var(--color-primary);">
+                Sangat Direkomendasikan
+              </div>
+            </div>
+
+            <div style="margin-bottom: var(--space-4);">
+              <div style="font-size: var(--font-size-xs); font-weight: 700; margin-bottom: var(--space-2);">Keahlian Sesuai:</div>
+              <div id="ai-matched-skills" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+            </div>
+
+            <div style="margin-bottom: var(--space-4);">
+              <div style="font-size: var(--font-size-xs); font-weight: 700; margin-bottom: var(--space-2);">Keahlian Perlu Dipelajari:</div>
+              <div id="ai-missing-skills" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.7); padding: var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--color-border-subtle); font-size: var(--font-size-xs); line-height: 1.5; color: var(--color-text-secondary);">
+              <strong>Analisis AI:</strong>
+              <div id="ai-reasoning-text" style="margin-top: 4px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Application Modal Dialog -->
+  <div class="modal-backdrop" id="application-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Ajukan Lamaran Proyek</h3>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <form id="application-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="app-letter">Surat Motivasi & Rencana Solusi</label>
+            <textarea id="app-letter" class="form-textarea" placeholder="Jelaskan mengapa Anda kandidat yang tepat dan rencana penyelesaian proyek ini..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="app-portfolio">Link Portofolio / GitHub / Behance</label>
+            <input type="url" id="app-portfolio" class="form-control" placeholder="https://github.com/username atau https://behance.net/..." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="app-timeline">Estimasi Durasi Pengerjaan</label>
+            <input type="text" id="app-timeline" class="form-control" placeholder="Contoh: 3 minggu (15 hari kerja)" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="modal-cancel-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Kirim Lamaran</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../assets/js/toast.js"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script>
+    let currentProject = null;
+
+    async function loadProjectDetail() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const projectId = urlParams.get('id') || 'p1';
+
+      currentProject = await window.SkillBridgeDB.getProjectById(projectId);
+      if (!currentProject) {
+        window.toast.error('Proyek tidak ditemukan.');
+        setTimeout(() => window.location.href = 'projects.html', 1500);
+        return;
+      }
+
+      document.title = `${currentProject.title} — SkillBridge`;
+      document.getElementById('detail-title').textContent = currentProject.title;
+      document.getElementById('detail-category').textContent = currentProject.category_name;
+      document.getElementById('detail-city').textContent = `📍 ${currentProject.umkm_city}`;
+      document.getElementById('detail-deadline').textContent = `📅 Batas: ${currentProject.deadline}`;
+      document.getElementById('detail-applicants').textContent = `👥 ${currentProject.applicants_count || 0} Pelamar`;
+      document.getElementById('detail-desc').textContent = currentProject.description;
+      document.getElementById('detail-umkm-name').textContent = currentProject.umkm_name;
+      document.getElementById('detail-umkm-avatar').textContent = currentProject.umkm_name.charAt(0);
+
+      const formattedBudget = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(currentProject.budget);
+      document.getElementById('detail-budget').textContent = formattedBudget;
+
+      const skillsContainer = document.getElementById('detail-skills');
+      skillsContainer.innerHTML = currentProject.required_skills.map(s => `
+        <span class="badge badge-neutral" style="font-size: var(--font-size-sm);">${s}</span>
+      `).join('');
+    }
+
+    // AI Matchmaker Trigger
+    document.getElementById('btn-run-ai').addEventListener('click', async () => {
+      const btn = document.getElementById('btn-run-ai');
+      let user = window.SkillBridgeAuth.getUser();
+
+      if (!user) {
+        window.toast.warning('Silakan masuk sebagai Mahasiswa untuk menghitung kecocokan AI.');
+        setTimeout(() => window.location.href = 'auth/login.html', 1200);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Menganalisis dengan Gemini 3.8 Flash...';
+
+      try {
+        const result = await window.SkillBridgeAI.calculateMatch(user, currentProject);
+
+        const resultsBox = document.getElementById('ai-results-box');
+        resultsBox.style.display = 'block';
+
+        const scoreBadge = document.getElementById('ai-score-badge');
+        scoreBadge.textContent = `🎯 ${result.match_score}% Cocok`;
+
+        scoreBadge.className = 'match-score-badge ' + (
+          result.match_score >= 75 ? 'match-high' :
+          result.match_score >= 50 ? 'match-medium' : 'match-low'
+        );
+
+        document.getElementById('ai-recommendation-text').textContent = result.recommendation;
+        document.getElementById('ai-reasoning-text').textContent = result.reasoning;
+
+        const matchedContainer = document.getElementById('ai-matched-skills');
+        matchedContainer.innerHTML = (result.matched_skills.length > 0) 
+          ? result.matched_skills.map(s => `<span class="skill-chip matched">✓ ${s}</span>`).join('')
+          : '<span style="font-size: var(--font-size-xs); color: var(--color-text-muted);">Belum ada keahlian yang cocok</span>';
+
+        const missingContainer = document.getElementById('ai-missing-skills');
+        missingContainer.innerHTML = (result.missing_skills.length > 0)
+          ? result.missing_skills.map(s => `<span class="skill-chip missing">⚠ ${s}</span>`).join('')
+          : '<span style="font-size: var(--font-size-xs); color: var(--color-success);">Semua keahlian terpenuhi! 🎉</span>';
+
+        window.toast.success(`Analisis AI Selesai: Skor ${result.match_score}%!`);
+      } catch (err) {
+        window.toast.error('Gagal menjalankan analisis AI.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔄 Hitung Ulang Kecocokan AI';
+      }
+    });
+
+    // Modal Application Flow
+    const modal = document.getElementById('application-modal');
+    const btnOpenModal = document.getElementById('btn-apply-modal');
+    const btnCloseModal = document.getElementById('modal-close-btn');
+    const btnCancelModal = document.getElementById('modal-cancel-btn');
+
+    btnOpenModal.addEventListener('click', () => {
+      const user = window.SkillBridgeAuth.getUser();
+      if (!user) {
+        window.toast.warning('Silakan masuk terlebih dahulu untuk melamar.');
+        setTimeout(() => window.location.href = 'auth/login.html', 1000);
+        return;
+      }
+      if (user.role === 'umkm') {
+        window.toast.warning('Akun UMKM tidak dapat mengajukan lamaran proyek.');
+        return;
+      }
+      modal.classList.add('active');
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+    btnCloseModal.addEventListener('click', closeModal);
+    btnCancelModal.addEventListener('click', closeModal);
+
+    document.getElementById('application-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = window.SkillBridgeAuth.getUser();
+      const letter = document.getElementById('app-letter').value;
+      const portfolio = document.getElementById('app-portfolio').value;
+      const timeline = document.getElementById('app-timeline').value;
+
+      await window.SkillBridgeDB.applyToProject({
+        project_id: currentProject.id,
+        student_id: user.id,
+        student_name: user.name,
+        student_university: user.university || 'Kampus Indonesia',
+        student_skills: user.skills || [],
+        cover_letter: letter,
+        portfolio_url: portfolio,
+        timeline_estimate: timeline
+      });
+
+      closeModal();
+      window.toast.success('Lamaran Anda berhasil dikirim ke mitra UMKM!');
+      await loadProjectDetail();
+    });
+
+    document.addEventListener('DOMContentLoaded', loadProjectDetail);
+  </script>
+</body>
+</html>
