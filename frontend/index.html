@@ -8,10 +8,52 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <style>
     /* Homepage Specific Section Layouts matching Figma 01_homepage.png */
+    body {
+      background-color: #FFFFFF !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Section scroll offset to respect sticky navbar */
+    #home, #about, #help {
+      scroll-margin-top: 80px;
+    }
+
+    /* Navbar Link Styling - Enlarged and high contrast */
+    .navbar .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.25rem;
+      list-style: none;
+    }
+
+    .navbar .nav-links a {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #64748B;
+      text-decoration: none;
+      padding: 0.35rem 0.15rem;
+      position: relative;
+      transition: color 0.2s ease, font-weight 0.2s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      color: #2563EB;
+    }
+
+    .navbar .nav-links a.active {
+      color: #2563EB !important;
+      font-weight: 700 !important;
+    }
+
+    /* Seamless Hero & Sections (no color mismatch or borders between Home & About) */
     .hero-section {
       text-align: center;
       padding: 5rem 1rem 4rem 1rem;
-      background: radial-gradient(circle at 50% 10%, rgba(37, 99, 235, 0.06) 0%, transparent 60%), #FFFFFF;
+      background: radial-gradient(circle at 50% 10%, rgba(37, 99, 235, 0.05) 0%, transparent 65%), #FFFFFF;
+      border: none;
     }
 
     .hero-badge-pill {
@@ -55,6 +97,8 @@
       padding: 5rem 1.5rem;
       max-width: 1140px;
       margin: 0 auto;
+      background-color: #FFFFFF;
+      border: none;
     }
 
     .section-header-center {
@@ -290,10 +334,10 @@
 
       <nav>
         <ul class="nav-links">
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#help">Help & FAQ</a></li>
-          <li><a href="pages/projects.html">Market</a></li>
+          <li><a href="#home" id="nav-link-home" class="active">Home</a></li>
+          <li><a href="#about" id="nav-link-about">About</a></li>
+          <li><a href="#help" id="nav-link-help">Help & FAQ</a></li>
+          <li><a href="pages/projects.html" id="nav-link-market">Market</a></li>
         </ul>
       </nav>
 
@@ -305,7 +349,7 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero-section">
+  <section id="home" class="hero-section">
     <div class="container">
       <div class="hero-badge-pill">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -611,6 +655,66 @@
         });
       });
     });
+
+    // Dynamic ScrollSpy: Update active nav link (Home, About, Help & FAQ) as user scrolls
+    const navSections = [
+      { id: 'home', linkId: 'nav-link-home' },
+      { id: 'about', linkId: 'nav-link-about' },
+      { id: 'help', linkId: 'nav-link-help' }
+    ];
+
+    function updateScrollSpy() {
+      const scrollPosition = window.scrollY || window.pageYOffset;
+      const headerOffset = 100; // sticky header clearance buffer
+
+      // If at or near top of the page, activate Home
+      if (scrollPosition < 120) {
+        setActiveNav('home');
+        return;
+      }
+
+      let currentSectionId = 'home';
+      navSections.forEach(section => {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const top = el.offsetTop - headerOffset;
+          if (scrollPosition >= top) {
+            currentSectionId = section.id;
+          }
+        }
+      });
+
+      setActiveNav(currentSectionId);
+    }
+
+    function setActiveNav(activeId) {
+      navSections.forEach(section => {
+        const link = document.getElementById(section.linkId);
+        if (link) {
+          if (section.id === activeId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        }
+      });
+    }
+
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(() => {
+          updateScrollSpy();
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', updateScrollSpy);
+    window.addEventListener('DOMContentLoaded', updateScrollSpy);
+    // Run on initial load
+    updateScrollSpy();
   </script>
 </body>
 </html>

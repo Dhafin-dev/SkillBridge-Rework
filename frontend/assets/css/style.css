@@ -279,15 +279,17 @@ img {
 
 .nav-links a {
   color: var(--color-text-secondary);
-  font-weight: 500;
-  font-size: var(--font-size-sm);
-  transition: color 0.15s ease;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+  padding: 0.25rem 0;
+  transition: color 0.2s ease, font-weight 0.2s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
   color: var(--color-primary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .nav-actions {
