@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .box { fill: #ffffff; stroke: #4f46e5; stroke-width: 1.5; rx: 6; }
+      .entity-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 600; fill: #1e1b4b; text-anchor: middle; }
+      .lifeline { stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4; }
+      .active-bar { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; rx: 3; }
+      .arrow { stroke: #1e293b; stroke-width: 1.5; marker-end: url(#arrowhead); }
+      .return-arrow { stroke: #4f46e5; stroke-width: 1.5; stroke-dasharray: 4; marker-end: url(#arrowhead-blue); }
+      .msg-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; fill: #1e293b; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1e293b"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4f46e5"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="520" class="bg"/>
+
+  <text x="450" y="35" text-anchor="middle" class="title">Sequence Diagram: AI Talent Matchmaking Engine (Gemini 2.5 Flash)</text>
+
+  <!-- Entities -->
+  <rect x="30" y="60" width="120" height="35" class="box"/>
+  <text x="90" y="82" class="entity-text">Pemilik UMKM</text>
+  <line x1="90" y1="95" x2="90" y2="480" class="lifeline"/>
+
+  <rect x="190" y="60" width="130" height="35" class="box"/>
+  <text x="255" y="82" class="entity-text">applicants.html</text>
+  <line x1="255" y1="95" x2="255" y2="480" class="lifeline"/>
+
+  <rect x="360" y="60" width="110" height="35" class="box"/>
+  <text x="415" y="82" class="entity-text">api.js Client</text>
+  <line x1="415" y1="95" x2="415" y2="480" class="lifeline"/>
+
+  <rect x="510" y="60" width="140" height="35" class="box"/>
+  <text x="580" y="82" class="entity-text">FastAPI (Python)</text>
+  <line x1="580" y1="95" x2="580" y2="480" class="lifeline"/>
+
+  <rect x="690" y="60" width="170" height="35" class="box"/>
+  <text x="775" y="82" class="entity-text">Google Gemini 2.5 Flash</text>
+  <line x1="775" y1="95" x2="775" y2="480" class="lifeline"/>
+
+  <!-- Active Lifelines -->
+  <rect x="84" y="110" width="12" height="330" class="active-bar"/>
+  <rect x="249" y="115" width="12" height="320" class="active-bar"/>
+  <rect x="409" y="145" width="12" height="260" class="active-bar"/>
+  <rect x="574" y="175" width="12" height="200" class="active-bar"/>
+  <rect x="769" y="215" width="12" height="120" class="active-bar"/>
+
+  <!-- Messages -->
+  <line x1="96" y1="120" x2="249" y2="120" class="arrow"/>
+  <text x="105" y="115" class="msg-text">1. Buka Pelamar, klik "Lihat Analisis Kecocokan AI"</text>
+
+  <line x1="261" y1="150" x2="409" y2="150" class="arrow"/>
+  <text x="270" y="145" class="msg-text">2. fetchAIMatch(studentProfile, projectDetails)</text>
+
+  <line x1="421" y1="180" x2="574" y2="180" class="arrow"/>
+  <text x="430" y="175" class="msg-text">3. POST /api/ai-match (Payload JSON)</text>
+
+  <line x1="586" y1="220" x2="769" y2="220" class="arrow"/>
+  <text x="595" y="215" class="msg-text">4. generateContent(model='gemini-2.5-flash', prompt)</text>
+
+  <line x1="769" y1="310" x2="586" y2="310" class="return-arrow"/>
+  <text x="595" y="305" class="msg-text">5. Response JSON {matchPercent: 94, rationale, nextSteps}</text>
+
+  <line x1="574" y1="355" x2="421" y2="355" class="return-arrow"/>
+  <text x="430" y="350" class="msg-text">6. 200 OK (Validated Pydantic Envelope JSON)</text>
+
+  <line x1="409" y1="385" x2="261" y2="385" class="return-arrow"/>
+  <text x="270" y="380" class="msg-text">7. Render data to SBAIMatchModal</text>
+
+  <line x1="249" y1="425" x2="96" y2="425" class="return-arrow"/>
+  <text x="105" y="420" class="msg-text">8. Tampilkan Skor 94%, Argumen Rasionalisasi &amp; 3 Rekomendasi Aksi</text>
+</svg>

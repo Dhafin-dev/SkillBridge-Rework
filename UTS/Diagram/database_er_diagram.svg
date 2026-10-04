@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 880" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .header-box { fill: #0f172a; rx: 8; }
+      .header-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .header-sub { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; fill: #94a3b8; text-anchor: middle; }
+      .table-card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 6; }
+      .table-hdr-blue { fill: #1e3a8a; rx: 6; }
+      .table-hdr-indigo { fill: #312e81; rx: 6; }
+      .table-hdr-amber { fill: #78350f; rx: 6; }
+      .table-hdr-emerald { fill: #064e3b; rx: 6; }
+      .table-hdr-purple { fill: #581c87; rx: 6; }
+      .table-hdr-slate { fill: #334155; rx: 6; }
+      .table-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .pk-txt { font-family: 'Courier New', monospace; font-size: 9.5px; font-weight: 700; fill: #b91c1c; }
+      .fk-txt { font-family: 'Courier New', monospace; font-size: 9.5px; font-weight: 700; fill: #0369a1; }
+      .col-txt { font-family: 'Courier New', monospace; font-size: 9.5px; fill: #334155; }
+      .rel-line { stroke: #64748b; stroke-width: 1.5; fill: none; stroke-dasharray: 4,3; marker-end: url(#arrowhead); }
+      .rel-solid { stroke: #475569; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="880" class="bg"/>
+
+  <!-- Main Banner -->
+  <rect x="30" y="15" width="1020" height="50" class="header-box"/>
+  <text x="540" y="36" class="header-title">Gambar 2.4 Entity-Relationship Diagram (ERD) SkillBridge</text>
+  <text x="540" y="52" class="header-sub">Skema Basis Data Relasional PostgreSQL 15+ (12 Entitas, Normalisasi 3NF, Foreign Keys &amp; RLS)</text>
+
+  <!-- TABLE 1: users (Top Center) -->
+  <g transform="translate(420, 80)">
+    <rect width="240" height="150" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 234 0 A 6 6 0 0 1 240 6 L 240 24 L 0 24 Z" class="table-hdr-blue"/>
+    <text x="120" y="16" class="table-title">users (Central Identity)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="col-txt">email: VARCHAR(255) [UNIQUE]</text>
+    <text x="10" y="72" class="col-txt">name: VARCHAR(150)</text>
+    <text x="10" y="88" class="col-txt">role: 'STUDENT'|'UMKM'|'ADMIN'</text>
+    <text x="10" y="104" class="col-txt">avatar, bio: TEXT</text>
+    <text x="10" y="120" class="col-txt">is_verified: BOOLEAN</text>
+    <text x="10" y="136" class="col-txt">created_at, updated_at: TIMESTAMPTZ</text>
+  </g>
+
+  <!-- TABLE 2: student_profiles (Left of Users) -->
+  <g transform="translate(50, 80)">
+    <rect width="230" height="135" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 224 0 A 6 6 0 0 1 230 6 L 230 24 L 0 24 Z" class="table-hdr-indigo"/>
+    <text x="115" y="16" class="table-title">student_profiles (1:1 users)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: user_id (UUID) -> users(id)</text>
+    <text x="10" y="72" class="col-txt">institution: VARCHAR(200)</text>
+    <text x="10" y="88" class="col-txt">portfolio_score: INT (0-100)</text>
+    <text x="10" y="104" class="col-txt">completed_projects_count: INT</text>
+    <text x="10" y="120" class="col-txt">skills, certificates: JSONB</text>
+  </g>
+
+  <!-- TABLE 3: umkm_profiles (Right of Users) -->
+  <g transform="translate(800, 80)">
+    <rect width="230" height="135" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 224 0 A 6 6 0 0 1 230 6 L 230 24 L 0 24 Z" class="table-hdr-amber"/>
+    <text x="115" y="16" class="table-title">umkm_profiles (1:1 users)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: user_id (UUID) -> users(id)</text>
+    <text x="10" y="72" class="col-txt">company_name: VARCHAR(200)</text>
+    <text x="10" y="88" class="col-txt">industry, location: VARCHAR</text>
+    <text x="10" y="104" class="col-txt">business_scale: VARCHAR(50)</text>
+    <text x="10" y="120" class="col-txt">instagram, website: VARCHAR</text>
+  </g>
+
+  <!-- Rel users -> student_profiles & umkm_profiles -->
+  <path d="M 420 120 L 280 120" class="rel-solid"/>
+  <path d="M 660 120 L 800 120" class="rel-solid"/>
+
+  <!-- TABLE 4: categories (Far Right Middle) -->
+  <g transform="translate(800, 260)">
+    <rect width="230" height="90" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 224 0 A 6 6 0 0 1 230 6 L 230 24 L 0 24 Z" class="table-hdr-slate"/>
+    <text x="115" y="16" class="table-title">categories (Reference)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="col-txt">name: VARCHAR(100) [UNIQUE]</text>
+    <text x="10" y="72" class="col-txt">description: TEXT</text>
+  </g>
+
+  <!-- TABLE 5: projects (Center Middle) -->
+  <g transform="translate(420, 260)">
+    <rect width="250" height="180" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 244 0 A 6 6 0 0 1 250 6 L 250 24 L 0 24 Z" class="table-hdr-amber"/>
+    <text x="125" y="16" class="table-title">projects (Marketplace Listings)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: category_id -> categories(id)</text>
+    <text x="10" y="72" class="fk-txt">FK: owner_id -> users(id)</text>
+    <text x="10" y="88" class="col-txt">title: VARCHAR(255)</text>
+    <text x="10" y="104" class="col-txt">level, duration, stipend: VARCHAR</text>
+    <text x="10" y="120" class="col-txt">status: DRAFT|PUBLISHED|ACTIVE|...</text>
+    <text x="10" y="136" class="col-txt">objectives, deliverables: JSONB</text>
+    <text x="10" y="152" class="col-txt">tags: JSONB, deadline: TIMESTAMPTZ</text>
+    <text x="10" y="168" class="col-txt">created_at, updated_at</text>
+  </g>
+
+  <!-- Rel categories -> projects & users -> projects -->
+  <path d="M 800 305 L 670 305" class="rel-solid"/>
+  <path d="M 540 230 L 540 260" class="rel-solid"/>
+
+  <!-- TABLE 6: project_applications (Left Middle) -->
+  <g transform="translate(50, 260)">
+    <rect width="250" height="160" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 244 0 A 6 6 0 0 1 250 6 L 250 24 L 0 24 Z" class="table-hdr-purple"/>
+    <text x="125" y="16" class="table-title">project_applications (N:M Apply)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: project_id -> projects(id)</text>
+    <text x="10" y="72" class="fk-txt">FK: student_id -> users(id)</text>
+    <text x="10" y="88" class="col-txt">status: 'PENDING'|'ACCEPTED'|'REJ'</text>
+    <text x="10" y="104" class="col-txt">pitch: TEXT, portfolio_url</text>
+    <text x="10" y="120" class="col-txt">ai_match_percent: INT (60-99)</text>
+    <text x="10" y="136" class="col-txt">ai_rationale: TEXT</text>
+    <text x="10" y="152" class="col-txt">applied_at: TIMESTAMPTZ</text>
+  </g>
+
+  <!-- Rel projects -> project_applications -->
+  <path d="M 420 340 L 300 340" class="rel-solid"/>
+
+  <!-- TABLE 7: workspaces (Center Bottom) -->
+  <g transform="translate(420, 480)">
+    <rect width="250" height="150" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 244 0 A 6 6 0 0 1 250 6 L 250 24 L 0 24 Z" class="table-hdr-emerald"/>
+    <text x="125" y="16" class="table-title">workspaces (Active Collaboration)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: project_id -> projects(id)</text>
+    <text x="10" y="72" class="fk-txt">FK: student_id, umkm_id -> users(id)</text>
+    <text x="10" y="88" class="col-txt">status: 'ACTIVE'|'COMPLETED'|'HOLD'</text>
+    <text x="10" y="104" class="col-txt">progress_percent: INT (0-100)</text>
+    <text x="10" y="120" class="col-txt">deliverable_url: VARCHAR(500)</text>
+    <text x="10" y="136" class="col-txt">created_at, updated_at</text>
+  </g>
+
+  <!-- Rel projects -> workspaces -->
+  <path d="M 545 440 L 545 480" class="rel-solid"/>
+
+  <!-- TABLE 8: project_tasks (Left Bottom) -->
+  <g transform="translate(50, 480)">
+    <rect width="240" height="135" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 234 0 A 6 6 0 0 1 240 6 L 240 24 L 0 24 Z" class="table-hdr-emerald"/>
+    <text x="120" y="16" class="table-title">project_tasks (Milestones)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: workspace_id -> workspaces(id)</text>
+    <text x="10" y="72" class="fk-txt">FK: assigned_to -> users(id)</text>
+    <text x="10" y="88" class="col-txt">title: VARCHAR(255)</text>
+    <text x="10" y="104" class="col-txt">completed: BOOLEAN</text>
+    <text x="10" y="120" class="col-txt">due_date: TIMESTAMPTZ</text>
+  </g>
+
+  <!-- Rel workspaces -> project_tasks -->
+  <path d="M 420 545 L 290 545" class="rel-solid"/>
+
+  <!-- TABLE 9: messages (Right Bottom) -->
+  <g transform="translate(790, 480)">
+    <rect width="240" height="135" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 234 0 A 6 6 0 0 1 240 6 L 240 24 L 0 24 Z" class="table-hdr-blue"/>
+    <text x="120" y="16" class="table-title">messages (Realtime CDC Chat)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: workspace_id -> workspaces(id)</text>
+    <text x="10" y="72" class="fk-txt">FK: sender_id, receiver_id -> users</text>
+    <text x="10" y="88" class="col-txt">text: TEXT</text>
+    <text x="10" y="104" class="col-txt">created_at: TIMESTAMPTZ</text>
+    <text x="10" y="120" class="col-txt">[Listened via Supabase Realtime]</text>
+  </g>
+
+  <!-- Rel workspaces -> messages -->
+  <path d="M 670 545 L 790 545" class="rel-solid"/>
+
+  <!-- LOWER ROW: reviews, notifications, audit_logs -->
+  <!-- TABLE 10: reviews -->
+  <g transform="translate(50, 680)">
+    <rect width="240" height="145" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 234 0 A 6 6 0 0 1 240 6 L 240 24 L 0 24 Z" class="table-hdr-amber"/>
+    <text x="120" y="16" class="table-title">reviews (Two-Way Endorsement)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: project_id -> projects(id)</text>
+    <text x="10" y="72" class="fk-txt">FK: author_id, target_id -> users</text>
+    <text x="10" y="88" class="col-txt">rating: INT CHECK (1-5)</text>
+    <text x="10" y="104" class="col-txt">comment: TEXT</text>
+    <text x="10" y="120" class="col-txt">created_at: TIMESTAMPTZ</text>
+  </g>
+
+  <!-- TABLE 11: notifications -->
+  <g transform="translate(420, 680)">
+    <rect width="250" height="145" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 244 0 A 6 6 0 0 1 250 6 L 250 24 L 0 24 Z" class="table-hdr-blue"/>
+    <text x="125" y="16" class="table-title">notifications (User In-App Alerts)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: user_id -> users(id)</text>
+    <text x="10" y="72" class="col-txt">type, title: VARCHAR</text>
+    <text x="10" y="88" class="col-txt">message: TEXT, is_read: BOOLEAN</text>
+    <text x="10" y="104" class="col-txt">action_route: VARCHAR(255)</text>
+    <text x="10" y="120" class="col-txt">created_at: TIMESTAMPTZ</text>
+  </g>
+
+  <!-- TABLE 12: audit_logs -->
+  <g transform="translate(790, 680)">
+    <rect width="240" height="145" class="table-card"/>
+    <path d="M 0 6 A 6 6 0 0 1 6 0 L 234 0 A 6 6 0 0 1 240 6 L 240 24 L 0 24 Z" class="table-hdr-slate"/>
+    <text x="120" y="16" class="table-title">audit_logs (Security &amp; Governance)</text>
+    <text x="10" y="40" class="pk-txt">PK: id (UUID)</text>
+    <text x="10" y="56" class="fk-txt">FK: admin_id -> users(id)</text>
+    <text x="10" y="72" class="col-txt">action: VARCHAR(100)</text>
+    <text x="10" y="88" class="col-txt">entity_type, entity_id: VARCHAR</text>
+    <text x="10" y="104" class="col-txt">details: JSONB</text>
+    <text x="10" y="120" class="col-txt">created_at: TIMESTAMPTZ</text>
+  </g>
+
+  <!-- Dashed connections to users / projects -->
+  <path d="M 170 680 L 170 640 L 480 640 L 480 440" class="rel-line"/>
+  <path d="M 545 680 L 545 630" class="rel-line"/>
+  <path d="M 910 680 L 910 230 L 660 230" class="rel-line"/>
+
+</svg>

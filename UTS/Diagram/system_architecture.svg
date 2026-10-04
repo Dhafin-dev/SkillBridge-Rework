@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 860" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .header-box { fill: #0f172a; rx: 8; }
+      .header-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .header-sub { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; fill: #94a3b8; text-anchor: middle; }
+      .layer-card { rx: 10; stroke-width: 1.5; }
+      .layer-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; font-weight: 700; }
+      .layer-badge { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 10.5px; font-weight: 600; text-anchor: middle; }
+      .item-box { rx: 6; stroke-width: 1; }
+      .item-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: #0f172a; text-anchor: middle; }
+      .item-desc { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 9.5px; fill: #475569; text-anchor: middle; }
+      .flow-arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .bidir-arrow { stroke: #0284c7; stroke-width: 2; fill: none; marker-end: url(#arrow-blue); marker-start: url(#arrow-blue-rev); }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#0284c7"/>
+    </marker>
+    <marker id="arrow-blue-rev" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8 0, 0 3, 8 6" fill="#0284c7"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="860" class="bg"/>
+
+  <!-- Title Banner -->
+  <rect x="30" y="15" width="940" height="52" class="header-box"/>
+  <text x="500" y="38" class="header-title">Gambar 2.3 Arsitektur Sistem SkillBridge (6-Layer Architecture)</text>
+  <text x="500" y="55" class="header-sub">Model Lapisan Decoupled: Tampilan, Keamanan, Bisnis, Fondasi, AI Processing, hingga RDBMS</text>
+
+  <!-- LAYER 1: TAMPILAN PENGGUNA -->
+  <g transform="translate(30, 80)">
+    <rect width="940" height="95" fill="#f0fdf4" stroke="#86efac" class="layer-card"/>
+    <text x="20" y="24" fill="#166534" class="layer-title">LAPISAN 1: TAMPILAN PENGGUNA (PRESENTATION TIER)</text>
+    <text x="915" y="24" fill="#15803d" class="layer-badge" text-anchor="end">Client-Side Web App</text>
+    
+    <!-- User View Subcomponents -->
+    <rect x="20" y="35" width="285" height="48" fill="#ffffff" stroke="#bbf7d0" class="item-box"/>
+    <text x="162" y="54" class="item-title">Portal Mahasiswa</text>
+    <text x="162" y="70" class="item-desc">Marketplace Proyek, 1-Click Apply, Workspace</text>
+
+    <rect x="325" y="35" width="290" height="48" fill="#ffffff" stroke="#bbf7d0" class="item-box"/>
+    <text x="470" y="54" class="item-title">Portal Pelaku UMKM</text>
+    <text x="470" y="70" class="item-desc">Post Keluhan Bisnis, Seleksi Pelamar AI, Review</text>
+
+    <rect x="635" y="35" width="285" height="48" fill="#ffffff" stroke="#bbf7d0" class="item-box"/>
+    <text x="777" y="54" class="item-title">Portal Administrator</text>
+    <text x="777" y="70" class="item-desc">Verifikasi Usaha, Audit Log &amp; Moderasi Listing</text>
+  </g>
+
+  <!-- Connection Layer 1 to Layer 2 -->
+  <path d="M 500 175 L 500 200" class="flow-arrow"/>
+
+  <!-- LAYER 2: JARINGAN DAN KEAMANAN -->
+  <g transform="translate(30, 200)">
+    <rect width="940" height="95" fill="#eff6ff" stroke="#93c5fd" class="layer-card"/>
+    <text x="20" y="24" fill="#1e40af" class="layer-title">LAPISAN 2: JARINGAN DAN KEAMANAN (NETWORK &amp; SECURITY GATEWAY)</text>
+    <text x="915" y="24" fill="#2563eb" class="layer-badge" text-anchor="end">Zero Trust &amp; Protection</text>
+
+    <rect x="20" y="35" width="210" height="48" fill="#ffffff" stroke="#bfdbfe" class="item-box"/>
+    <text x="125" y="54" class="item-title">Supabase GoTrue (JWT)</text>
+    <text x="125" y="70" class="item-desc">Enkripsi Token Sesi &amp; Refresh</text>
+
+    <rect x="250" y="35" width="215" height="48" fill="#ffffff" stroke="#bfdbfe" class="item-box"/>
+    <text x="357" y="54" class="item-title">Role-Based Access (RBAC)</text>
+    <text x="357" y="70" class="item-desc">Isolasi Izin: Student / UMKM / Admin</text>
+
+    <rect x="485" y="35" width="215" height="48" fill="#ffffff" stroke="#bfdbfe" class="item-box"/>
+    <text x="592" y="54" class="item-title">Validasi &amp; Sanitasi Data</text>
+    <text x="592" y="70" class="item-desc">Pydantic Schemas &amp; Anti-XSS</text>
+
+    <rect x="720" y="35" width="200" height="48" fill="#ffffff" stroke="#bfdbfe" class="item-box"/>
+    <text x="820" y="54" class="item-title">Rate Limiting &amp; CORS</text>
+    <text x="820" y="70" class="item-desc">Anti DoS, Spam, &amp; Origin Shield</text>
+  </g>
+
+  <!-- Connection Layer 2 to Layer 3 -->
+  <path d="M 500 295 L 500 320" class="flow-arrow"/>
+
+  <!-- LAYER 3: LAYANAN BISNIS (CORE BUSINESS SERVICES) -->
+  <g transform="translate(30, 320)">
+    <rect width="940" height="95" fill="#fdf4ff" stroke="#f0abfc" class="layer-card"/>
+    <text x="20" y="24" fill="#86198f" class="layer-title">LAPISAN 3: LAYANAN BISNIS (CORE BUSINESS LOGIC)</text>
+    <text x="915" y="24" fill="#a21caf" class="layer-badge" text-anchor="end">Core Domain Engine</text>
+
+    <rect x="20" y="35" width="285" height="48" fill="#ffffff" stroke="#f5d0fe" class="item-box"/>
+    <text x="162" y="54" class="item-title">Manajemen Proyek &amp; Brief</text>
+    <text x="162" y="70" class="item-desc">Marketplace Listing, Status Siklus, Deliverables</text>
+
+    <rect x="325" y="35" width="290" height="48" fill="#ffffff" stroke="#f5d0fe" class="item-box"/>
+    <text x="470" y="54" class="item-title">AI Matchmaking Orchestrator</text>
+    <text x="470" y="70" class="item-desc">Perhitungan Skor Kecocokan, Rationale &amp; Saran</text>
+
+    <rect x="635" y="35" width="285" height="48" fill="#ffffff" stroke="#f5d0fe" class="item-box"/>
+    <text x="777" y="54" class="item-title">Workspace Kolaborasi</text>
+    <text x="777" y="70" class="item-desc">Milestone Checklist, Realtime Progress &amp; Approval</text>
+  </g>
+
+  <!-- Connection Layer 3 to Layer 4 & Layer 5 -->
+  <path d="M 270 415 L 270 440" class="flow-arrow"/>
+  <path d="M 730 415 L 730 440" class="flow-arrow"/>
+
+  <!-- SPLIT: LAYER 4 (LAYANAN DASAR) & LAYER 5 (PENGOLAHAN DATA AI) -->
+  <!-- LAYER 4: LAYANAN DASAR (FOUNDATIONAL SERVICES) -->
+  <g transform="translate(30, 440)">
+    <rect width="455" height="185" fill="#f8fafc" stroke="#cbd5e1" class="layer-card"/>
+    <text x="20" y="24" fill="#334155" class="layer-title">LAPISAN 4: LAYANAN DASAR (FOUNDATION)</text>
+    
+    <rect x="20" y="40" width="200" height="55" fill="#ffffff" stroke="#e2e8f0" class="item-box"/>
+    <text x="120" y="60" class="item-title">Akun &amp; Identitas Pengguna</text>
+    <text x="120" y="76" class="item-desc">Profil, Sertifikat, Kredensial</text>
+
+    <rect x="235" y="40" width="200" height="55" fill="#ffffff" stroke="#e2e8f0" class="item-box"/>
+    <text x="335" y="60" class="item-title">Verifikasi &amp; Moderasi</text>
+    <text x="335" y="76" class="item-desc">Verifikasi NIB/KTP &amp; KTM</text>
+
+    <rect x="20" y="110" width="200" height="55" fill="#ffffff" stroke="#e2e8f0" class="item-box"/>
+    <text x="120" y="130" class="item-title">Pesan Instan (In-App Chat)</text>
+    <text x="120" y="146" class="item-desc">WebSocket Latensi &lt; 300ms</text>
+
+    <rect x="235" y="110" width="200" height="55" fill="#ffffff" stroke="#e2e8f0" class="item-box"/>
+    <text x="335" y="130" class="item-title">Ulasan &amp; Rating Dua Arah</text>
+    <text x="335" y="146" class="item-desc">Endorsement Terverifikasi</text>
+  </g>
+
+  <!-- LAYER 5: PENGOLAHAN DATA AI (AI PROCESSING PIPELINE) -->
+  <g transform="translate(515, 440)">
+    <rect width="455" height="185" fill="#faf5ff" stroke="#d8b4fe" class="layer-card"/>
+    <text x="20" y="24" fill="#6b21a8" class="layer-title">LAPISAN 5: PENGOLAHAN DATA AI (AI PIPELINE)</text>
+    <text x="435" y="24" fill="#7e22ce" class="layer-badge" text-anchor="end">7 Tahap Eksekusi</text>
+
+    <rect x="20" y="40" width="415" height="28" fill="#ffffff" stroke="#e9d5ff" class="item-box"/>
+    <text x="227" y="58" class="item-title">1. Ekstraksi Brief UMKM &amp; 2. Data Profil Mahasiswa (Anonim)</text>
+
+    <rect x="20" y="75" width="415" height="28" fill="#ffffff" stroke="#e9d5ff" class="item-box"/>
+    <text x="227" y="93" class="item-title">3. Konstruksi Prompt &amp; 4. Kirim ke LLM (Gemini 2.5/3.8 Flash)</text>
+
+    <rect x="20" y="110" width="415" height="28" fill="#ffffff" stroke="#e9d5ff" class="item-box"/>
+    <text x="227" y="128" class="item-title">5. Return JSON (Skor, Rationale, Saran) &amp; 6. Validasi Skema Pydantic</text>
+
+    <rect x="20" y="145" width="415" height="28" fill="#ffffff" stroke="#e9d5ff" class="item-box"/>
+    <text x="227" y="163" class="item-title">7. Tampilkan di Dasbor UMKM (Human-in-the-Loop Decision)</text>
+  </g>
+
+  <!-- Connections down to Layer 6 -->
+  <path d="M 255 625 L 255 655" class="flow-arrow"/>
+  <path d="M 740 625 L 740 655" class="flow-arrow"/>
+
+  <!-- LAYER 6: SERVER DAN DATA (DATA & INFRASTRUCTURE TIER) -->
+  <g transform="translate(30, 655)">
+    <rect width="940" height="175" fill="#f1f5f9" stroke="#94a3b8" class="layer-card"/>
+    <text x="20" y="24" fill="#0f172a" class="layer-title">LAPISAN 6: SERVER DAN DATA (INFRASTRUCTURE &amp; PERSISTENCE TIER)</text>
+    <text x="915" y="24" fill="#475569" class="layer-badge" text-anchor="end">DBMS Relasional &amp; Runtime</text>
+
+    <rect x="20" y="40" width="285" height="115" fill="#ffffff" stroke="#cbd5e1" class="item-box"/>
+    <text x="162" y="62" class="item-title">PostgreSQL 15+ (Supabase BaaS)</text>
+    <text x="162" y="80" class="item-desc">• 12 Entitas Ternormalisasi (3NF)</text>
+    <text x="162" y="96" class="item-desc">• Foreign Key Cascades &amp; UUID v4</text>
+    <text x="162" y="112" class="item-desc">• Row-Level Security (RLS) Policies</text>
+    <text x="162" y="128" class="item-desc">• Realtime CDC WAL Replication</text>
+
+    <rect x="325" y="40" width="290" height="115" fill="#ffffff" stroke="#cbd5e1" class="item-box"/>
+    <text x="470" y="62" class="item-title">Python FastAPI AI Microservice</text>
+    <text x="470" y="80" class="item-desc">• Python 3.10+ ASGI via Uvicorn</text>
+    <text x="470" y="96" class="item-desc">• google-genai SDK Official Integration</text>
+    <text x="470" y="112" class="item-desc">• Secure GEMINI_API_KEY Vault</text>
+    <text x="470" y="128" class="item-desc">• Jaccard Similarity Fallback Engine</text>
+
+    <rect x="635" y="40" width="285" height="115" fill="#ffffff" stroke="#cbd5e1" class="item-box"/>
+    <text x="777" y="62" class="item-title">Supabase Storage &amp; Edge Hosting</text>
+    <text x="777" y="80" class="item-desc">• S3-Compatible Storage Buckets</text>
+    <text x="777" y="96" class="item-desc">• Portfolio &amp; Brief Attachment CDN</text>
+    <text x="777" y="112" class="item-desc">• HTTPS SSL/TLS 1.3 Certified</text>
+    <text x="777" y="128" class="item-desc">• Native Web Server (Laragon / Live Server)</text>
+  </g>
+
+</svg>

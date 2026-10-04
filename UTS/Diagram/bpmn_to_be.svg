@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 720" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .header-box { fill: #1e3a8a; rx: 8; }
+      .header-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 17px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .header-sub { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; fill: #bfdbfe; text-anchor: middle; }
+      .swimlane { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .lane-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; font-weight: 700; text-anchor: middle; }
+      .task-box { fill: #ffffff; stroke: #0284c7; stroke-width: 1.5; rx: 8; }
+      .task-box-sys { fill: #f0fdf4; stroke: #10b981; stroke-width: 1.5; rx: 8; }
+      .task-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 10px; font-weight: 700; fill: #0f172a; text-anchor: middle; }
+      .task-io { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 8px; fill: #64748b; text-anchor: middle; }
+      .gateway { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .gw-txt { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 10px; font-weight: 700; fill: #92400e; text-anchor: middle; dominant-baseline: middle; }
+      .start-node { fill: #10b981; stroke: #047857; stroke-width: 2.5; }
+      .stop-outer { fill: none; stroke: #ef4444; stroke-width: 2; }
+      .stop-inner { fill: #ef4444; }
+      .arrow { stroke: #64748b; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+      .arrow-reject { stroke: #ef4444; stroke-width: 1.5; fill: none; stroke-dasharray: 4,3; marker-end: url(#arrowhead-red); }
+      .lbl-yes { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 9px; font-weight: 700; fill: #059669; }
+      .lbl-no { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 9px; font-weight: 700; fill: #dc2626; }
+    </style>
+    <marker id="arrowhead" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#64748b"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <rect width="1020" height="720" class="bg"/>
+
+  <!-- Header -->
+  <rect x="25" y="15" width="970" height="48" class="header-box"/>
+  <text x="510" y="36" class="header-title">BPMN TO-BE: Proses Bisnis Digital Kolaboratif SkillBridge</text>
+  <text x="510" y="52" class="header-sub">Integrasi LLM Brief Synthesis, AI Matchmaking, Realtime Workspace, &amp; Two-Way Verified Endorsement</text>
+
+  <!-- Swimlane 1: UMKM -->
+  <rect x="25" y="70" width="970" height="195" class="swimlane"/>
+  <rect x="25" y="70" width="36" height="195" fill="#fef3c7" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="-165" y="44" transform="rotate(-90)" fill="#92400e" class="lane-title">Pemilik UMKM</text>
+
+  <!-- Swimlane 2: Platform SkillBridge -->
+  <rect x="25" y="265" width="970" height="210" class="swimlane"/>
+  <rect x="25" y="265" width="36" height="210" fill="#d1fae5" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="-370" y="44" transform="rotate(-90)" fill="#065f46" class="lane-title">Sistem Platform (BaaS &amp; AI)</text>
+
+  <!-- Swimlane 3: Mahasiswa -->
+  <rect x="25" y="475" width="970" height="215" class="swimlane"/>
+  <rect x="25" y="475" width="36" height="215" fill="#e0e7ff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="-580" y="44" transform="rotate(-90)" fill="#312e81" class="lane-title">Mahasiswa Talenta</text>
+
+  <!-- Start Event -->
+  <circle cx="85" cy="165" r="10" class="start-node"/>
+
+  <!-- Task 1: UMKM input keluhan -->
+  <path d="M 95 165 L 115 165" class="arrow"/>
+  <rect x="115" y="138" width="130" height="54" class="task-box"/>
+  <text x="180" y="156" class="task-title">Input Keluhan Usaha</text>
+  <text x="180" y="170" class="task-io">[In: Masalah Bisnis Sehari-hari]</text>
+  <text x="180" y="182" class="task-io">[Out: Teks Natural Prompt]</text>
+
+  <!-- Flow to AI: Synthesize Brief -->
+  <path d="M 180 192 L 180 340" class="arrow"/>
+  <rect x="115" y="340" width="130" height="54" class="task-box-sys"/>
+  <text x="180" y="358" class="task-title">Sintesis Brief oleh LLM</text>
+  <text x="180" y="372" class="task-io">[In: Teks Keluhan Alami]</text>
+  <text x="180" y="384" class="task-io">[Out: Draf Proyek &amp; Skill Tags]</text>
+
+  <!-- Flow back to UMKM for review -->
+  <path d="M 245 367 L 275 367 L 275 165 L 295 165" class="arrow"/>
+  <rect x="295" y="138" width="130" height="54" class="task-box"/>
+  <text x="360" y="156" class="task-title">Tinjau &amp; Publish Brief</text>
+  <text x="360" y="170" class="task-io">[In: Draf Proyek Terstruktur]</text>
+  <text x="360" y="182" class="task-io">[Out: Status PUBLISHED]</text>
+
+  <!-- Publish triggers marketplace display to Student -->
+  <path d="M 360 192 L 360 550" class="arrow"/>
+  <rect x="295" y="550" width="130" height="54" class="task-box"/>
+  <text x="360" y="568" class="task-title">Eksplorasi &amp; 1-Click Apply</text>
+  <text x="360" y="582" class="task-io">[In: Katalog Marketplace]</text>
+  <text x="360" y="594" class="task-io">[Out: Permohonan Lamaran &amp; Pitch]</text>
+
+  <!-- System AI Matching -->
+  <path d="M 425 577 L 460 577 L 460 367 L 480 367" class="arrow"/>
+  <rect x="480" y="340" width="135" height="54" class="task-box-sys"/>
+  <text x="547" y="358" class="task-title">Kalkulasi AI Matchmaking</text>
+  <text x="547" y="372" class="task-io">[In: Profil Anonim &amp; Brief]</text>
+  <text x="547" y="384" class="task-io">[Out: Skor %, Rationale, Saran]</text>
+
+  <!-- Flow to UMKM Decision -->
+  <path d="M 547 340 L 547 165 L 575 165" class="arrow"/>
+  <polygon points="595,145 615,165 595,185 575,165" class="gateway"/>
+  <text x="595" y="165" class="gw-txt">X</text>
+
+  <!-- Reject branch -->
+  <path d="M 595 145 L 595 105 L 670 105" class="arrow-reject"/>
+  <text x="605" y="120" class="lbl-no">[Tolak: Notifikasi]</text>
+  <circle cx="685" cy="105" r="10" class="stop-outer"/>
+  <circle cx="685" cy="105" r="5" class="stop-inner"/>
+
+  <!-- Accept branch -> System Workspace Inisialisasi -->
+  <path d="M 615 165 L 665 165 L 665 340" class="arrow"/>
+  <text x="620" y="157" class="lbl-yes">[Terima]</text>
+  <rect x="650" y="340" width="135" height="54" class="task-box-sys"/>
+  <text x="717" y="358" class="task-title">Otomasi Ruang Kerja</text>
+  <text x="717" y="372" class="task-io">[In: Lamaran ACCEPTED]</text>
+  <text x="717" y="384" class="task-io">[Out: Workspace &amp; Kontak Buka]</text>
+
+  <!-- Parallel work in workspace -->
+  <path d="M 717 394 L 717 550" class="arrow"/>
+  <rect x="650" y="550" width="135" height="54" class="task-box"/>
+  <text x="717" y="568" class="task-title">Eksekusi Tugas &amp; Chat</text>
+  <text x="717" y="582" class="task-io">[In: Task Checklist Milestone]</text>
+  <text x="717" y="594" class="task-io">[Out: Deliverable Akhir Disubmit]</text>
+
+  <!-- Submit Deliverable to UMKM -->
+  <path d="M 785 577 L 820 577 L 820 165 L 840 165" class="arrow"/>
+  <polygon points="860,145 880,165 860,185 840,165" class="gateway"/>
+  <text x="860" y="165" class="gw-txt">X</text>
+
+  <!-- Need Revision branch -->
+  <path d="M 860 145 L 860 115 L 750 115 L 750 550" class="arrow-reject"/>
+  <text x="770" y="125" class="lbl-no">[Perlu Revisi: Catatan Chat]</text>
+
+  <!-- Approved -> Complete -->
+  <path d="M 880 165 L 905 165 L 905 340" class="arrow"/>
+  <text x="882" y="157" class="lbl-yes">[Setuju]</text>
+  <rect x="850" y="340" width="130" height="54" class="task-box-sys"/>
+  <text x="915" y="358" class="task-title">Verifikasi &amp; Rating</text>
+  <text x="915" y="372" class="task-io">[In: Approval Final Proyek]</text>
+  <text x="915" y="384" class="task-io">[Out: Endorsement Portofolio]</text>
+
+  <!-- End Event -->
+  <path d="M 915 394 L 915 435" class="arrow"/>
+  <circle cx="915" cy="445" r="12" class="stop-outer"/>
+  <circle cx="915" cy="445" r="7" class="stop-inner"/>
+
+</svg>

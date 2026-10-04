@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 540" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 700; fill: #0f172a; }
+      .box { fill: #ffffff; stroke: #4f46e5; stroke-width: 1.5; rx: 6; }
+      .entity-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 600; fill: #1e1b4b; text-anchor: middle; }
+      .lifeline { stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4; }
+      .active-bar { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; rx: 3; }
+      .arrow { stroke: #1e293b; stroke-width: 1.5; marker-end: url(#arrowhead); }
+      .return-arrow { stroke: #4f46e5; stroke-width: 1.5; stroke-dasharray: 4; marker-end: url(#arrowhead-blue); }
+      .msg-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; fill: #1e293b; }
+      .realtime-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; font-weight: 600; fill: #0d9488; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1e293b"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4f46e5"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="540" class="bg"/>
+
+  <text x="460" y="35" text-anchor="middle" class="title">Sequence Diagram: Ruang Kerja Kolaboratif &amp; Real-Time Sync (Supabase)</text>
+
+  <!-- Entities -->
+  <rect x="30" y="60" width="110" height="35" class="box"/>
+  <text x="85" y="82" class="entity-text">Mahasiswa</text>
+  <line x1="85" y1="95" x2="85" y2="500" class="lifeline"/>
+
+  <rect x="180" y="60" width="130" height="35" class="box"/>
+  <text x="245" y="82" class="entity-text">Tab Mahasiswa</text>
+  <line x1="245" y1="95" x2="245" y2="500" class="lifeline"/>
+
+  <rect x="350" y="60" width="130" height="35" class="box"/>
+  <text x="415" y="82" class="entity-text">PostgreSQL DB</text>
+  <line x1="415" y1="95" x2="415" y2="500" class="lifeline"/>
+
+  <rect x="520" y="60" width="150" height="35" class="box"/>
+  <text x="595" y="82" class="entity-text">Supabase Realtime</text>
+  <line x1="595" y1="95" x2="595" y2="500" class="lifeline"/>
+
+  <rect x="710" y="60" width="100" height="35" class="box"/>
+  <text x="760" y="82" class="entity-text">Tab UMKM</text>
+  <line x1="760" y1="95" x2="760" y2="500" class="lifeline"/>
+
+  <rect x="830" y="60" width="80" height="35" class="box"/>
+  <text x="870" y="82" class="entity-text">UMKM</text>
+  <line x1="870" y1="95" x2="870" y2="500" class="lifeline"/>
+
+  <!-- Active Lifelines -->
+  <rect x="79" y="110" width="12" height="360" class="active-bar"/>
+  <rect x="239" y="115" width="12" height="350" class="active-bar"/>
+  <rect x="409" y="140" width="12" height="280" class="active-bar"/>
+  <rect x="589" y="170" width="12" height="240" class="active-bar"/>
+  <rect x="754" y="210" width="12" height="250" class="active-bar"/>
+  <rect x="864" y="220" width="12" height="230" class="active-bar"/>
+
+  <!-- Messages: Task Toggle -->
+  <line x1="91" y1="125" x2="239" y2="125" class="arrow"/>
+  <text x="100" y="120" class="msg-text">1. Centang tugas "Selesaikan Wireframe"</text>
+
+  <line x1="251" y1="150" x2="409" y2="150" class="arrow"/>
+  <text x="260" y="145" class="msg-text">2. UPDATE project_tasks SET completed=true</text>
+
+  <line x1="421" y1="180" x2="589" y2="180" class="arrow"/>
+  <text x="430" y="175" class="realtime-text">3. Postgres CDC Event (UPDATE task)</text>
+
+  <line x1="589" y1="215" x2="251" y2="215" class="return-arrow"/>
+  <text x="260" y="210" class="realtime-text">4a. Broadcast Task State to Student</text>
+
+  <line x1="601" y1="215" x2="754" y2="215" class="return-arrow"/>
+  <text x="615" y="210" class="realtime-text">4b. Broadcast Task State to UMKM</text>
+
+  <text x="260" y="245" class="msg-text">Progress Bar Student naik otomatis (66% -> 100%)</text>
+  <text x="615" y="245" class="msg-text">Progress Bar UMKM beranimasi live (66% -> 100%)</text>
+
+  <!-- Messages: Chat -->
+  <line x1="864" y1="290" x2="766" y2="290" class="arrow"/>
+  <text x="775" y="285" class="msg-text">5. Kirim chat: "Bagus! Kirim linknya ya"</text>
+
+  <line x1="754" y1="320" x2="421" y2="320" class="arrow"/>
+  <text x="440" y="315" class="msg-text">6. INSERT INTO messages (text, workspace_id)</text>
+
+  <line x1="421" y1="350" x2="589" y2="350" class="arrow"/>
+  <text x="440" y="345" class="realtime-text">7. CDC Event (INSERT messages)</text>
+
+  <line x1="589" y1="385" x2="251" y2="385" class="return-arrow"/>
+  <text x="265" y="380" class="realtime-text">8. Broadcast New Message Bubble (&lt; 300ms)</text>
+
+  <line x1="239" y1="420" x2="91" y2="420" class="return-arrow"/>
+  <text x="100" y="415" class="msg-text">9. Bubble Chat langsung muncul di layar Mahasiswa</text>
+</svg>
