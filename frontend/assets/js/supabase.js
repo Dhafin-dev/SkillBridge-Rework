@@ -303,6 +303,10 @@
       return newApp;
     },
 
+    getApplications: async function () {
+      return JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+    },
+
     getApplicationsForProject: async function (projectId) {
       const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
       return apps.filter(a => a.project_id === projectId);

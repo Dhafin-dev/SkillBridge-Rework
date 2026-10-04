@@ -294,19 +294,26 @@
         return false;
       }
 
-      if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+      if (typeof allowedRoles === 'string') {
+        allowedRoles = [allowedRoles];
+      }
+
+      const normalizedUserRole = (user.role === 'student' ? 'mahasiswa' : user.role);
+      const normalizedAllowed = allowedRoles.map(r => r === 'student' ? 'mahasiswa' : r);
+
+      if (normalizedAllowed.length > 0 && !normalizedAllowed.includes(normalizedUserRole)) {
         window.toast?.error('Akses ditolak: Peran akun Anda tidak memiliki izin.');
-        if (user.role === 'mahasiswa') {
+        if (normalizedUserRole === 'mahasiswa') {
           window.location.href = this.getPathTo('student_dashboard');
-        } else if (user.role === 'umkm') {
+        } else if (normalizedUserRole === 'umkm') {
           window.location.href = this.getPathTo('umkm_dashboard');
-        } else if (user.role === 'admin') {
+        } else if (normalizedUserRole === 'admin') {
           window.location.href = this.getPathTo('admin_dashboard');
         }
         return false;
       }
 
-      return true;
+      return user;
     },
 
     updateNavbar: function () {

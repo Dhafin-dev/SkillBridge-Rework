@@ -32,6 +32,14 @@
       border-radius: 1.5rem;
       padding: 1.5rem;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .stat-pill-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      border-color: #CBD5E1;
     }
 
     .navy-performance-banner {
@@ -225,7 +233,7 @@
 
         <!-- 4 Stats Cards (Matching 09_umkm_dashboard.png) -->
         <div class="umkm-stats-row">
-          <div class="stat-pill-box">
+          <div class="stat-pill-box" onclick="window.location.href='my-projects.html'">
             <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
                 <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
@@ -238,7 +246,7 @@
             </div>
           </div>
 
-          <div class="stat-pill-box">
+          <div class="stat-pill-box" onclick="window.location.href='applicants.html'">
             <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
@@ -251,7 +259,7 @@
             </div>
           </div>
 
-          <div class="stat-pill-box">
+          <div class="stat-pill-box" onclick="window.location.href='my-projects.html'">
             <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
@@ -263,7 +271,7 @@
             </div>
           </div>
 
-          <div class="stat-pill-box">
+          <div class="stat-pill-box" onclick="window.location.href='my-projects.html'">
             <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
@@ -377,7 +385,7 @@
               </svg>
               <span>Recent Activity</span>
             </div>
-            <a href="javascript:void(0)" style="font-size: 0.85rem; font-weight: 700; color: #2563EB; text-decoration: none;">
+            <a href="applicants.html" style="font-size: 0.85rem; font-weight: 700; color: #2563EB; text-decoration: none;">
               All Activity
             </a>
           </div>

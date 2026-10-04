@@ -841,6 +841,7 @@
 }
 
 /* --- 9. MODALS & OVERLAYS --- */
+.modal,
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -853,12 +854,19 @@
   padding: var(--space-4);
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.modal-overlay.active {
+.modal.active,
+.modal.open,
+.modal.show,
+.modal-overlay.active,
+.modal-overlay.open,
+.modal-overlay.show {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 .modal-content {
@@ -875,7 +883,12 @@
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.modal-overlay.active .modal-content {
+.modal.active .modal-content,
+.modal.open .modal-content,
+.modal.show .modal-content,
+.modal-overlay.active .modal-content,
+.modal-overlay.open .modal-content,
+.modal-overlay.show .modal-content {
   transform: scale(1);
 }
 

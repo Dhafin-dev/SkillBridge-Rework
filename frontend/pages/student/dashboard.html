@@ -90,13 +90,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.15rem 0;
+      padding: 1rem 0.75rem;
       border-bottom: 1px solid #F1F5F9;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .recent-proj-row:hover {
+      background-color: #F8FAFC;
+      transform: translateX(4px);
     }
 
     .recent-proj-row:last-child {
       border-bottom: none;
-      padding-bottom: 0;
     }
 
     .proj-avatar-badge {
@@ -227,7 +234,7 @@
 
         <!-- 3-Column Top Stat Card (Figma Style) -->
         <div class="stats-grouped-card">
-          <div class="stat-column">
+          <div class="stat-column" style="cursor: pointer;" onclick="window.location.href='profile.html'">
             <div class="stat-icon-square stat-icon-blue">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/>
@@ -243,7 +250,7 @@
             </div>
           </div>
 
-          <div class="stat-column">
+          <div class="stat-column" style="cursor: pointer;" onclick="window.location.href='my-projects.html'">
             <div class="stat-icon-square stat-icon-gray">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
@@ -259,7 +266,7 @@
             </div>
           </div>
 
-          <div class="stat-column">
+          <div class="stat-column" style="cursor: pointer;" onclick="window.location.href='my-projects.html'">
             <div class="stat-icon-square stat-icon-green">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -381,7 +388,7 @@
 
           <div id="student-recent-projects-list">
             <!-- Project 1 -->
-            <div class="recent-proj-row">
+            <div class="recent-proj-row" onclick="window.location.href='workspace.html'">
               <div style="display: flex; align-items: center; gap: 1rem;">
                 <div class="proj-avatar-badge">AI</div>
                 <div>
@@ -396,7 +403,7 @@
             </div>
 
             <!-- Project 2 -->
-            <div class="recent-proj-row">
+            <div class="recent-proj-row" onclick="window.location.href='workspace.html'">
               <div style="display: flex; align-items: center; gap: 1rem;">
                 <div class="proj-avatar-badge" style="background-color: #F0FDF4; color: #16A34A;">CU</div>
                 <div>
@@ -411,7 +418,7 @@
             </div>
 
             <!-- Project 3 -->
-            <div class="recent-proj-row">
+            <div class="recent-proj-row" onclick="window.location.href='workspace.html'">
               <div style="display: flex; align-items: center; gap: 1rem;">
                 <div class="proj-avatar-badge" style="background-color: #ECFDF5; color: #059669;">BA</div>
                 <div>
@@ -435,19 +442,28 @@
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script>
-    const user = window.SkillBridgeAuth.requireAuth('mahasiswa');
-    if (user) {
-      document.getElementById('student-name').innerText = user.name.split(' ')[0] || user.name;
-      const avatarCircle = document.getElementById('student-avatar-circle');
-      if (avatarCircle) avatarCircle.innerText = user.name.charAt(0).toUpperCase();
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = window.SkillBridgeAuth.requireAuth('mahasiswa');
+      if (user) {
+        const fullName = user.name || user.fullName || 'Mahasiswa';
+        const firstName = fullName.split(' ')[0] || fullName;
+        const nameEl = document.getElementById('student-name');
+        if (nameEl) nameEl.innerText = firstName;
+        const avatarCircle = document.getElementById('student-avatar-circle');
+        if (avatarCircle) avatarCircle.innerText = firstName.charAt(0).toUpperCase();
 
-      // Load dynamic stats if available
-      const apps = window.SkillBridgeDB.getApplications().filter(a => a.student_id === user.id);
-      if (apps.length > 0) {
-        const active = apps.filter(a => a.status === 'accepted').length;
-        document.getElementById('stat-active-count').innerText = active || 3;
+        // Load dynamic stats if available
+        if (window.SkillBridgeDB && window.SkillBridgeDB.getApplications) {
+          const apps = (await window.SkillBridgeDB.getApplications()) || [];
+          const userApps = apps.filter(a => a.student_id === user.id);
+          if (userApps.length > 0) {
+            const active = userApps.filter(a => a.status === 'accepted').length;
+            const statActive = document.getElementById('stat-active-count');
+            if (statActive) statActive.innerText = active || userApps.length;
+          }
+        }
       }
-    }
+    });
   </script>
 </body>
 </html>

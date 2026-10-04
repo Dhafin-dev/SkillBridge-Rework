@@ -205,16 +205,18 @@
       'Kopi Nusantara Roastery': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=120&auto=format&fit=crop&q=80'
     };
 
-    function renderProjects() {
-      const allProjects = window.SkillBridgeDB.getProjects();
+    async function renderProjects() {
+      const allProjects = (await window.SkillBridgeDB.getProjects()) || [];
       const term = searchInput.value.toLowerCase();
       const cat = categorySelect.value;
 
       const filtered = allProjects.filter(p => {
-        const matchesTerm = p.title.toLowerCase().includes(term) ||
-                            (p.business_name && p.business_name.toLowerCase().includes(term)) ||
-                            p.description.toLowerCase().includes(term);
-        const matchesCat = (cat === 'all') || (p.category === cat);
+        const bName = p.business_name || p.umkm_name || '';
+        const catName = p.category || p.category_name || '';
+        const matchesTerm = (p.title || '').toLowerCase().includes(term) ||
+                            bName.toLowerCase().includes(term) ||
+                            (p.description || '').toLowerCase().includes(term);
+        const matchesCat = (cat === 'all') || (catName === cat) || (p.category_id === cat);
         return matchesTerm && matchesCat;
       });
 
@@ -228,8 +230,10 @@
       }
 
       container.innerHTML = filtered.map(p => {
-        const logoUrl = companyImages[p.business_name] || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=120&auto=format&fit=crop&q=80';
-        const stipendFormatted = (p.stipend_amount > 0) ? `Rp ${p.stipend_amount.toLocaleString('id-ID')}` : 'Unpaid';
+        const bName = p.business_name || p.umkm_name || 'UMKM PARTNER';
+        const logoUrl = companyImages[bName] || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=120&auto=format&fit=crop&q=80';
+        const stipendVal = p.stipend_amount || p.budget || 0;
+        const stipendFormatted = (stipendVal > 0) ? `Rp ${stipendVal.toLocaleString('id-ID')}` : 'Unpaid';
         const tagsHtml = (p.required_skills || []).map(s => `<span class="skill-tag-pill">${s}</span>`).join('');
         const applicantsCount = p.applicants_count || 1;
 
@@ -237,9 +241,9 @@
           <div class="market-project-card">
             <div class="market-card-header">
               <div class="market-card-company">
-                <img src="${logoUrl}" alt="${p.business_name || 'Business'}" class="company-avatar-img">
+                <img src="${logoUrl}" alt="${bName}" class="company-avatar-img">
                 <div>
-                  <div class="company-name-text">${p.business_name || 'UMKM PARTNER'}</div>
+                  <div class="company-name-text">${bName}</div>
                   <h3 class="project-title-text">${p.title}</h3>
                 </div>
               </div>
