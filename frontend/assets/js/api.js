@@ -4,7 +4,8 @@
  */
 
 (function () {
-  const API_BASE = window.AI_API_BASE || 'http://127.0.0.1:8000';
+  const host = (window.location && window.location.hostname) ? window.location.hostname : '127.0.0.1';
+  const API_BASE = window.AI_API_BASE || `http://${host}:8000`;
 
   const ApiClient = {
     async checkHealth() {
