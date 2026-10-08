@@ -19,6 +19,16 @@
 
     async calculateMatch(studentProfile, project) {
       try {
+        console.group('[SkillBridge AI API]');
+        console.info('📡 Mengirim HTTP POST ke Endpoint Backend:', `${API_BASE}/api/ai-match`);
+        console.info('📦 Data Dikirim:', {
+          student_name: studentProfile.name,
+          student_skills: studentProfile.skills,
+          project_title: project.title,
+          project_skills: project.required_skills || project.tags
+        });
+        console.groupEnd();
+
         const response = await fetch(`${API_BASE}/api/ai-match`, {
           method: 'POST',
           headers: {
@@ -45,6 +55,11 @@
         }
 
         const data = await response.json();
+        console.group('[SkillBridge AI API Response]');
+        console.info('✅ Respons Diterima (Status 200 OK):', data);
+        console.info('⚡ Model Digunakan:', data.modelUsed);
+        console.groupEnd();
+
         const score = data.match_score !== undefined ? data.match_score : (data.matchPercent !== undefined ? data.matchPercent : 85);
         const reasoning = data.reasoning || data.rationale || 'Kandidat memiliki kompetensi yang selaras dengan proyek.';
         const recommendation = data.recommendation || (score >= 75 ? 'Sangat Direkomendasikan' : 'Direkomendasikan');

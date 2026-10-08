@@ -197,10 +197,16 @@
 
           <!-- Result box -->
           <div id="ai-results-box" style="display: none; margin-top: 1.25rem; border-top: 1px solid #BFDBFE; padding-top: 1.25rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
               <span style="font-size: 0.8rem; font-weight: 800; color: #1E40AF; text-transform: uppercase;">SKOR KECOCOKAN</span>
               <span id="ai-score-badge" style="font-weight: 800; font-size: 0.95rem; padding: 4px 10px; border-radius: 9999px; background: #2563EB; color: #FFFFFF;">
                 🎯 0% Cocok
+              </span>
+            </div>
+
+            <div style="margin-bottom: 0.85rem;">
+              <span id="ai-model-badge" style="font-size: 0.725rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; display: inline-block;">
+                API: Menghubungi...
               </span>
             </div>
 
@@ -322,6 +328,21 @@
 
         const scoreBadge = document.getElementById('ai-score-badge');
         scoreBadge.textContent = `🎯 ${result.match_score}% Cocok`;
+
+        const modelBadge = document.getElementById('ai-model-badge');
+        if (modelBadge) {
+          if (result.modelUsed && result.modelUsed.includes('fallback')) {
+            modelBadge.innerHTML = `📡 <strong>Status API:</strong> Terhubung ke Backend (Mode Heuristik • API Key Gemini Belum Diisi)`;
+            modelBadge.style.color = '#B45309';
+            modelBadge.style.backgroundColor = '#FEF3C7';
+            modelBadge.style.borderColor = '#FDE68A';
+          } else {
+            modelBadge.innerHTML = `✨ <strong>Status API:</strong> Live Google Gemini API (${result.modelUsed || 'gemini-3.8-flash'})`;
+            modelBadge.style.color = '#047857';
+            modelBadge.style.backgroundColor = '#ECFDF5';
+            modelBadge.style.borderColor = '#A7F3D0';
+          }
+        }
 
         document.getElementById('ai-recommendation-text').textContent = result.recommendation;
         document.getElementById('ai-reasoning-text').textContent = result.reasoning;
