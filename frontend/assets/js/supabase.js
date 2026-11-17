@@ -228,13 +228,56 @@
   }
   initMockStorage();
 
-  // Data Access Service
+  // Data Access Service (Hybrid: Supabase PostgREST with LocalStorage Fallback)
   const dbService = {
+    isLive: function () {
+      return Boolean(client && isRealSupabase);
+    },
+
+    getClient: function () {
+      return client;
+    },
+
     getCategories: async function () {
+      if (this.isLive()) {
+        try {
+          const { data, error } = await client.from('categories').select('*');
+          if (!error && data && data.length > 0) {
+            return data;
+          }
+        } catch (e) {
+          console.warn('[SupabaseDB] Categories fetch failed, using fallback:', e);
+        }
+      }
       return MOCK_CATEGORIES;
     },
 
     getProjects: async function (filterCategory = null, searchQuery = '') {
+      if (this.isLive()) {
+        try {
+          let query = client.from('projects').select('*');
+          if (filterCategory && filterCategory !== 'all') {
+            query = query.or(`category_id.eq.${filterCategory},category_name.ilike.%${filterCategory}%`);
+          }
+          const { data, error } = await query;
+          if (!error && data && data.length > 0) {
+            let list = data;
+            if (searchQuery) {
+              const q = searchQuery.toLowerCase();
+              list = list.filter(p => {
+                const title = (p.title || '').toLowerCase();
+                const desc = (p.description || '').toLowerCase();
+                const skillsArr = Array.isArray(p.required_skills) ? p.required_skills : (Array.isArray(p.skills) ? p.skills : []);
+                return title.includes(q) || desc.includes(q) || skillsArr.some(s => typeof s === 'string' && s.toLowerCase().includes(q));
+              });
+            }
+            return list;
+          }
+        } catch (e) {
+          console.warn('[SupabaseDB] Projects fetch failed, using fallback:', e);
+        }
+      }
+
       let list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
       const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
 
@@ -261,6 +304,17 @@
     },
 
     getProjectById: async function (id) {
+      if (this.isLive()) {
+        try {
+          const { data, error } = await client.from('projects').select('*').eq('id', id).single();
+          if (!error && data) {
+            return data;
+          }
+        } catch (e) {
+          console.warn('[SupabaseDB] Project detail fetch failed, using fallback:', e);
+        }
+      }
+
       const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
       const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
       const target = list.find(p => p.id === id);
@@ -271,7 +325,6 @@
     },
 
     createProject: async function (projectData) {
-      const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
       const skillsArr = Array.isArray(projectData.required_skills) 
         ? projectData.required_skills 
         : (Array.isArray(projectData.skills) ? projectData.skills : []);
@@ -287,19 +340,52 @@
         status: 'open',
         created_at: new Date().toISOString()
       };
+
+      if (this.isLive()) {
+        try {
+          await client.from('projects').insert([newProject]);
+        } catch (e) {
+          console.warn('[SupabaseDB] Project insert failed, saving locally:', e);
+        }
+      }
+
+      const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
       list.unshift(newProject);
       localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(list));
       return newProject;
     },
 
+    deleteProject: async function (projectId) {
+      if (this.isLive()) {
+        try {
+          await client.from('projects').delete().eq('id', projectId);
+        } catch (e) {
+          console.warn('[SupabaseDB] Project delete failed, deleting locally:', e);
+        }
+      }
+      let list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
+      list = list.filter(p => p.id !== projectId);
+      localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(list));
+      return true;
+    },
+
     applyToProject: async function (applicationData) {
-      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
       const newApp = {
         id: 'app_' + Date.now(),
         ...applicationData,
         status: 'pending',
         created_at: new Date().toISOString()
       };
+
+      if (this.isLive()) {
+        try {
+          await client.from('project_applications').insert([newApp]);
+        } catch (e) {
+          console.warn('[SupabaseDB] Application insert failed, saving locally:', e);
+        }
+      }
+
+      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
       apps.push(newApp);
       localStorage.setItem('SB_MOCK_APPLICATIONS', JSON.stringify(apps));
 

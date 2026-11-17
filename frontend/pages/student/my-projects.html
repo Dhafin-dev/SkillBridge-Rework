@@ -6,18 +6,6 @@
   <title>My Projects — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
-  <script>
-    (function () {
-      try {
-        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
-        if (!user) {
-          window.location.replace('../auth/login.html');
-        }
-      } catch (e) {
-        window.location.replace('../auth/login.html');
-      }
-    })();
-  </script>
   <style>
     .filter-tabs-row {
       display: flex;
@@ -231,214 +219,9 @@
 
         <!-- Projects Container -->
         <div id="projects-container">
-          <!-- Project Card 1: AI Smart Recommendation -->
-          <div class="my-proj-card" data-status="active">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Active</span>
-                <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Data & Analytics</span>
-              </div>
-              <div style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Rp 2.200.000</div>
-            </div>
-
-            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0.85rem 0 0.4rem; letter-spacing: -0.01em;">
-              AI Smart Recommendation & Talent Matching
-            </h2>
-
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.875rem; margin-bottom: 1.25rem;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
-                <path d="M9 22v-4h6v4"/>
-                <path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/>
-                <path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>
-              </svg>
-              <span>Batik Wastra Nusantara</span>
-            </div>
-
-            <div class="progress-track-box">
-              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.5rem;">
-                <span>Active Project</span>
-                <span style="color: #64748B;">TBD</span>
-              </div>
-              <div style="height: 8px; border-radius: 9999px; background: #E2E8F0; overflow: hidden;">
-                <div style="width: 50%; height: 100%; background: #2563EB; border-radius: 9999px;"></div>
-              </div>
-              <div style="text-align: right; font-size: 0.8rem; font-weight: 700; color: #0F172A; margin-top: 0.5rem;">
-                50% Complete
-              </div>
-            </div>
-
-            <div class="card-actions-grid">
-              <a href="workspace.html?id=p_ai_recom" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                </svg>
-                <span>Open Workspace</span>
-              </a>
-              <a href="workspace.html?id=p_ai_recom&chat=1" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; color: #2563EB; border-color: #BFDBFE; background: #EFF6FF;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-                <span>Open Chat</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Project Card 2: Customer Segmentation & AI Sales Analytics -->
-          <div class="my-proj-card" data-status="active">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Active</span>
-                <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Data & Analytics</span>
-              </div>
-              <div style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Rp 3.000.000</div>
-            </div>
-
-            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0.85rem 0 0.4rem; letter-spacing: -0.01em;">
-              Customer Segmentation & AI Sales Analytics
-            </h2>
-
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.875rem; margin-bottom: 1.25rem;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
-                <path d="M9 22v-4h6v4"/>
-                <path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/>
-              </svg>
-              <span>Lumina Beans Roastery</span>
-            </div>
-
-            <div class="progress-track-box">
-              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.5rem;">
-                <span>Active Project</span>
-                <span style="color: #64748B;">TBD</span>
-              </div>
-              <div style="height: 8px; border-radius: 9999px; background: #E2E8F0; overflow: hidden;">
-                <div style="width: 75%; height: 100%; background: #2563EB; border-radius: 9999px;"></div>
-              </div>
-              <div style="text-align: right; font-size: 0.8rem; font-weight: 700; color: #0F172A; margin-top: 0.5rem;">
-                75% Complete
-              </div>
-            </div>
-
-            <div class="card-actions-grid">
-              <a href="workspace.html?id=p_cust_seg" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                </svg>
-                <span>Open Workspace</span>
-              </a>
-              <a href="workspace.html?id=p_cust_seg&chat=1" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; color: #2563EB; border-color: #BFDBFE; background: #EFF6FF;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-                <span>Open Chat</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Project Card 3: Customer Segmentation & Sales Analytics -->
-          <div class="my-proj-card" data-status="active">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Active</span>
-                <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Data & Analytics</span>
-              </div>
-              <div style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Rp 1.800.000</div>
-            </div>
-
-            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0.85rem 0 0.4rem; letter-spacing: -0.01em;">
-              Customer Segmentation & Sales Analytics
-            </h2>
-
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.875rem; margin-bottom: 1.25rem;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
-                <path d="M9 22v-4h6v4"/>
-                <path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/>
-              </svg>
-              <span>Lumina Beans Roastery</span>
-            </div>
-
-            <div class="progress-track-box">
-              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.5rem;">
-                <span>Active Project</span>
-                <span style="color: #64748B;">15 Oct 2026</span>
-              </div>
-              <div style="height: 8px; border-radius: 9999px; background: #E2E8F0; overflow: hidden;">
-                <div style="width: 50%; height: 100%; background: #2563EB; border-radius: 9999px;"></div>
-              </div>
-              <div style="text-align: right; font-size: 0.8rem; font-weight: 700; color: #0F172A; margin-top: 0.5rem;">
-                50% Complete
-              </div>
-            </div>
-
-            <div class="card-actions-grid">
-              <a href="workspace.html?id=p_cust_seg_2" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                </svg>
-                <span>Open Workspace</span>
-              </a>
-              <a href="workspace.html?id=p_cust_seg_2&chat=1" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; color: #2563EB; border-color: #BFDBFE; background: #EFF6FF;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-                <span>Open Chat</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Pending Card 1 -->
-          <div class="my-proj-card" data-status="pending" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge" style="background: #FEF3C7; color: #D97706; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Review Pending</span>
-                <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">UI/UX Design</span>
-              </div>
-              <div style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Rp 2.500.000</div>
-            </div>
-            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0.85rem 0 0.4rem;">
-              Revamp UI/UX Mobile App Kopi Nusantara
-            </h2>
-            <div style="color: #64748B; font-size: 0.875rem; margin-bottom: 1.25rem;">
-              Lamaran terkirim • Menunggu konfirmasi pemilik UMKM
-            </div>
-            <div class="card-actions-grid">
-              <a href="../projects.html" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
-                Lihat Detail Lowongan
-              </a>
-              <button onclick="window.toast.info('Lamaran Anda sedang dalam antrean review oleh UMKM')" class="btn btn-secondary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
-                Cek Status
-              </button>
-            </div>
-          </div>
-
-          <!-- Completed Card 1 -->
-          <div class="my-proj-card" data-status="completed" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <span class="badge" style="background: #ECFDF5; color: #059669; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Completed</span>
-                <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Web Development</span>
-              </div>
-              <div style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">Rp 2.500.000</div>
-            </div>
-            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0.85rem 0 0.4rem;">
-              Coffee Subscription App & Checkout Platform
-            </h2>
-            <div style="color: #64748B; font-size: 0.875rem; margin-bottom: 1.25rem;">
-              Lumina Beans Roastery • Selesai pada 23 September 2026 (Rating: 5.0 ⭐)
-            </div>
-            <div class="card-actions-grid">
-              <a href="workspace.html?id=p_coffee_sub" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
-                Lihat Arsip Workspace
-              </a>
-              <a href="profile.html" class="btn btn-secondary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
-                Lihat Ulasan di Profil
-              </a>
-            </div>
+          <div style="text-align: center; padding: 3.5rem 1.5rem; color: #64748B;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+            Memuat daftar proyek Anda...
           </div>
         </div>
       </div>
@@ -446,22 +229,163 @@
   </div>
 
   <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/settings.js"></script>
   <script>
-    function filterProjects(status) {
+    let currentFilter = 'active';
+
+    async function renderStudentProjects(targetFilter = currentFilter) {
+      currentFilter = targetFilter;
       document.querySelectorAll('.tab-pill-btn').forEach(b => b.classList.remove('active'));
-      const activeBtn = document.querySelector(`.tab-pill-btn[data-tab="${status}"]`);
+      const activeBtn = document.querySelector(`.tab-pill-btn[data-tab="${currentFilter}"]`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const cards = document.querySelectorAll('.my-proj-card');
-      cards.forEach(c => {
-        if (c.getAttribute('data-status') === status) {
-          c.style.display = 'block';
-        } else {
-          c.style.display = 'none';
-        }
+      const container = document.getElementById('projects-container');
+      const user = window.SkillBridgeAuth.getUser() || {};
+      const allApps = (await window.SkillBridgeDB.getApplications()) || [];
+      const allProjects = (await window.SkillBridgeDB.getProjects()) || [];
+
+      // Find user's applications
+      const myApps = allApps.filter(a => 
+        (a.student_id && a.student_id === user.id) || 
+        (a.student_name && a.student_name.toLowerCase() === (user.name || '').toLowerCase())
+      );
+
+      // Join with project details
+      const userProjects = myApps.map(app => {
+        const proj = allProjects.find(p => p.id === app.project_id) || {
+          id: app.project_id || 'p_unknown',
+          title: 'Proyek Kolaborasi Industri',
+          category_name: 'Web Development',
+          umkm_name: 'Mitra UMKM',
+          budget: 2500000
+        };
+
+        let normalizedStatus = 'pending';
+        if (app.status === 'accepted') normalizedStatus = 'active';
+        if (app.status === 'completed' || proj.status === 'completed') normalizedStatus = 'completed';
+
+        return {
+          appId: app.id,
+          projectId: proj.id,
+          title: proj.title,
+          category: proj.category_name || proj.category || 'Teknologi & Desain',
+          company: proj.umkm_name || 'Mitra UMKM',
+          stipend: proj.stipend_amount || proj.budget || 2500000,
+          status: normalizedStatus,
+          rawStatus: app.status,
+          appliedDate: app.created_at || 'Baru-baru ini'
+        };
       });
+
+      // Update badge counters
+      const activeCount = userProjects.filter(p => p.status === 'active').length;
+      const pendingCount = userProjects.filter(p => p.status === 'pending').length;
+      const completedCount = userProjects.filter(p => p.status === 'completed').length;
+
+      const bActive = document.getElementById('badge-count-active');
+      const bPending = document.getElementById('badge-count-pending');
+      const bCompleted = document.getElementById('badge-count-completed');
+      if (bActive) bActive.textContent = activeCount;
+      if (bPending) bPending.textContent = pendingCount;
+      if (bCompleted) bCompleted.textContent = completedCount;
+
+      const filtered = userProjects.filter(p => p.status === currentFilter);
+      const esc = window.escapeHtml || (s => s);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 1.5rem; padding: 3.5rem 1.5rem; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📋</div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0 0 0.5rem;">Belum ada proyek dalam status "${currentFilter}"</h3>
+            <p style="color: #64748B; font-size: 0.9rem; max-width: 420px; margin: 0 auto 1.5rem;">
+              Jelajahi pasar proyek industri dan ajukan lamaran pada proyek UMKM yang relevan dengan keahlian Anda.
+            </p>
+            <a href="../projects.html" class="btn btn-primary" style="display: inline-flex; border-radius: 0.75rem; text-decoration: none;">
+              Jelajahi Market Proyek
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => {
+        const stipendFormatted = (p.stipend > 0) ? `Rp ${p.stipend.toLocaleString('id-ID')}` : 'Stipend Disepakati';
+        const statusBadge = p.status === 'active' 
+          ? '<span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Aktif Berjalan</span>'
+          : (p.status === 'completed'
+            ? '<span class="badge" style="background: #ECFDF5; color: #059669; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Selesai</span>'
+            : '<span class="badge" style="background: #FEF3C7; color: #D97706; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">Menunggu Review</span>');
+
+        return `
+          <div class="my-proj-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                ${statusBadge}
+                <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">${esc(p.category)}</span>
+              </div>
+              <div style="font-size: 1.15rem; font-weight: 800; color: #0F172A;">${stipendFormatted}</div>
+            </div>
+
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A; margin: 0.85rem 0 0.4rem; letter-spacing: -0.01em;">
+              ${esc(p.title)}
+            </h2>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.875rem; margin-bottom: 1.25rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
+                <path d="M9 22v-4h6v4"/>
+              </svg>
+              <span>${esc(p.company)}</span>
+            </div>
+
+            ${p.status === 'active' ? `
+              <div class="progress-track-box">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.5rem;">
+                  <span>Sprint Kolaborasi</span>
+                  <span style="color: #2563EB;">Sedang Berlangsung</span>
+                </div>
+                <div style="height: 8px; border-radius: 9999px; background: #E2E8F0; overflow: hidden;">
+                  <div style="width: 65%; height: 100%; background: #2563EB; border-radius: 9999px;"></div>
+                </div>
+                <div style="text-align: right; font-size: 0.8rem; font-weight: 700; color: #0F172A; margin-top: 0.5rem;">
+                  65% Selesai
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="card-actions-grid">
+              ${p.status === 'active' ? `
+                <a href="workspace.html?id=${p.projectId}" class="btn btn-primary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; text-decoration: none;">
+                  <span>Buka Workspace</span>
+                </a>
+                <a href="workspace.html?id=${p.projectId}&chat=1" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; color: #2563EB; border-color: #BFDBFE; background: #EFF6FF; text-decoration: none;">
+                  <span>Buka Chat</span>
+                </a>
+              ` : (p.status === 'completed' ? `
+                <a href="workspace.html?id=${p.projectId}" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; text-decoration: none;">
+                  <span>Lihat Arsip Workspace</span>
+                </a>
+                <a href="profile.html" class="btn btn-secondary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; text-decoration: none;">
+                  <span>Lihat Ulasan</span>
+                </a>
+              ` : `
+                <a href="../projects.html" class="btn btn-outline" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem; text-decoration: none;">
+                  <span>Lihat Lowongan Proyek</span>
+                </a>
+                <button onclick="window.toast.info('Lamaran Anda sedang dalam antrean evaluasi UMKM')" class="btn btn-secondary" style="justify-content: center; border-radius: 0.875rem; padding: 0.85rem;">
+                  <span>Cek Status</span>
+                </button>
+              `)}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterProjects(status) {
+      renderStudentProjects(status);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -471,6 +395,7 @@
         const circle = document.getElementById('student-avatar-circle');
         if (circle) circle.textContent = (user.name || 'A')[0].toUpperCase();
       }
+      renderStudentProjects('active');
     });
   </script>
 </body>

@@ -238,6 +238,61 @@ if (typeof window.escapeHtml !== 'function') {
       return user;
     },
 
+    signInWithSupabase: async function (email, password, role = 'mahasiswa') {
+      const client = window.supabaseClient;
+      if (client && client.auth) {
+        try {
+          const { data, error } = await client.auth.signInWithPassword({ email, password });
+          if (!error && data.user) {
+            const meta = data.user.user_metadata || {};
+            const user = {
+              id: data.user.id,
+              email: data.user.email,
+              name: meta.name || email.split('@')[0],
+              role: (meta.role || role).toLowerCase(),
+              ...meta
+            };
+            this.setUser(user);
+            return user;
+          }
+        } catch (e) {
+          console.warn('[GoTrueAuth] Supabase auth login failed, using local mock auth:', e);
+        }
+      }
+      return this.login(email, password, role);
+    },
+
+    signUpWithSupabase: async function (formData) {
+      const client = window.supabaseClient;
+      if (client && client.auth) {
+        try {
+          const { data, error } = await client.auth.signUp({
+            email: formData.email,
+            password: formData.password || 'password123',
+            options: {
+              data: {
+                name: formData.name,
+                role: formData.role,
+                university: formData.university,
+                business_name: formData.business_name
+              }
+            }
+          });
+          if (!error && data.user) {
+            const user = {
+              id: data.user.id,
+              ...formData
+            };
+            this.setUser(user);
+            return user;
+          }
+        } catch (e) {
+          console.warn('[GoTrueAuth] Supabase auth sign-up failed, using local registration:', e);
+        }
+      }
+      return this.register(formData);
+    },
+
     register: function (formData) {
       const id = (formData.role === 'umkm' ? 'umkm_' : 'std_') + Date.now();
       const user = {

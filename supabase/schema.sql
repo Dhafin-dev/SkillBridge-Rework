@@ -167,12 +167,31 @@ CREATE TABLE public.reviews (
 -- 12. LOG AUDIT KEAMANAN (AUDIT LOGS)
 CREATE TABLE public.audit_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    admin_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    admin_id UUID NULL REFERENCES public.users(id) ON DELETE SET NULL,
     action VARCHAR(100) NOT NULL,
     entity_type VARCHAR(50) NOT NULL,
     entity_id VARCHAR(100) NOT NULL,
     details JSONB NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 13. DOKUMEN VERIFIKASI (VERIFICATION DOCUMENTS)
+CREATE TABLE public.verification_documents (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+    entity_name VARCHAR(200) NOT NULL,
+    entity_type VARCHAR(20) NOT NULL CHECK (entity_type IN ('mahasiswa', 'umkm')),
+    doc_type VARCHAR(100) NOT NULL,
+    doc_number VARCHAR(100) NOT NULL,
+    file_url VARCHAR(500) NULL,
+    file_name VARCHAR(255) NULL,
+    issuing_institution VARCHAR(200) NULL,
+    valid_until VARCHAR(100) NULL,
+    extracted_ocr_text TEXT NULL,
+    status VARCHAR(30) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    rejection_reason TEXT NULL,
+    submitted_at TIMESTAMPTZ DEFAULT NOW(),
+    reviewed_at TIMESTAMPTZ NULL
 );
 
 -- ====================================================================
@@ -190,21 +209,41 @@ ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.verification_documents ENABLE ROW LEVEL SECURITY;
 
--- Public read for projects and categories
+-- 1. Profiles & Users RLS
+CREATE POLICY "Allow public read users" ON public.users FOR SELECT USING (true);
+CREATE POLICY "Allow users to update own profile" ON public.users FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Allow public read student_profiles" ON public.student_profiles FOR SELECT USING (true);
+CREATE POLICY "Allow student to update own student_profile" ON public.student_profiles FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Allow public read umkm_profiles" ON public.umkm_profiles FOR SELECT USING (true);
+CREATE POLICY "Allow umkm to update own umkm_profile" ON public.umkm_profiles FOR ALL USING (auth.uid() = user_id);
+
+-- 2. Projects & Categories RLS
+CREATE POLICY "Allow public read categories" ON public.categories FOR SELECT USING (true);
 CREATE POLICY "Allow public read published projects" ON public.projects 
 FOR SELECT USING (status = 'PUBLISHED' OR auth.uid() = owner_id);
 
-CREATE POLICY "Allow public read categories" ON public.categories 
-FOR SELECT USING (true);
-
-CREATE POLICY "Allow users to read profiles" ON public.users 
-FOR SELECT USING (true);
-
--- Authenticated modifications
-CREATE POLICY "Allow owners to manage projects" ON public.projects 
+CREATE POLICY "Allow owners to insert/update projects" ON public.projects 
 FOR ALL USING (auth.uid() = owner_id);
 
+-- 3. Applications RLS
+CREATE POLICY "Allow students to apply and read own applications" ON public.project_applications
+FOR ALL USING (auth.uid() = student_id);
+
+CREATE POLICY "Allow project owners to read and review applications" ON public.project_applications
+FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.projects WHERE projects.id = project_applications.project_id AND projects.owner_id = auth.uid())
+);
+
+CREATE POLICY "Allow project owners to update application status" ON public.project_applications
+FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.projects WHERE projects.id = project_applications.project_id AND projects.owner_id = auth.uid())
+);
+
+-- 4. Workspaces & Tasks RLS
 CREATE POLICY "Allow participants to access workspace" ON public.workspaces 
 FOR ALL USING (auth.uid() = student_id OR auth.uid() = umkm_id);
 
@@ -217,8 +256,71 @@ FOR ALL USING (
     )
 );
 
+-- 5. Chat & Notifications RLS
 CREATE POLICY "Allow chat participants to read/send messages" ON public.messages 
 FOR ALL USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
+
+CREATE POLICY "Allow users to access own notifications" ON public.notifications
+FOR ALL USING (auth.uid() = user_id);
+
+-- 6. Reviews RLS
+CREATE POLICY "Allow public read reviews" ON public.reviews FOR SELECT USING (true);
+CREATE POLICY "Allow author to insert review" ON public.reviews FOR INSERT WITH CHECK (auth.uid() = author_id);
+
+-- 7. Verification Documents RLS
+CREATE POLICY "Allow users to read and insert own verification documents" ON public.verification_documents
+FOR ALL USING (auth.uid() = user_id);
+
+-- 8. Audit Logs & Admin Policies
+CREATE POLICY "Allow admins full access to audit_logs" ON public.audit_logs FOR ALL USING (
+    EXISTS (SELECT 1 FROM public.users WHERE users.id = auth.uid() AND users.role = 'ADMIN')
+);
+
+-- ====================================================================
+-- AUTOMATED AUTH SYNC TRIGGER (GoTrue -> public.users)
+-- ====================================================================
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+DECLARE
+    user_role VARCHAR(20);
+    user_name VARCHAR(150);
+BEGIN
+    user_role := COALESCE(NEW.raw_user_meta_data->>'role', 'STUDENT');
+    user_name := COALESCE(NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1));
+
+    INSERT INTO public.users (id, email, name, role, is_verified)
+    VALUES (NEW.id, NEW.email, user_name, UPPER(user_role), FALSE)
+    ON CONFLICT (id) DO UPDATE 
+    SET email = EXCLUDED.email, name = EXCLUDED.name;
+
+    IF UPPER(user_role) = 'STUDENT' THEN
+        INSERT INTO public.student_profiles (user_id, institution)
+        VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'university', 'Universitas Indonesia'))
+        ON CONFLICT (user_id) DO NOTHING;
+    ELSIF UPPER(user_role) = 'UMKM' THEN
+        INSERT INTO public.umkm_profiles (user_id, company_name, industry, location)
+        VALUES (
+            NEW.id, 
+            COALESCE(NEW.raw_user_meta_data->>'business_name', user_name || ' UMKM'),
+            COALESCE(NEW.raw_user_meta_data->>'business_category', 'Kuliner & Kreatif'),
+            COALESCE(NEW.raw_user_meta_data->>'city', 'Bandung')
+        )
+        ON CONFLICT (user_id) DO NOTHING;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Enable Supabase Realtime for instant collaboration
+ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.project_tasks;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
 
 -- ====================================================================
 -- SEED DATA (KATEGORI & DUMMY DEMO)
