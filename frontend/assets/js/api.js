@@ -114,6 +114,106 @@
         ],
         modelUsed: 'gemini-3.8-flash (fallback)'
       };
+    },
+
+    async synthesizeBrief(briefInput) {
+      try {
+        console.group('[SkillBridge AI Synthesizer]');
+        console.info('📡 Mengirim HTTP POST ke Endpoint Backend:', `${API_BASE}/api/synthesize-brief`);
+        console.info('📦 Data Dikirim:', briefInput);
+        console.groupEnd();
+
+        const response = await fetch(`${API_BASE}/api/synthesize-brief`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            business_name: briefInput.business_name || 'Mitra UMKM',
+            industry: briefInput.industry || 'Kuliner & Retail',
+            goal: briefInput.goal || 'Transformasi Digital',
+            problem_statement: briefInput.problem_statement || 'Optimalisasi operasional',
+            budget_range: briefInput.budget_range || 'Rp 2.000.000 - Rp 3.000.000'
+          }),
+          signal: AbortSignal.timeout(12000)
+        });
+
+        if (!response.ok) {
+          throw new Error(`AI synthesize brief responded with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (err) {
+        console.warn('Backend AI brief synthesis failed, using client fallback:', err);
+        return this.clientFallbackBrief(briefInput);
+      }
+    },
+
+    clientFallbackBrief(input) {
+      const corpus = `${input.goal || ''} ${input.problem_statement || ''} ${input.industry || ''}`.toLowerCase();
+      let category = 'Web Development';
+      let title = `Pengembangan Platform Web Katalog ${input.business_name || 'UMKM'}`;
+      let skills = ['HTML/CSS', 'JavaScript', 'Responsive Design', 'API Integration'];
+      let deliverables = [
+        'Sitemap arsitektur informasi & wireframe responsif',
+        'Frontend web katalog interaktif terintegrasi WhatsApp checkout',
+        'Panduan panduan admin dan serah terima aset kode'
+      ];
+      let stipend = 2500000;
+
+      if (corpus.includes('ui') || corpus.includes('ux') || corpus.includes('desain') || corpus.includes('figma')) {
+        category = 'UI/UX Design';
+        title = `Redesain Pengalaman Pengguna (UI/UX) untuk ${input.business_name || 'UMKM'}`;
+        skills = ['Figma', 'UI/UX Design', 'Wireframing', 'User Research'];
+        deliverables = [
+          'Riset pengguna & benchmark kompetitor',
+          'Wireframe low & high fidelity di Figma',
+          'Design system komponen & prototipe interaktif'
+        ];
+        stipend = 2200000;
+      } else if (corpus.includes('data') || corpus.includes('analisis') || corpus.includes('laporan') || corpus.includes('excel')) {
+        category = 'Data & Analytics';
+        title = `Dashboard Analisis Penjualan & Pelanggan ${input.business_name || 'UMKM'}`;
+        skills = ['Python', 'SQL', 'Data Visualization', 'Spreadsheet Analytics'];
+        deliverables = [
+          'Standardisasi dan pembersihan database transaksi',
+          'Dashboard visual analitik penjualan',
+          'Laporan rekomendasi tren produk terlaris'
+        ];
+        stipend = 2500000;
+      } else if (corpus.includes('brand') || corpus.includes('logo') || corpus.includes('kemasan') || corpus.includes('packaging')) {
+        category = 'Branding & Creative';
+        title = `Brand Identity & Visual Packaging Design untuk ${input.business_name || 'UMKM'}`;
+        skills = ['Graphic Design', 'Brand Guidelines', 'Adobe Illustrator', 'Visual Packaging'];
+        deliverables = [
+          'Brand guideline identitas visual & palet warna',
+          'Desain label kemasan produk siap cetak',
+          'Template grafis media sosial'
+        ];
+        stipend = 2000000;
+      } else if (corpus.includes('marketing') || corpus.includes('iklan') || corpus.includes('seo') || corpus.includes('promosi')) {
+        category = 'Digital Marketing';
+        title = `Strategi Digital Marketing & Kampanye Penjualan ${input.business_name || 'UMKM'}`;
+        skills = ['Digital Marketing', 'SEO/SEM', 'Content Strategy', 'Social Media Analytics'];
+        deliverables = [
+          'Kalender konten 30 hari & pilar materi promosi',
+          'Setup kampanye iklan digital & SEO listing UMKM',
+          'Laporan analisis konversi dan traffic'
+        ];
+        stipend = 2000000;
+      }
+
+      return {
+        title: title,
+        category: category,
+        description: `Proyek transformasi digital untuk ${input.business_name || 'Mitra UMKM'} di sektor ${input.industry || 'Industri Kreatif'}. Berfokus pada ${input.goal || 'pencapaian target bisnis'} guna mengatasi tantangan: ${input.problem_statement || 'kendala operasional saat ini'}.`,
+        required_skills: skills,
+        deliverables: deliverables,
+        timeline_weeks: 4,
+        estimated_stipend: stipend,
+        modelUsed: 'gemini-3.8-flash (client-fallback)'
+      };
     }
   };
 

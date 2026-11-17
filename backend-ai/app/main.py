@@ -7,9 +7,11 @@ from .schemas import (
     AIMatchResponse,
     HealthResponse,
     StudentProfilePayload,
-    ProjectDetailsPayload
+    ProjectDetailsPayload,
+    AIBriefSynthesizeRequest,
+    AIBriefSynthesizeResponse
 )
-from .gemini_service import evaluate_match
+from .gemini_service import evaluate_match, synthesize_project_brief
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("skillbridge.main")
@@ -66,6 +68,15 @@ async def match_candidate(payload: AIMatchRequest):
     except Exception as exc:
         logger.error(f"Error saat memproses matchmaking: {exc}")
         raise HTTPException(status_code=500, detail=f"Gagal memproses evaluasi AI: {str(exc)}")
+
+@app.post("/api/synthesize-brief", response_model=AIBriefSynthesizeResponse, tags=["AI Brief Synthesizer"])
+async def synthesize_brief(payload: AIBriefSynthesizeRequest):
+    try:
+        result = await synthesize_project_brief(payload)
+        return result
+    except Exception as exc:
+        logger.error(f"Error saat menyusun brief AI: {exc}")
+        raise HTTPException(status_code=500, detail=f"Gagal menyusun project brief AI: {str(exc)}")
 
 if __name__ == "__main__":
     import uvicorn

@@ -40,3 +40,20 @@ class HealthResponse(BaseModel):
     status: str
     service: str
     model: str
+
+class AIBriefSynthesizeRequest(BaseModel):
+    business_name: str = Field(..., description="Nama UMKM atau bisnis")
+    industry: str = Field(default="Kuliner & Retail", description="Sektor industri atau kategori bisnis")
+    goal: str = Field(..., description="Tujuan atau target hasil proyek")
+    problem_statement: str = Field(..., description="Masalah atau tantangan yang dihadapi saat ini")
+    budget_range: Optional[str] = Field(default="Rp 2.000.000 - Rp 3.000.000", description="Ekspektasi rentang anggaran")
+
+class AIBriefSynthesizeResponse(BaseModel):
+    title: str = Field(..., description="Judul proyek yang profesional dan spesifik")
+    category: str = Field(default="Web Development", description="Kategori proyek")
+    description: str = Field(..., description="Deskripsi lengkap dan latar belakang proyek")
+    required_skills: List[str] = Field(default_factory=list, description="Daftar keahlian teknis yang dibutuhkan")
+    deliverables: List[str] = Field(default_factory=list, description="Daftar luaran kerja utama")
+    timeline_weeks: int = Field(default=4, description="Estimasi durasi pengerjaan dalam minggu")
+    estimated_stipend: int = Field(default=2500000, description="Rekomendasi nominal uang saku mahasiswa (IDR)")
+    modelUsed: str = Field(default="gemini-3.8-flash", description="Model AI yang digunakan")

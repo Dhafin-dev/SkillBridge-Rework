@@ -6,18 +6,6 @@
   <title>Pasang Kebutuhan Proyek Baru — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
-  <script>
-    (function () {
-      try {
-        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
-        if (!user) {
-          window.location.replace('../auth/login.html');
-        }
-      } catch (e) {
-        window.location.replace('../auth/login.html');
-      }
-    })();
-  </script>
   <style>
     .form-card {
       background: #FFFFFF;
@@ -166,6 +154,20 @@
             </p>
           </div>
 
+          <!-- AI Synthesizer Promotion Banner -->
+          <div style="background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%); border: 1.5px solid #BFDBFE; border-radius: 1.25rem; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <div style="width: 42px; height: 42px; border-radius: 12px; background: #2563EB; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">✨</div>
+              <div>
+                <div style="font-weight: 800; color: #0F172A; font-size: 0.95rem;">Bingung Menyusun Brief Proyek?</div>
+                <div style="color: #64748B; font-size: 0.85rem;">Gunakan Gemini 3.8 Flash untuk merumuskan brief profesional dan estimasi kebutuhan otomatis.</div>
+              </div>
+            </div>
+            <button type="button" onclick="openAIBriefModal()" class="btn btn-primary" style="border-radius: 9999px; padding: 0.55rem 1.25rem; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+              ✨ Bantu Buat Brief dengan AI
+            </button>
+          </div>
+
           <div class="form-card">
             <form id="create-project-form">
               <div class="form-group">
@@ -242,8 +244,65 @@
     </main>
   </div>
 
+  <!-- AI Brief Synthesizer Modal -->
+  <div id="ai-brief-modal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
+    <div style="background: #FFFFFF; border-radius: 1.5rem; max-width: 580px; width: 100%; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.5rem;">✨</span>
+          <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #0F172A;">AI Project Brief Synthesizer</h3>
+        </div>
+        <button type="button" onclick="closeAIBriefModal()" style="border: none; background: transparent; font-size: 1.75rem; color: #94A3B8; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+      <p style="color: #64748B; font-size: 0.875rem; margin-top: 0; margin-bottom: 1.5rem; line-height: 1.5;">
+        Ceritakan secara ringkas bisnis dan kendala Anda. Gemini 3.8 Flash akan merumuskan judul profesional, keahlian, deliverables, dan rekomendasi anggaran secara instan.
+      </p>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label" for="ai-business-name">Nama Usaha / Brand Anda</label>
+        <input type="text" id="ai-business-name" class="form-input" placeholder="Contoh: Kopi Roastery Nusantara">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label" for="ai-industry">Sektor Industri</label>
+        <select id="ai-industry" class="form-select">
+          <option value="Kuliner & F&B">☕ Kuliner & F&B</option>
+          <option value="Fashion & Kerajinan">👗 Fashion & Kerajinan</option>
+          <option value="Jasa & Konsultasi">💼 Jasa & Konsultasi</option>
+          <option value="Retail & Toko Kelontong">🛒 Retail & Toko Kelontong</option>
+          <option value="Pertanian & Agribisnis">🌱 Pertanian & Agribisnis</option>
+          <option value="Teknologi & Kreatif">🎨 Teknologi & Kreatif</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label class="form-label" for="ai-goal">Apa yang Ingin Anda Buat atau Capai?</label>
+        <input type="text" id="ai-goal" class="form-input" placeholder="Contoh: Website katalog produk dengan pemesanan langsung WhatsApp">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label" for="ai-problem">Masalah atau Kendala Utama Saat Ini</label>
+        <textarea id="ai-problem" class="form-textarea" style="min-height: 80px;" placeholder="Contoh: Pembeli kesulitan melihat katalog terbaru dan kami sering salah mencatat pesanan manual di chat."></textarea>
+      </div>
+
+      <div id="ai-loading-state" style="display: none; text-align: center; padding: 1.5rem; background: #F8FAFC; border-radius: 1rem; margin-bottom: 1.5rem; border: 1px dashed #BFDBFE;">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠⚡</div>
+        <div style="font-weight: 700; color: #2563EB;">Gemini 3.8 Flash sedang merumuskan brief...</div>
+        <div style="font-size: 0.8rem; color: #64748B; margin-top: 4px;">Menyusun deliverables, keahlian teknis, dan estimasi anggaran</div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" onclick="closeAIBriefModal()" class="btn btn-outline" style="border-radius: 9999px; padding: 0.6rem 1.25rem;">Batal</button>
+        <button type="button" id="btn-run-ai-synthesize" onclick="runAIBriefSynthesis()" class="btn btn-primary" style="border-radius: 9999px; padding: 0.6rem 1.5rem; font-weight: 700;">
+          ✨ Rumuskan Brief Otomatis
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/api.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/settings.js"></script>
   <script>
@@ -290,6 +349,89 @@
       document.getElementById('proj-deadline').value = formatted;
       document.querySelectorAll('.deadline-chip').forEach(c => c.classList.remove('active'));
       if (el) el.classList.add('active');
+    }
+
+    // --- AI BRIEF SYNTHESIZER MODAL LOGIC ---
+    function openAIBriefModal() {
+      const user = window.SkillBridgeAuth.getUser() || {};
+      const nameInput = document.getElementById('ai-business-name');
+      if (nameInput && !nameInput.value) {
+        nameInput.value = user.company_name || user.name || '';
+      }
+      const modal = document.getElementById('ai-brief-modal');
+      modal.style.display = 'flex';
+    }
+
+    function closeAIBriefModal() {
+      const modal = document.getElementById('ai-brief-modal');
+      modal.style.display = 'none';
+      document.getElementById('ai-loading-state').style.display = 'none';
+      document.getElementById('btn-run-ai-synthesize').disabled = false;
+    }
+
+    async function runAIBriefSynthesis() {
+      const businessName = document.getElementById('ai-business-name').value.trim() || 'Mitra UMKM';
+      const industry = document.getElementById('ai-industry').value;
+      const goal = document.getElementById('ai-goal').value.trim();
+      const problem = document.getElementById('ai-problem').value.trim();
+
+      if (!goal || !problem) {
+        window.toast.warning('Silakan isi target proyek dan kendala utama Anda terlebih dahulu.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-run-ai-synthesize');
+      const loader = document.getElementById('ai-loading-state');
+      btn.disabled = true;
+      loader.style.display = 'block';
+
+      try {
+        const result = await window.SkillBridgeAI.synthesizeBrief({
+          business_name: businessName,
+          industry: industry,
+          goal: goal,
+          problem_statement: problem,
+          budget_range: 'Rp 2.000.000 - Rp 3.000.000'
+        });
+
+        if (result) {
+          if (result.title) document.getElementById('proj-title').value = result.title;
+          if (result.category) {
+            const catSelect = document.getElementById('proj-category');
+            for (let opt of catSelect.options) {
+              if (opt.value.toLowerCase().includes(result.category.toLowerCase()) || result.category.toLowerCase().includes(opt.value.toLowerCase())) {
+                catSelect.value = opt.value;
+                break;
+              }
+            }
+          }
+          if (result.required_skills && result.required_skills.length > 0) {
+            document.getElementById('proj-skills').value = result.required_skills.join(', ');
+          }
+          if (result.estimated_stipend) {
+            document.getElementById('proj-budget').value = result.estimated_stipend;
+          }
+          if (result.timeline_weeks) {
+            setDeadlinePreset(result.timeline_weeks * 7, null);
+          }
+
+          let fullDesc = result.description || '';
+          if (result.deliverables && result.deliverables.length > 0) {
+            fullDesc += '\n\nTarget Luaran / Deliverables:\n' + result.deliverables.map((d, idx) => `${idx + 1}. ${d}`).join('\n');
+          }
+          document.getElementById('proj-desc').value = fullDesc;
+
+          closeAIBriefModal();
+          window.toast.success('✨ Project Brief berhasil dirumuskan oleh Gemini 3.8 Flash!');
+          document.getElementById('proj-title').focus();
+        }
+      } catch (err) {
+        console.error('Error synthesize brief:', err);
+        window.toast.error('Gagal merumuskan brief dengan AI. Silakan coba lagi.');
+      } finally {
+        btn.disabled = false;
+        loader.style.display = 'none';
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
