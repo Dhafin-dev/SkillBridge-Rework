@@ -6,18 +6,6 @@
   <title>Detail Proyek — SkillBridge</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/components.css">
-  <script>
-    (function () {
-      try {
-        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
-        if (!user) {
-          window.location.replace('auth/register.html');
-        }
-      } catch (e) {
-        window.location.replace('auth/register.html');
-      }
-    })();
-  </script>
   <style>
     .project-detail-layout {
       display: grid;
@@ -284,24 +272,31 @@
         return;
       }
 
+      const catName = currentProject.category_name || currentProject.category || 'Web Development';
+      const cityLoc = currentProject.umkm_city || currentProject.location || 'Indonesia';
+      const skillsList = Array.isArray(currentProject.required_skills) 
+        ? currentProject.required_skills 
+        : (Array.isArray(currentProject.skills) ? currentProject.skills : ['HTML/CSS', 'JavaScript', 'UI/UX']);
+
       document.title = `${currentProject.title} — SkillBridge`;
       document.getElementById('detail-title').textContent = currentProject.title;
-      document.getElementById('detail-category').textContent = currentProject.category;
-      document.getElementById('detail-city').textContent = `📍 ${currentProject.location || 'Indonesia'}`;
+      document.getElementById('detail-category').textContent = catName;
+      document.getElementById('detail-city').textContent = `📍 ${cityLoc}`;
       document.getElementById('detail-deadline').textContent = `📅 Batas: ${currentProject.deadline || '1 Bulan'}`;
-      document.getElementById('detail-applicants').textContent = `👥 ${currentProject.applicants_count || 3} Pelamar`;
+      document.getElementById('detail-applicants').textContent = `👥 ${currentProject.applicants_count || 0} Pelamar`;
       document.getElementById('detail-desc').textContent = currentProject.description;
       document.getElementById('detail-budget').textContent = typeof currentProject.budget === 'number' 
         ? `Rp ${currentProject.budget.toLocaleString('id-ID')}` 
         : (currentProject.budget || 'Rp 2.500.000');
 
-      document.getElementById('detail-umkm-name').textContent = currentProject.umkm_name;
-      document.getElementById('detail-umkm-meta').textContent = `${currentProject.category} • ${currentProject.location || 'Indonesia'}`;
+      document.getElementById('detail-umkm-name').textContent = currentProject.umkm_name || 'Mitra UMKM';
+      document.getElementById('detail-umkm-meta').textContent = `${catName} • ${cityLoc}`;
       document.getElementById('detail-umkm-desc').textContent = currentProject.umkm_desc || 'Mitra UMKM terpercaya terdaftar di platform kolaborasi SkillBridge.';
 
       const skillsContainer = document.getElementById('detail-skills');
-      skillsContainer.innerHTML = (currentProject.skills || ['React', 'Node.js', 'UI/UX']).map(s => `
-        <span class="skill-chip">${s}</span>
+      const esc = window.escapeHtml || (s => s);
+      skillsContainer.innerHTML = skillsList.map(s => `
+        <span class="skill-chip">${esc(s)}</span>
       `).join('');
     }
 

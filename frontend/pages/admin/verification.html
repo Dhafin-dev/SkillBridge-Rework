@@ -320,36 +320,38 @@
     let activeTab = 'student';
     let currentModalCard = null;
 
-    const studentVerifs = [
-      { id: 'v1', name: 'Sari Dewi', institution: 'Universitas Gadjah Mada', type: 'Student ID', date: '2026-08-26' },
-      { id: 'v2', name: 'Reza Putra', institution: 'Universitas Brawijaya', type: 'Student ID', date: '2026-08-26' },
-      { id: 'v3', name: 'Dimas Pratama', institution: 'Institut Teknologi Bandung', type: 'Student ID', date: '2026-08-27' },
-      { id: 'v4', name: 'Budi Santoso', institution: 'Universitas Gadjah Mada', type: 'Student ID', date: '2026-08-27' },
-      { id: 'v5', name: 'Rizky Fadilah', institution: 'Universitas Indonesia', type: 'Student ID', date: '2026-08-27' },
-      { id: 'v6', name: 'Radhitya Prasetyadi Wahana', institution: 'Institut Teknologi Sepuluh Nopember', type: 'Student ID', date: '2026-08-31' }
-    ];
-
-    const umkmVerifs = [
-      { id: 'vu1', name: 'Batik Wastra Nusantara', institution: 'Solo, Jawa Tengah', type: 'NIB Enterprise License', date: '2026-08-25' },
-      { id: 'vu2', name: 'Lumina Beans Roastery', institution: 'Jakarta Selatan, DKI Jakarta', type: 'SIUP Micro License', date: '2026-08-27' },
-      { id: 'vu3', name: 'GreenTech Solutions ID', institution: 'Bandung, Jawa Barat', type: 'NIB Enterprise License', date: '2026-08-28' }
-    ];
-
-    function renderVerifications() {
-      const list = activeTab === 'student' ? studentVerifs : umkmVerifs;
+    async function renderVerifications() {
       const grid = document.getElementById('verif-cards-grid');
+      let allReqs = [];
+      if (window.SkillBridgeDB && window.SkillBridgeDB.getVerificationRequests) {
+        allReqs = await window.SkillBridgeDB.getVerificationRequests();
+      }
 
+      // Filter by active tab (student vs umkm)
+      const targetType = activeTab === 'student' ? 'mahasiswa' : 'umkm';
+      const list = allReqs.filter(r => (r.entity_type === targetType || (activeTab === 'student' && r.entity_type === 'student')) && r.status === 'pending');
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 1.25rem; padding: 3rem; text-align: center; color: #64748B;">
+            Tidak ada permohonan verifikasi baru untuk kategori ini.
+          </div>
+        `;
+        return;
+      }
+
+      const esc = window.escapeHtml || (s => s);
       grid.innerHTML = list.map(item => `
         <div class="verif-card-item" id="card-${item.id}">
           <div>
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <div style="width: 40px; height: 40px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-weight: 800; display: flex; align-items: center; justify-content: center;">
-                  ${item.name.charAt(0)}
+                  ${esc(item.entity_name ? item.entity_name.charAt(0) : 'U')}
                 </div>
                 <div>
-                  <h4 style="font-size: 1.05rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${item.name}</h4>
-                  <div style="font-size: 0.75rem; color: #64748B;">${item.institution}</div>
+                  <h4 style="font-size: 1.05rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${esc(item.entity_name)}</h4>
+                  <div style="font-size: 0.75rem; color: #64748B;">${esc(item.issuing_institution || item.doc_number)}</div>
                 </div>
               </div>
               <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 800; border-radius: 9999px; padding: 2px 8px; font-size: 0.7rem;">
@@ -360,16 +362,16 @@
             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 1rem;">
               <div>
                 <div style="color: #94A3B8; font-weight: 800; text-transform: uppercase;">DOCUMENT TYPE</div>
-                <div style="font-weight: 700; color: #0F172A;">${item.type}</div>
+                <div style="font-weight: 700; color: #0F172A;">${esc(item.doc_type)}</div>
               </div>
               <div style="text-align: right;">
                 <div style="color: #94A3B8; font-weight: 800; text-transform: uppercase;">SUBMITTED DATE</div>
-                <div style="font-weight: 700; color: #0F172A;">${item.date}</div>
+                <div style="font-weight: 700; color: #0F172A;">${esc(item.submitted_date || 'Hari ini')}</div>
               </div>
             </div>
 
             <!-- Preview Thumbnail -->
-            <div class="doc-preview-thumb" onclick="openOcrModal('${item.name}', '${item.type}')">
+            <div class="doc-preview-thumb" onclick="openOcrModal('${esc(item.entity_name)}', '${esc(item.doc_type)}')">
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8">
                 <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
                 <circle cx="9" cy="9" r="2"/>
@@ -385,7 +387,7 @@
             <button onclick="approveVerif('${item.id}')" class="btn btn-sm" style="background: #10B981; color: #FFFFFF; border-radius: 9999px; justify-content: center; font-weight: 700;">
               ✓ Approve
             </button>
-            <button onclick="promptRejectVerif('${item.id}', '${item.name}')" class="btn btn-sm btn-outline" style="color: #DC2626; border-color: #FCA5A5; border-radius: 9999px; justify-content: center; font-weight: 700;">
+            <button onclick="promptRejectVerif('${item.id}', '${item.entity_name}')" class="btn btn-sm btn-outline" style="color: #DC2626; border-color: #FCA5A5; border-radius: 9999px; justify-content: center; font-weight: 700;">
               ✕ Reject
             </button>
           </div>
@@ -402,12 +404,15 @@
       renderVerifications();
     }
 
-    function approveVerif(id) {
+    async function approveVerif(id) {
+      if (window.SkillBridgeDB && window.SkillBridgeDB.updateVerificationStatus) {
+        await window.SkillBridgeDB.updateVerificationStatus(id, 'approved');
+      }
       const card = document.getElementById(`card-${id}`);
       if (card) {
         card.style.opacity = '0.5';
         window.toast.success('Pengajuan verifikasi disetujui! Pengguna telah terverifikasi.');
-        setTimeout(() => card.remove(), 400);
+        setTimeout(() => renderVerifications(), 300);
       }
     }
 
@@ -427,12 +432,16 @@
       currentRejectId = null;
     }
 
-    function handleConfirmReject(e) {
+    async function handleConfirmReject(e) {
       e.preventDefault();
       const selectedRadio = document.querySelector('input[name="reject_reason"]:checked');
       const reason = selectedRadio ? selectedRadio.value : 'Dokumen tidak memenuhi persyaratan';
       const notes = document.getElementById('reject-additional-notes').value.trim();
       const fullReason = notes ? `${reason} — ${notes}` : reason;
+
+      if (window.SkillBridgeDB && window.SkillBridgeDB.updateVerificationStatus) {
+        await window.SkillBridgeDB.updateVerificationStatus(currentRejectId, 'rejected');
+      }
 
       if (window.SkillBridgeDB && window.SkillBridgeDB.addAuditLog) {
         window.SkillBridgeDB.addAuditLog({
@@ -441,14 +450,9 @@
         });
       }
 
-      const card = document.getElementById(`card-${currentRejectId}`);
-      if (card) {
-        card.style.opacity = '0.5';
-        setTimeout(() => card.remove(), 300);
-      }
-
       closeRejectModal();
       window.toast.error(`Pengajuan verifikasi ${currentRejectName} ditolak: ${reason}`);
+      renderVerifications();
     }
 
     function openOcrModal(name, type) {

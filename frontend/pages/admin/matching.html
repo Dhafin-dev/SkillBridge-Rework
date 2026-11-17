@@ -458,26 +458,28 @@
         return;
       }
 
+      const esc = window.escapeHtml || (s => s);
       container.innerHTML = filtered.map(m => {
         const badgeClass = m.score >= 90 ? 'high' : (m.score >= 75 ? 'medium' : 'low');
+        const initial = m.student_name ? m.student_name.charAt(0) : 'S';
         return `
           <div class="match-card" id="match-card-${m.id}">
             <div class="match-header-row">
               <div>
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
                   <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
-                    ${m.student_name[0]}
+                    ${esc(initial)}
                   </div>
                   <div>
-                    <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${m.student_name}</h3>
-                    <div style="font-size: 0.85rem; color: #64748B;">${m.university}</div>
+                    <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0 0 2px;">${esc(m.student_name)}</h3>
+                    <div style="font-size: 0.85rem; color: #64748B;">${esc(m.university)}</div>
                   </div>
                 </div>
               </div>
 
               <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                 <span class="match-score-badge ${badgeClass}">
-                  ✨ ${m.score}% Match — ${m.recommendation}
+                  ✨ ${m.score}% Cocok — ${esc(m.recommendation)}
                 </span>
               </div>
             </div>
@@ -486,10 +488,10 @@
             <div style="background: #F8FAFC; border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
               <div>
                 <span style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">PROYEK TUJUAN:</span>
-                <span style="font-size: 0.9rem; font-weight: 700; color: #0F172A; margin-left: 4px;">${m.project_title}</span>
+                <span style="font-size: 0.9rem; font-weight: 700; color: #0F172A; margin-left: 4px;">${esc(m.project_title)}</span>
               </div>
               <div style="font-size: 0.8rem; color: #64748B;">
-                Mitra: <strong style="color: #2563EB;">${m.umkm_name}</strong>
+                Mitra: <strong style="color: #2563EB;">${esc(m.umkm_name)}</strong>
               </div>
             </div>
 
@@ -497,26 +499,26 @@
             <div>
               <div style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">SKILL OVERLAP:</div>
               <div class="skills-tag-wrap">
-                ${m.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}
+                ${m.skills.map(s => `<span class="skill-tag">${esc(s)}</span>`).join('')}
               </div>
             </div>
 
             <!-- AI Rationale -->
             <div class="ai-rationale-box">
               <strong style="color: #1E40AF; display: block; margin-bottom: 3px;">Analisis Gemini 3.8 Flash:</strong>
-              ${m.rationale}
+              ${esc(m.rationale)}
             </div>
 
             <!-- Moderator Actions -->
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem; border-top: 1px solid #F1F5F9; padding-top: 1rem;">
               <button onclick="dismissMatch('${m.id}')" class="btn btn-sm btn-outline" style="border-radius: 9999px; color: #64748B; border-color: #CBD5E1;">
-                Dismiss
+                Abaikan
               </button>
               <button onclick="openOverrideModal('${m.id}')" class="btn btn-sm btn-outline" style="border-radius: 9999px; color: #2563EB; border-color: #BFDBFE;">
-                ⚙️ Manual Override
+                ⚙️ Kalibrasi Manual
               </button>
               <button onclick="approveRecommendation('${m.id}')" class="btn btn-sm btn-primary" style="border-radius: 9999px; font-weight: 700;">
-                ✓ Approve Recommendation
+                ✓ Setujui Rekomendasi
               </button>
             </div>
           </div>

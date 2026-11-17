@@ -245,15 +245,17 @@
       }));
 
       if (filterCategory && filterCategory !== 'all') {
-        list = list.filter(p => p.category_id === filterCategory);
+        list = list.filter(p => p.category_id === filterCategory || p.category_name === filterCategory || p.category === filterCategory);
       }
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
-        list = list.filter(p => 
-          p.title.toLowerCase().includes(q) || 
-          p.description.toLowerCase().includes(q) ||
-          p.required_skills.some(s => s.toLowerCase().includes(q))
-        );
+        list = list.filter(p => {
+          const title = (p.title || '').toLowerCase();
+          const desc = (p.description || '').toLowerCase();
+          const skillsArr = Array.isArray(p.required_skills) ? p.required_skills : (Array.isArray(p.skills) ? p.skills : []);
+          const matchesSkill = skillsArr.some(s => typeof s === 'string' && s.toLowerCase().includes(q));
+          return title.includes(q) || desc.includes(q) || matchesSkill;
+        });
       }
       return list;
     },
@@ -270,9 +272,17 @@
 
     createProject: async function (projectData) {
       const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
+      const skillsArr = Array.isArray(projectData.required_skills) 
+        ? projectData.required_skills 
+        : (Array.isArray(projectData.skills) ? projectData.skills : []);
+
       const newProject = {
         id: 'p' + (Date.now()),
         ...projectData,
+        required_skills: skillsArr,
+        skills: skillsArr,
+        category_name: projectData.category_name || projectData.category || 'Web Development',
+        umkm_city: projectData.umkm_city || projectData.location || 'Indonesia',
         applicants_count: 0,
         status: 'open',
         created_at: new Date().toISOString()

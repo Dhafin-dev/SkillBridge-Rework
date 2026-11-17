@@ -3,6 +3,19 @@
  * Manages user sessions, role-based access control, robust path resolution, and dynamic navbar state.
  */
 
+// Universal HTML Escaper for XSS Prevention
+if (typeof window.escapeHtml !== 'function') {
+  window.escapeHtml = function (str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+}
+
 (function () {
   const STORAGE_KEY = 'SKILLBRIDGE_CURRENT_USER';
 
@@ -232,6 +245,17 @@
         ...formData
       };
       this.setUser(user);
+
+      // Persist in dynamically registered users collection so user can re-login
+      const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
+      const existingIdx = registered.findIndex(r => r.email.toLowerCase() === (user.email || '').toLowerCase());
+      if (existingIdx !== -1) {
+        registered[existingIdx] = user;
+      } else {
+        registered.push(user);
+      }
+      localStorage.setItem('SB_REGISTERED_USERS', JSON.stringify(registered));
+
       return user;
     },
 
@@ -326,19 +350,18 @@
         return true; // Login & register are freely accessible
       }
 
-      // Every other page inside /pages/ requires active authentication!
+      // Public Market browsing is accessible to everyone (guests included)
+      const isMarketPage = path.endsWith('/projects.html') || path.includes('/project-detail.html');
+      if (isMarketPage) {
+        return true;
+      }
+
+      // Every other page inside /pages/ (student, umkm, admin) requires active authentication!
       const user = this.getUser();
       if (!user) {
-        // Accessing Market (projects.html or project-detail.html) -> direct immediately to register
-        if (path.includes('projects.html') || path.includes('project-detail.html')) {
-          const target = this.getPathTo('register');
-          window.location.replace(target);
-          return false;
-        }
-
-        // Accessing other protected pages (student, umkm, admin) -> direct to login
         const target = this.getPathTo('login');
-        window.location.replace(target);
+        const returnUrl = encodeURIComponent(window.location.href);
+        window.location.replace(`${target}?redirect=${returnUrl}`);
         return false;
       }
 
@@ -348,12 +371,9 @@
     requireAuth: function (allowedRoles = []) {
       const user = this.getUser();
       if (!user) {
-        const rawPath = (window.location.pathname || '').replace(/\\/g, '/').toLowerCase();
-        if (rawPath.includes('projects.html') || rawPath.includes('project-detail.html')) {
-          window.location.replace(this.getPathTo('register'));
-        } else {
-          window.location.replace(this.getPathTo('login'));
-        }
+        const target = this.getPathTo('login');
+        const returnUrl = encodeURIComponent(window.location.href);
+        window.location.replace(`${target}?redirect=${returnUrl}`);
         return false;
       }
 
@@ -385,10 +405,11 @@
       const marketLink = document.getElementById('nav-link-market');
       const heroCta = document.getElementById('hero-cta-btn');
 
+      if (marketLink) {
+        marketLink.href = this.getPathTo('projects');
+      }
+
       if (user) {
-        if (marketLink) {
-          marketLink.href = this.getPathTo('projects');
-        }
         if (heroCta) {
           heroCta.href = this.getPathTo('projects');
         }
@@ -411,11 +432,8 @@
           `;
         }
       } else {
-        if (marketLink) {
-          marketLink.href = this.getPathTo('register');
-        }
         if (heroCta) {
-          heroCta.href = this.getPathTo('register');
+          heroCta.href = this.getPathTo('projects');
         }
         if (authContainer) {
           const loginLink = this.getPathTo('login');
@@ -443,7 +461,7 @@
         })();
         const t = document.createElement('div');
         t.className = `toast toast-${type}`;
-        t.innerHTML = `<span class="toast-text">${msg}</span>`;
+        t.innerHTML = `<span class="toast-text">${window.escapeHtml ? window.escapeHtml(msg) : msg}</span>`;
         c.appendChild(t);
         setTimeout(() => { t.remove(); }, 3500);
       },
@@ -456,18 +474,6 @@
 
   // Enforce universal route guard immediately on script evaluation
   Auth.enforceUniversalGuard();
-
-  // Intercept click on market links for unauthenticated visitors
-  document.addEventListener('click', (e) => {
-    const marketEl = e.target.closest('#nav-link-market, .market-direct-link');
-    if (marketEl) {
-      const u = Auth.getUser();
-      if (!u) {
-        e.preventDefault();
-        window.location.href = Auth.getPathTo('register');
-      }
-    }
-  });
 
   document.addEventListener('DOMContentLoaded', () => {
     Auth.updateNavbar();

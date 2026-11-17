@@ -6,18 +6,6 @@
   <title>Collaboration Workspace — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
-  <script>
-    (function () {
-      try {
-        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
-        if (!user) {
-          window.location.replace('../auth/login.html');
-        }
-      } catch (e) {
-        window.location.replace('../auth/login.html');
-      }
-    })();
-  </script>
   <style>
     .workspace-header-lockup {
       display: flex;
@@ -242,7 +230,7 @@
         </a>
       </div>
 
-      <div class="sidebar-nav">
+      <div class="sidebar-nav" id="workspace-sidebar-nav">
         <div class="sidebar-section-title">STUDENT MENU</div>
         <a href="dashboard.html" class="sidebar-item">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -331,7 +319,7 @@
         <!-- Title & Action Lockup -->
         <div class="workspace-header-lockup">
           <div class="workspace-title-group">
-            <a href="my-projects.html" class="back-btn-circle" title="Back to My Projects">
+            <a href="my-projects.html" id="workspace-back-link" class="back-btn-circle" title="Back to My Projects">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="m15 18-6-6 6-6"/>
               </svg>
@@ -346,7 +334,7 @@
             </div>
           </div>
 
-          <div>
+          <div id="workspace-header-actions" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
             <button onclick="toggleChat()" class="btn btn-outline" style="border-radius: 9999px; padding: 0.65rem 1.25rem; font-weight: 700; color: #2563EB; border-color: #BFDBFE; background: #EFF6FF;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -899,9 +887,79 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       window.SkillBridgeAuth.requireAuth();
-      const user = window.SkillBridgeAuth.getUser();
-      if (user) {
-        document.getElementById('student-avatar-circle').textContent = (user.name || 'A')[0].toUpperCase();
+      const user = window.SkillBridgeAuth.getUser() || {};
+      if (user.name) {
+        document.getElementById('student-avatar-circle').textContent = user.name[0].toUpperCase();
+      }
+
+      // Role-Aware Workspace Adaptation (UMKM vs Student)
+      if (user.role === 'umkm') {
+        const backLink = document.getElementById('workspace-back-link');
+        if (backLink) {
+          backLink.href = '../umkm/my-projects.html';
+          backLink.title = 'Back to UMKM Projects';
+        }
+
+        const sidebarNav = document.getElementById('workspace-sidebar-nav');
+        if (sidebarNav) {
+          sidebarNav.innerHTML = `
+            <div class="sidebar-section-title">UMKM MENU</div>
+            <a href="../umkm/dashboard.html" class="sidebar-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              <span>Dashboard</span>
+            </a>
+            <a href="../umkm/talent-search.html" class="sidebar-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span>Talent Search</span>
+            </a>
+            <a href="../umkm/my-projects.html" class="sidebar-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+              <span>Projects</span>
+            </a>
+            <a href="workspace.html" class="sidebar-item active">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span>Messages</span>
+            </a>
+            <a href="../umkm/profile.html" class="sidebar-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>Profile</span>
+            </a>
+          `;
+        }
+
+        const headerActions = document.getElementById('workspace-header-actions');
+        if (headerActions) {
+          const btnComplete = document.createElement('button');
+          btnComplete.className = 'btn btn-primary';
+          btnComplete.style.borderRadius = '9999px';
+          btnComplete.style.padding = '0.65rem 1.25rem';
+          btnComplete.style.fontWeight = '700';
+          btnComplete.innerHTML = '⭐ Selesaikan Proyek &amp; Beri Ulasan';
+          btnComplete.onclick = () => {
+            if (window.SkillBridgeReview && window.SkillBridgeReview.openModal) {
+              window.SkillBridgeReview.openModal('Budi Santoso', 'Pembuatan Website Katalog Kopi Nusantara');
+            } else {
+              window.toast?.success('Proyek telah diselesaikan!');
+            }
+          };
+          headerActions.prepend(btnComplete);
+        }
       }
 
       loadTasks();

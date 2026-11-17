@@ -6,18 +6,6 @@
   <title>My Profile — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
-  <script>
-    (function () {
-      try {
-        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
-        if (!user) {
-          window.location.replace('../auth/login.html');
-        }
-      } catch (e) {
-        window.location.replace('../auth/login.html');
-      }
-    })();
-  </script>
   <style>
     .profile-hero-card {
       background: #FFFFFF;
@@ -279,7 +267,7 @@
             </div>
           </div>
 
-          <div>
+          <div id="btn-edit-profile-wrapper">
             <button onclick="openEditProfileModal()" class="btn btn-outline" style="border-radius: 0.875rem; padding: 0.65rem 1.25rem; font-weight: 700;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 20h9"/>
@@ -296,7 +284,7 @@
           <div class="info-box-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
               <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0;">About & Expertise</h3>
-              <button onclick="openEditProfileModal()" style="background: none; border: none; color: #2563EB; cursor: pointer;">
+              <button id="btn-edit-about" onclick="openEditProfileModal()" style="background: none; border: none; color: #2563EB; cursor: pointer;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 20h9"/>
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
@@ -603,6 +591,60 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryName = urlParams.get('name');
+      const queryId = urlParams.get('id');
+
+      // If viewing another talent's profile (e.g. UMKM or Admin browsing)
+      if (queryName || queryId) {
+        window.SkillBridgeAuth.requireAuth(['mahasiswa', 'umkm', 'admin']);
+        const preloaded = window.SkillBridgeAuth.getPreloadedStudents() || [];
+        const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
+        const allStudents = [...preloaded, ...registered.filter(u => u.role === 'mahasiswa' || u.role === 'student')];
+
+        const target = allStudents.find(s => 
+          (queryId && s.id === queryId) || 
+          (queryName && s.name && s.name.toLowerCase() === queryName.toLowerCase())
+        ) || {
+          name: queryName || 'Mahasiswa Berbakat',
+          university: 'Universitas Indonesia',
+          major: 'Teknologi Informasi',
+          semester: 5,
+          bio: 'Mahasiswa berprestasi siap berkontribusi pada proyek transformasi digital UMKM.',
+          skills: ['React', 'JavaScript', 'Python', 'UI/UX Design']
+        };
+
+        // Populate Target Student Profile
+        document.title = `${target.name} — Profil Talenta SkillBridge`;
+        document.getElementById('prof-display-name').textContent = target.name;
+        const initial = (target.name || 'T')[0].toUpperCase();
+        document.getElementById('profile-hero-avatar').textContent = initial;
+        document.getElementById('prof-display-uni').textContent = target.major 
+          ? `${target.university} • ${target.major} (Smtr ${target.semester || 5})`
+          : target.university;
+        document.getElementById('prof-display-bio').textContent = target.bio || 'Mahasiswa berdedikasi tinggi siap bermitra dengan UMKM lokal.';
+        renderSkillsList(target.skills);
+
+        // Hide Edit Buttons for Viewers
+        const editWrapper = document.getElementById('btn-edit-profile-wrapper');
+        if (editWrapper) {
+          const currentUser = window.SkillBridgeAuth.getUser() || {};
+          if (currentUser.role === 'umkm') {
+            editWrapper.innerHTML = `
+              <a href="../umkm/talent-search.html" class="btn btn-outline" style="border-radius: 0.875rem; padding: 0.65rem 1.25rem; font-weight: 700; text-decoration: none;">
+                ← Kembali ke Talent Search
+              </a>
+            `;
+          } else {
+            editWrapper.style.display = 'none';
+          }
+        }
+        const editAboutBtn = document.getElementById('btn-edit-about');
+        if (editAboutBtn) editAboutBtn.style.display = 'none';
+        return;
+      }
+
+      // Default: Own profile view
       window.SkillBridgeAuth.requireAuth('mahasiswa');
       const user = window.SkillBridgeAuth.getUser();
       if (user) {

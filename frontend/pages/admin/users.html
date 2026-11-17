@@ -311,29 +311,55 @@
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/settings.js"></script>
   <script>
-    let usersList = [
-      { id: 'u1', name: 'Budi Santoso', email: 'budi.santoso@university.edu', role: 'student', verified: true },
-      { id: 'u2', name: 'Rawul', email: 'rawul_test_1787814556195@gmail.com', role: 'umkm', verified: false },
-      { id: 'u3', name: 'GreenTech Solutions ID', email: 'info@greentechid.com', role: 'umkm', verified: false },
-      { id: 'u4', name: 'Maya Lestari', email: 'maya.lestari@university.edu', role: 'student', verified: true },
-      { id: 'u5', name: 'Batik Wastra Nusantara', email: 'partner@batikwastra.id', role: 'umkm', verified: true },
-      { id: 'u6', name: 'Ahmad Dhafin Al Farisy', email: 'student.dhafin@skillbridge.edu', role: 'student', verified: true },
-      { id: 'u7', name: 'Lumina Beans Roastery', email: 'hello@luminabeans.com', role: 'umkm', verified: true },
-      { id: 'u8', name: 'Platform Administrator', email: 'admin@skillbridge.edu', role: 'admin', verified: true },
-      { id: 'u9', name: 'Reza Putra', email: 'reza.putra@university.edu', role: 'student', verified: false },
-      { id: 'u10', name: 'Dimas Pratama', email: 'dimas.pratama@univ.ac.id', role: 'student', verified: false },
-      { id: 'u11', name: 'Jepara Woodcraft Studio', email: 'craft@woodcraft.id', role: 'umkm', verified: false }
-    ];
+    function loadSystemUsers() {
+      const auth = window.SkillBridgeAuth;
+      const stds = (auth && auth.getPreloadedStudents ? auth.getPreloadedStudents() : []).map(s => ({
+        id: s.id,
+        name: s.name,
+        email: s.email,
+        role: 'student',
+        verified: true
+      }));
+
+      const umkms = (auth && auth.getPreloadedUMKM ? auth.getPreloadedUMKM() : []).map(u => ({
+        id: u.id,
+        name: u.business_name || u.name,
+        email: u.email,
+        role: 'umkm',
+        verified: true
+      }));
+
+      const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]').map(r => ({
+        id: r.id,
+        name: r.name || r.business_name || 'Pengguna Baru',
+        email: r.email,
+        role: r.role === 'umkm' ? 'umkm' : 'student',
+        verified: r.verified || false
+      }));
+
+      const admin = [{
+        id: 'admin_1',
+        name: 'Administrator SkillBridge',
+        email: 'admin@skillbridge.id',
+        role: 'admin',
+        verified: true
+      }];
+
+      return [...stds, ...umkms, ...registered, ...admin];
+    }
+
+    let usersList = loadSystemUsers();
 
     let currentRoleFilter = 'all';
 
     function renderUsers() {
       const q = document.getElementById('users-search').value.toLowerCase().trim();
       const tbody = document.getElementById('users-tbody');
+      const esc = window.escapeHtml || (s => s);
 
       const filtered = usersList.filter(u => {
         const matchesRole = currentRoleFilter === 'all' || u.role.toLowerCase() === currentRoleFilter;
-        const matchesSearch = u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+        const matchesSearch = (u.name || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q);
         return matchesRole && matchesSearch;
       });
 
@@ -345,32 +371,32 @@
           : '<span class="badge" style="background: #FDF4FF; color: #A855F7; font-weight: 800; border-radius: 9999px; padding: 3px 10px; font-size: 0.75rem;">ADMIN</span>';
 
         const verifToggle = u.verified
-          ? `<button onclick="toggleVerification('${u.id}')" style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">✓ Verified (Click to Revoke)</button>`
-          : `<button onclick="toggleVerification('${u.id}')" style="background: #FFFBEB; border: 1px solid #FDE68A; color: #D97706; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">⏱ Pending (Click to Verify)</button>`;
+          ? `<button onclick="toggleVerification('${u.id}')" style="background: #ECFDF5; border: 1px solid #A7F3D0; color: #059669; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">✓ Verified (Klik Cabut)</button>`
+          : `<button onclick="toggleVerification('${u.id}')" style="background: #FFFBEB; border: 1px solid #FDE68A; color: #D97706; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">⏱ Pending (Klik Verifikasi)</button>`;
 
         return `
           <tr>
             <td>
               <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <div style="width: 38px; height: 38px; border-radius: 50%; background: #F1F5F9; color: #334155; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.95rem;">
-                  ${u.name.charAt(0)}
+                  ${esc(u.name ? u.name.charAt(0) : 'U')}
                 </div>
                 <div>
-                  <div style="font-weight: 800; color: #0F172A;">${u.name}</div>
-                  <div style="font-size: 0.75rem; color: #64748B;">${u.email}</div>
+                  <div style="font-weight: 800; color: #0F172A;">${esc(u.name)}</div>
+                  <div style="font-size: 0.75rem; color: #64748B;">${esc(u.email)}</div>
                 </div>
               </div>
             </td>
             <td>${rolePill}</td>
             <td>${verifToggle}</td>
             <td style="text-align: right;">
-              <button onclick="viewUserDetail('${u.id}')" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px; margin-right: 4px;" title="View Details">
+              <button onclick="viewUserDetail('${u.id}')" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px; margin-right: 4px;" title="Lihat Detail">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                   <circle cx="12" cy="12" r="3"/>
                 </svg>
               </button>
-              <button onclick="deleteUserRow('${u.id}')" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px;" title="Delete User">
+              <button onclick="deleteUserRow('${u.id}')" style="background: none; border: none; color: #94A3B8; cursor: pointer; padding: 4px;" title="Hapus User">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                 </svg>

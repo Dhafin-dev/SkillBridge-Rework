@@ -6,18 +6,6 @@
   <title>Market — SkillBridge</title>
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/components.css">
-  <script>
-    (function () {
-      try {
-        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
-        if (!user) {
-          window.location.replace('auth/register.html');
-        }
-      } catch (e) {
-        window.location.replace('auth/register.html');
-      }
-    })();
-  </script>
   <style>
     .market-filter-card {
       background: #FFFFFF;
@@ -180,11 +168,12 @@
             <input type="text" id="marketSearchInput" class="market-search-input" placeholder="Search projects or companies...">
           </div>
           <select id="marketCategorySelect" class="market-category-select">
-            <option value="all">All Projects</option>
-            <option value="Data & Analytics">Data &amp; Analytics</option>
+            <option value="all">Semua Kategori</option>
             <option value="Web Development">Web Development</option>
-            <option value="Design & Creative">Design &amp; Creative</option>
-            <option value="Mobile Development">Mobile Development</option>
+            <option value="Mobile App">Mobile App</option>
+            <option value="Graphic Design & UI/UX">Graphic Design & UI/UX</option>
+            <option value="Digital Marketing & SEO">Digital Marketing & SEO</option>
+            <option value="Financial & Accounting System">Financial & Accounting System</option>
           </select>
         </div>
 
@@ -243,28 +232,30 @@
       }
 
       container.innerHTML = filtered.map(p => {
+        const esc = window.escapeHtml || (s => s);
         const bName = p.business_name || p.umkm_name || 'UMKM PARTNER';
         const logoUrl = companyImages[bName] || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=120&auto=format&fit=crop&q=80';
         const stipendVal = p.stipend_amount || p.budget || 0;
         const stipendFormatted = (stipendVal > 0) ? `Rp ${stipendVal.toLocaleString('id-ID')}` : 'Unpaid';
-        const tagsHtml = (p.required_skills || []).map(s => `<span class="skill-tag-pill">${s}</span>`).join('');
+        const skillsList = Array.isArray(p.required_skills) ? p.required_skills : (Array.isArray(p.skills) ? p.skills : []);
+        const tagsHtml = skillsList.map(s => `<span class="skill-tag-pill">${esc(s)}</span>`).join('');
         const applicantsCount = p.applicants_count || 1;
 
         return `
           <div class="market-project-card">
             <div class="market-card-header">
               <div class="market-card-company">
-                <img src="${logoUrl}" alt="${bName}" class="company-avatar-img">
+                <img src="${logoUrl}" alt="${esc(bName)}" class="company-avatar-img">
                 <div>
-                  <div class="company-name-text">${bName}</div>
-                  <h3 class="project-title-text">${p.title}</h3>
+                  <div class="company-name-text">${esc(bName)}</div>
+                  <h3 class="project-title-text">${esc(p.title)}</h3>
                 </div>
               </div>
               <div class="project-stipend-badge">${stipendFormatted}</div>
             </div>
 
             <p style="color: #475569; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
-              ${p.description}
+              ${esc(p.description)}
             </p>
 
             <div class="skill-tags-group">
@@ -274,22 +265,22 @@
             <div class="project-meta-row">
               <span style="display: flex; align-items: center; gap: 0.35rem;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
-                ${p.difficulty_level || 'Advanced'}
+                ${esc(p.difficulty_level || 'Menengah')}
               </span>
               <span>•</span>
               <span style="display: flex; align-items: center; gap: 0.35rem;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                ${p.duration_weeks ? p.duration_weeks + ' Weeks' : '4 Weeks'}
+                ${p.duration_weeks ? esc(p.duration_weeks) + ' Minggu' : '4 Minggu'}
               </span>
               <span>•</span>
               <span style="display: flex; align-items: center; gap: 0.35rem;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                ${applicantsCount} Applied
+                ${applicantsCount} Pelamar
               </span>
             </div>
 
             <a href="project-detail.html?id=${p.id}" class="btn btn-primary btn-block btn-lg" style="border-radius: 0.875rem;">
-              Apply Now
+              Lihat Detail &amp; Lamar
             </a>
           </div>
         `;
