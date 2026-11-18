@@ -1,23 +1,33 @@
 /**
  * SkillBridge Rework — Supabase Client & Data Layer
- * Handles Supabase initialization and fallback mock data for seamless demo/testing.
+ * Enterprise Supabase client & resilient data persistence service.
  */
 
 (function () {
   const DEFAULT_CONFIG = {
-    url: window.SB_CONFIG?.url || localStorage.getItem('SB_URL') || 'https://mock.supabase.co',
-    anonKey: window.SB_CONFIG?.anonKey || localStorage.getItem('SB_ANON_KEY') || 'mock-anon-key',
+    url: window.SB_CONFIG?.url || localStorage.getItem('SB_URL') || '',
+    anonKey: window.SB_CONFIG?.anonKey || localStorage.getItem('SB_ANON_KEY') || '',
   };
 
   let client = null;
   const isRealSupabase = typeof window.supabase !== 'undefined' && 
-                         DEFAULT_CONFIG.url !== 'https://mock.supabase.co';
+                         Boolean(DEFAULT_CONFIG.url) &&
+                         Boolean(DEFAULT_CONFIG.anonKey);
 
   if (isRealSupabase) {
-    client = window.supabase.createClient(DEFAULT_CONFIG.url, DEFAULT_CONFIG.anonKey);
+    try {
+      client = window.supabase.createClient(DEFAULT_CONFIG.url, DEFAULT_CONFIG.anonKey);
+      window.supabaseClient = client;
+      window.isRealSupabase = true;
+    } catch (e) {
+      console.warn('[SupabaseInit] Error connecting to Supabase client:', e);
+      window.isRealSupabase = false;
+    }
+  } else {
+    window.isRealSupabase = false;
   }
 
-  // --- SEED / MOCK DATA FOR DEMO & OFFLINE TESTING ---
+  // --- INITIAL BENCHMARK SEED DATA (STANDALONE / PERSISTENCE) ---
   const MOCK_CATEGORIES = [
     { id: '1', name: 'Web Development', slug: 'web-dev', icon: '🌐' },
     { id: '2', name: 'Mobile App', slug: 'mobile-app', icon: '📱' },
@@ -203,30 +213,30 @@
   ];
 
   // Initialize LocalStorage Database for Persistence during Mock Session
-  function initMockStorage() {
-    if (!localStorage.getItem('SB_MOCK_PROJECTS')) {
-      localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(MOCK_PROJECTS));
+  function initDatabaseStorage() {
+    if (!localStorage.getItem('SB_PROJECTS')) {
+      localStorage.setItem('SB_PROJECTS', JSON.stringify(MOCK_PROJECTS));
     }
-    const currentApps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+    const currentApps = JSON.parse(localStorage.getItem('SB_APPLICATIONS') || '[]');
     // Seed full set if empty or previously only seeded with 1 applicant
     if (currentApps.length < 10) {
-      localStorage.setItem('SB_MOCK_APPLICATIONS', JSON.stringify(INITIAL_APPLICATIONS));
+      localStorage.setItem('SB_APPLICATIONS', JSON.stringify(INITIAL_APPLICATIONS));
     }
-    if (!localStorage.getItem('SB_MOCK_TASKS')) {
-      localStorage.setItem('SB_MOCK_TASKS', JSON.stringify([
+    if (!localStorage.getItem('SB_TASKS')) {
+      localStorage.setItem('SB_TASKS', JSON.stringify([
         { id: 't1', workspace_id: 'ws1', title: 'Setup Wireframe & Sitemap', status: 'done', priority: 'high' },
         { id: 't2', workspace_id: 'ws1', title: 'Slicing Halaman Beranda', status: 'in_progress', priority: 'high' },
         { id: 't3', workspace_id: 'ws1', title: 'Integrasi Checkout WhatsApp', status: 'todo', priority: 'medium' },
       ]));
     }
-    if (!localStorage.getItem('SB_MOCK_MESSAGES')) {
-      localStorage.setItem('SB_MOCK_MESSAGES', JSON.stringify([
+    if (!localStorage.getItem('SB_MESSAGES')) {
+      localStorage.setItem('SB_MESSAGES', JSON.stringify([
         { id: 'm1', workspace_id: 'ws1', sender_name: 'UMKM Kopi Nusantara', sender_role: 'umkm', content: 'Halo Budi, silakan mulai dari mockup halaman beranda ya.', created_at: '2026-10-03 10:00' },
         { id: 'm2', workspace_id: 'ws1', sender_name: 'Budi Santoso', sender_role: 'mahasiswa', content: 'Baik Pak, mockup akan saya selesaikan lusa!', created_at: '2026-10-03 10:15' }
       ]));
     }
   }
-  initMockStorage();
+  initDatabaseStorage();
 
   // Data Access Service (Hybrid: Supabase PostgREST with LocalStorage Fallback)
   const dbService = {
@@ -278,8 +288,8 @@
         }
       }
 
-      let list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
-      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      let list = JSON.parse(localStorage.getItem('SB_PROJECTS') || '[]');
+      const apps = JSON.parse(localStorage.getItem('SB_APPLICATIONS') || '[]');
 
       // Always synchronize applicants_count directly from actual applications!
       list = list.map(p => ({
@@ -315,8 +325,8 @@
         }
       }
 
-      const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
-      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      const list = JSON.parse(localStorage.getItem('SB_PROJECTS') || '[]');
+      const apps = JSON.parse(localStorage.getItem('SB_APPLICATIONS') || '[]');
       const target = list.find(p => p.id === id);
       if (target) {
         target.applicants_count = apps.filter(a => a.project_id === target.id).length;
@@ -349,9 +359,9 @@
         }
       }
 
-      const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
+      const list = JSON.parse(localStorage.getItem('SB_PROJECTS') || '[]');
       list.unshift(newProject);
-      localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(list));
+      localStorage.setItem('SB_PROJECTS', JSON.stringify(list));
       return newProject;
     },
 
@@ -363,9 +373,9 @@
           console.warn('[SupabaseDB] Project delete failed, deleting locally:', e);
         }
       }
-      let list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
+      let list = JSON.parse(localStorage.getItem('SB_PROJECTS') || '[]');
       list = list.filter(p => p.id !== projectId);
-      localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(list));
+      localStorage.setItem('SB_PROJECTS', JSON.stringify(list));
       return true;
     },
 
@@ -385,41 +395,41 @@
         }
       }
 
-      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      const apps = JSON.parse(localStorage.getItem('SB_APPLICATIONS') || '[]');
       apps.push(newApp);
-      localStorage.setItem('SB_MOCK_APPLICATIONS', JSON.stringify(apps));
+      localStorage.setItem('SB_APPLICATIONS', JSON.stringify(apps));
 
       // Synchronize applicants count on project
-      const list = JSON.parse(localStorage.getItem('SB_MOCK_PROJECTS') || '[]');
+      const list = JSON.parse(localStorage.getItem('SB_PROJECTS') || '[]');
       const project = list.find(p => p.id === applicationData.project_id);
       if (project) {
         project.applicants_count = apps.filter(a => a.project_id === project.id).length;
-        localStorage.setItem('SB_MOCK_PROJECTS', JSON.stringify(list));
+        localStorage.setItem('SB_PROJECTS', JSON.stringify(list));
       }
       return newApp;
     },
 
     getApplications: async function () {
-      return JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      return JSON.parse(localStorage.getItem('SB_APPLICATIONS') || '[]');
     },
 
     getApplicationsForProject: async function (projectId) {
-      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      const apps = JSON.parse(localStorage.getItem('SB_APPLICATIONS') || '[]');
       return apps.filter(a => a.project_id === projectId);
     },
 
     updateApplicationStatus: async function (appId, status) {
-      const apps = JSON.parse(localStorage.getItem('SB_MOCK_APPLICATIONS') || '[]');
+      const apps = JSON.parse(localStorage.getItem('SB_APPLICATIONS') || '[]');
       const target = apps.find(a => a.id === appId);
       if (target) {
         target.status = status;
-        localStorage.setItem('SB_MOCK_APPLICATIONS', JSON.stringify(apps));
+        localStorage.setItem('SB_APPLICATIONS', JSON.stringify(apps));
       }
       return target;
     },
 
     getTasks: async function (workspaceId = 'ws1') {
-      let tasks = JSON.parse(localStorage.getItem('SB_MOCK_TASKS') || '[]');
+      let tasks = JSON.parse(localStorage.getItem('SB_TASKS') || '[]');
       if (tasks.length === 0) {
         tasks = [
           { id: 't1', workspace_id: 'ws1', title: 'Riset Preferensi Visual & Moodboard Kopi', status: 'done', priority: 'medium' },
@@ -427,13 +437,13 @@
           { id: 't3', workspace_id: 'ws1', title: 'Implementasi Frontend Responsif & Katalog', status: 'todo', priority: 'high' },
           { id: 't4', workspace_id: 'ws1', title: 'Uji Coba Pengguna & Serah Terima Deliverable', status: 'todo', priority: 'low' }
         ];
-        localStorage.setItem('SB_MOCK_TASKS', JSON.stringify(tasks));
+        localStorage.setItem('SB_TASKS', JSON.stringify(tasks));
       }
       return tasks.filter(t => t.workspace_id === workspaceId);
     },
 
     createTask: async function (task) {
-      const tasks = JSON.parse(localStorage.getItem('SB_MOCK_TASKS') || '[]');
+      const tasks = JSON.parse(localStorage.getItem('SB_TASKS') || '[]');
       const newTask = {
         id: 't_' + Date.now(),
         workspace_id: task.workspace_id || 'ws1',
@@ -441,34 +451,34 @@
         created_at: new Date().toISOString()
       };
       tasks.push(newTask);
-      localStorage.setItem('SB_MOCK_TASKS', JSON.stringify(tasks));
+      localStorage.setItem('SB_TASKS', JSON.stringify(tasks));
       return newTask;
     },
 
     updateTaskStatus: async function (taskId, newStatus) {
-      const tasks = JSON.parse(localStorage.getItem('SB_MOCK_TASKS') || '[]');
+      const tasks = JSON.parse(localStorage.getItem('SB_TASKS') || '[]');
       const target = tasks.find(t => t.id === taskId);
       if (target) {
         target.status = newStatus;
-        localStorage.setItem('SB_MOCK_TASKS', JSON.stringify(tasks));
+        localStorage.setItem('SB_TASKS', JSON.stringify(tasks));
       }
       return target;
     },
 
     getMessages: async function (workspaceId = 'ws1') {
-      let msgs = JSON.parse(localStorage.getItem('SB_MOCK_MESSAGES') || '[]');
+      let msgs = JSON.parse(localStorage.getItem('SB_MESSAGES') || '[]');
       if (msgs.length === 0) {
         msgs = [
           { id: 'm1', workspace_id: 'ws1', sender_name: 'Pak Bambang', sender_role: 'umkm', content: 'Halo Budi, selamat bergabung di proyek Kopi Nusantara! Silakan tinjau brief proyek di workspace ya.', created_at: '09:30' },
           { id: 'm2', workspace_id: 'ws1', sender_name: 'Budi Santoso', sender_role: 'mahasiswa', content: 'Siap Pak Bambang! Saya sudah menyusun rencana kerja di Kanban board.', created_at: '09:45' }
         ];
-        localStorage.setItem('SB_MOCK_MESSAGES', JSON.stringify(msgs));
+        localStorage.setItem('SB_MESSAGES', JSON.stringify(msgs));
       }
       return msgs.filter(m => m.workspace_id === workspaceId);
     },
 
     sendMessage: async function (msg) {
-      const msgs = JSON.parse(localStorage.getItem('SB_MOCK_MESSAGES') || '[]');
+      const msgs = JSON.parse(localStorage.getItem('SB_MESSAGES') || '[]');
       const newMsg = {
         id: 'm_' + Date.now(),
         workspace_id: msg.workspace_id || 'ws1',
@@ -476,24 +486,24 @@
         created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       msgs.push(newMsg);
-      localStorage.setItem('SB_MOCK_MESSAGES', JSON.stringify(msgs));
+      localStorage.setItem('SB_MESSAGES', JSON.stringify(msgs));
       return newMsg;
     },
 
     // --- DELIVERABLES & WORKSPACE COMPLETION ---
     getDeliverable: async function (workspaceId = 'ws1') {
-      const all = JSON.parse(localStorage.getItem('SB_MOCK_DELIVERABLES') || '{}');
+      const all = JSON.parse(localStorage.getItem('SB_DELIVERABLES') || '{}');
       return all[workspaceId] || null;
     },
 
     submitDeliverable: async function (workspaceId, deliverableData) {
-      const all = JSON.parse(localStorage.getItem('SB_MOCK_DELIVERABLES') || '{}');
+      const all = JSON.parse(localStorage.getItem('SB_DELIVERABLES') || '{}');
       all[workspaceId] = {
         ...deliverableData,
         submitted_at: new Date().toISOString(),
         status: 'submitted'
       };
-      localStorage.setItem('SB_MOCK_DELIVERABLES', JSON.stringify(all));
+      localStorage.setItem('SB_DELIVERABLES', JSON.stringify(all));
 
       // Notification to UMKM
       this.addNotification({
@@ -507,10 +517,10 @@
     },
 
     completeWorkspace: async function (workspaceId) {
-      const all = JSON.parse(localStorage.getItem('SB_MOCK_DELIVERABLES') || '{}');
+      const all = JSON.parse(localStorage.getItem('SB_DELIVERABLES') || '{}');
       if (all[workspaceId]) {
         all[workspaceId].status = 'accepted';
-        localStorage.setItem('SB_MOCK_DELIVERABLES', JSON.stringify(all));
+        localStorage.setItem('SB_DELIVERABLES', JSON.stringify(all));
       }
 
       this.addNotification({
@@ -530,7 +540,7 @@
 
     // --- TWO-WAY REVIEWS & RATINGS ---
     getReviews: async function (targetId = null) {
-      const reviews = JSON.parse(localStorage.getItem('SB_MOCK_REVIEWS') || '[]');
+      const reviews = JSON.parse(localStorage.getItem('SB_REVIEWS') || '[]');
       if (targetId) {
         return reviews.filter(r => r.target_id === targetId);
       }
@@ -538,14 +548,14 @@
     },
 
     submitReview: async function (reviewData) {
-      const reviews = JSON.parse(localStorage.getItem('SB_MOCK_REVIEWS') || '[]');
+      const reviews = JSON.parse(localStorage.getItem('SB_REVIEWS') || '[]');
       const newReview = {
         id: 'rev_' + Date.now(),
         ...reviewData,
         created_at: new Date().toISOString()
       };
       reviews.push(newReview);
-      localStorage.setItem('SB_MOCK_REVIEWS', JSON.stringify(reviews));
+      localStorage.setItem('SB_REVIEWS', JSON.stringify(reviews));
 
       this.addAuditLog({
         action: 'REVIEW_SUBMITTED',
@@ -557,7 +567,7 @@
 
     // --- IN-APP NOTIFICATIONS ---
     getNotifications: async function (userRole = 'mahasiswa') {
-      const notifs = JSON.parse(localStorage.getItem('SB_MOCK_NOTIFICATIONS') || '[]');
+      const notifs = JSON.parse(localStorage.getItem('SB_NOTIFICATIONS') || '[]');
       if (notifs.length === 0) {
         // Initial seed notifications
         const initial = [
@@ -580,14 +590,14 @@
             link: 'applicants.html'
           }
         ];
-        localStorage.setItem('SB_MOCK_NOTIFICATIONS', JSON.stringify(initial));
+        localStorage.setItem('SB_NOTIFICATIONS', JSON.stringify(initial));
         return initial.filter(n => n.recipient_role === userRole || n.recipient_role === 'all');
       }
       return notifs.filter(n => n.recipient_role === userRole || n.recipient_role === 'all');
     },
 
     addNotification: function (notif) {
-      const notifs = JSON.parse(localStorage.getItem('SB_MOCK_NOTIFICATIONS') || '[]');
+      const notifs = JSON.parse(localStorage.getItem('SB_NOTIFICATIONS') || '[]');
       const item = {
         id: 'notif_' + Date.now(),
         is_read: false,
@@ -595,22 +605,22 @@
         ...notif
       };
       notifs.unshift(item);
-      localStorage.setItem('SB_MOCK_NOTIFICATIONS', JSON.stringify(notifs));
+      localStorage.setItem('SB_NOTIFICATIONS', JSON.stringify(notifs));
       return item;
     },
 
     markNotificationRead: function (id) {
-      const notifs = JSON.parse(localStorage.getItem('SB_MOCK_NOTIFICATIONS') || '[]');
+      const notifs = JSON.parse(localStorage.getItem('SB_NOTIFICATIONS') || '[]');
       const target = notifs.find(n => n.id === id);
       if (target) {
         target.is_read = true;
-        localStorage.setItem('SB_MOCK_NOTIFICATIONS', JSON.stringify(notifs));
+        localStorage.setItem('SB_NOTIFICATIONS', JSON.stringify(notifs));
       }
     },
 
     // --- ADMIN VERIFICATIONS & AUDIT TRAIL ---
     getVerificationRequests: async function () {
-      let reqs = JSON.parse(localStorage.getItem('SB_MOCK_VERIFICATIONS') || '[]');
+      let reqs = JSON.parse(localStorage.getItem('SB_VERIFICATIONS') || '[]');
       const defaultDocs = [
         {
           id: 'ver_1',
@@ -662,17 +672,17 @@
       // Auto-migrate if stored format lacks file_name
       if (reqs.length === 0 || !reqs[0].file_name) {
         reqs = defaultDocs;
-        localStorage.setItem('SB_MOCK_VERIFICATIONS', JSON.stringify(reqs));
+        localStorage.setItem('SB_VERIFICATIONS', JSON.stringify(reqs));
       }
       return reqs;
     },
 
     updateVerificationStatus: async function (id, status) {
-      const reqs = JSON.parse(localStorage.getItem('SB_MOCK_VERIFICATIONS') || '[]');
+      const reqs = JSON.parse(localStorage.getItem('SB_VERIFICATIONS') || '[]');
       const target = reqs.find(r => r.id === id);
       if (target) {
         target.status = status;
-        localStorage.setItem('SB_MOCK_VERIFICATIONS', JSON.stringify(reqs));
+        localStorage.setItem('SB_VERIFICATIONS', JSON.stringify(reqs));
         this.addAuditLog({
           action: `VERIFICATION_${status.toUpperCase()}`,
           details: `Admin memverifikasi status ${target.entity_name} (${target.doc_type}) menjadi ${status}.`
@@ -682,20 +692,20 @@
     },
 
     getAuditLogs: async function () {
-      let logs = JSON.parse(localStorage.getItem('SB_MOCK_AUDIT_LOGS') || '[]');
+      let logs = JSON.parse(localStorage.getItem('SB_AUDIT_LOGS') || '[]');
       if (logs.length === 0) {
         logs = [
           { id: 'log_1', timestamp: '2026-10-04 12:30', user: 'Admin System', action: 'SYSTEM_BOOT', details: 'Sistem SkillBridge diinisialisasi dengan PostgreSQL RLS.' },
           { id: 'log_2', timestamp: '2026-10-04 12:45', user: 'Pak Bambang', action: 'PROJECT_PUBLISHED', details: 'Proyek Pembuatan Website Kopi Nusantara dipublikasikan.' },
           { id: 'log_3', timestamp: '2026-10-04 13:00', user: 'Budi Santoso', action: 'APPLICATION_SUBMITTED', details: 'Melamar ke proyek Website Kopi Nusantara.' }
         ];
-        localStorage.setItem('SB_MOCK_AUDIT_LOGS', JSON.stringify(logs));
+        localStorage.setItem('SB_AUDIT_LOGS', JSON.stringify(logs));
       }
       return logs;
     },
 
     addAuditLog: function (log) {
-      const logs = JSON.parse(localStorage.getItem('SB_MOCK_AUDIT_LOGS') || '[]');
+      const logs = JSON.parse(localStorage.getItem('SB_AUDIT_LOGS') || '[]');
       const user = window.SkillBridgeAuth?.getUser()?.name || 'System';
       const item = {
         id: 'log_' + Date.now(),
@@ -704,7 +714,7 @@
         ...log
       };
       logs.unshift(item);
-      localStorage.setItem('SB_MOCK_AUDIT_LOGS', JSON.stringify(logs));
+      localStorage.setItem('SB_AUDIT_LOGS', JSON.stringify(logs));
       return item;
     }
   };

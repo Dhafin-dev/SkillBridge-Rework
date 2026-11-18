@@ -39,7 +39,7 @@
 
       // Offline / Multi-tab Broadcast Fallback
       window.addEventListener('storage', (e) => {
-        if (e.key === 'SB_MOCK_MESSAGES') {
+        if (e.key === 'SB_MESSAGES' || e.key === 'SB_MOCK_MESSAGES') {
           try {
             const msgs = JSON.parse(e.newValue || '[]');
             if (msgs.length > 0) {
