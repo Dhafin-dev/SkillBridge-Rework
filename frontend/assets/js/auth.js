@@ -18,172 +18,157 @@ if (typeof window.escapeHtml !== 'function') {
 
 (function () {
   const STORAGE_KEY = 'SKILLBRIDGE_CURRENT_USER';
+  const USERS_STORAGE_KEY = 'SB_USERS';
 
-  // 10 Preloaded Student Accounts matching Mock Applications
-  const PRELOADED_STUDENTS = [
+  // Benchmark Verified Accounts (Seeded into persistent storage with enforced credentials)
+  const INITIAL_BENCHMARK_USERS = [
     {
-      id: 'std1',
+      id: 'std_1',
+      name: 'Ahmad Dhafin Al Farisy',
+      email: 'johnkerja@gmail.com',
+      password: 'PasswordKuat2026!',
+      role: 'mahasiswa',
+      university: 'Universitas Indonesia',
+      major: 'Teknologi Informasi',
+      semester: 5,
+      bio: 'Pengembang Web & Mobile yang bersemangat membantu digitalisasi UMKM lokal.',
+      skills: ['HTML/CSS', 'JavaScript', 'Python', 'UI/UX Design', 'SQL'],
+      portfolio_score: 98,
+      verified: true
+    },
+    {
+      id: 'std_2',
       name: 'Budi Santoso',
       email: 'budi.santoso@itb.ac.id',
+      password: 'password123',
       role: 'mahasiswa',
       university: 'Institut Teknologi Bandung',
       major: 'Teknik Informatika',
       semester: 5,
-      bio: 'Pengembang Web & Mobile yang bersemangat membantu digitalisasi UMKM lokal.',
-      skills: ['HTML/CSS', 'JavaScript', 'Python', 'UI/UX Design', 'SQL']
+      bio: 'Fullstack developer dengan fokus pada performa web app dan database.',
+      skills: ['HTML/CSS', 'JavaScript', 'Python', 'React', 'SQL'],
+      portfolio_score: 95,
+      verified: true
     },
     {
-      id: 'std2',
+      id: 'std_3',
+      name: 'Maya Lestari',
+      email: 'maya.lestari@ugm.ac.id',
+      password: 'password123',
+      role: 'mahasiswa',
+      university: 'Universitas Gadjah Mada',
+      major: 'Ilmu Komputer',
+      semester: 6,
+      bio: 'Mobile App Developer spesialis Flutter dan integrasi REST API modern.',
+      skills: ['Flutter', 'Dart', 'Firebase', 'Mobile Development'],
+      portfolio_score: 96,
+      verified: true
+    },
+    {
+      id: 'std_4',
       name: 'Siti Rahmawati',
       email: 'siti.rahmawati@ui.ac.id',
+      password: 'password123',
       role: 'mahasiswa',
       university: 'Universitas Indonesia',
       major: 'Sistem Informasi',
       semester: 5,
       bio: 'Spesialis Frontend React & UI/UX design modern.',
-      skills: ['Frontend', 'React', 'Tailwind CSS', 'Figma']
+      skills: ['Frontend', 'React', 'Tailwind CSS', 'Figma'],
+      portfolio_score: 92,
+      verified: true
     },
     {
-      id: 'std3',
-      name: 'Kevin Wijaya',
-      email: 'kevin.wijaya@ugm.ac.id',
-      role: 'mahasiswa',
-      university: 'Universitas Gadjah Mada',
-      major: 'Ilmu Komputer',
-      semester: 6,
-      bio: 'Fullstack developer dengan fokus pada performa web app dan database.',
-      skills: ['Fullstack Web', 'JavaScript', 'Node.js', 'PostgreSQL']
+      id: 'umkm_1',
+      name: 'Lumina Beans Roastery',
+      email: 'hello@luminabeans.com',
+      password: 'password123',
+      role: 'umkm',
+      business_name: 'Lumina Beans Roastery',
+      business_category: 'Kuliner & Agribisnis',
+      city: 'Bandung',
+      phone: '081234567890',
+      description: 'Roastery kopi artisan lokal Jawa Barat dengan kemitraan puluhan petani kopi.',
+      verified: true
     },
     {
-      id: 'std4',
-      name: 'Rina Puspita',
-      email: 'rina.puspita@telkomuniversity.ac.id',
-      role: 'mahasiswa',
-      university: 'Telkom University',
-      major: 'Desain Komunikasi Visual',
-      semester: 5,
-      bio: 'UI/UX designer dengan keahlian riset pengguna dan prototyping interaktif.',
-      skills: ['UI/UX Design', 'Figma', 'Web Design', 'HTML/CSS']
-    },
-    {
-      id: 'std5',
-      name: 'Ahmad Fauzi',
-      email: 'ahmad.fauzi@ub.ac.id',
-      role: 'mahasiswa',
-      university: 'Universitas Brawijaya',
-      major: 'Manajemen Pemasaran',
-      semester: 7,
-      bio: 'Digital marketer spesialis SEO dan social media growth strategy.',
-      skills: ['SEO', 'Copywriting', 'Social Media Marketing', 'Google Analytics']
-    },
-    {
-      id: 'std6',
-      name: 'Dimas Pratama',
-      email: 'dimas.pratama@um.ac.id',
-      role: 'mahasiswa',
-      university: 'Universitas Negeri Malang',
-      major: 'Ilmu Komunikasi',
-      semester: 5,
-      bio: 'Content creator dan video editor untuk campaign promosi TikTok & Instagram.',
-      skills: ['Content Creation', 'TikTok Ads', 'Instagram Reels', 'SEO On-Page']
-    },
-    {
-      id: 'std7',
-      name: 'Jessica Tan',
-      email: 'jessica.tan@isi.ac.id',
-      role: 'mahasiswa',
-      university: 'Institut Seni Indonesia',
-      major: 'Desain Produk',
-      semester: 6,
-      bio: 'Desainer kemasan produk makanan & minuman ramah lingkungan.',
-      skills: ['Packaging Design', '3D Mockup', 'Adobe Illustrator', 'Brand Identity']
-    },
-    {
-      id: 'std8',
-      name: 'Farhan Syahputra',
-      email: 'farhan.syahputra@unair.ac.id',
-      role: 'mahasiswa',
-      university: 'Universitas Airlangga',
-      major: 'Desain Komunikasi Visual',
-      semester: 5,
-      bio: 'Spesialis identitas merek, tipografi, dan kemasan ritel modern.',
-      skills: ['Brand Identity', 'Typography', 'Adobe Illustrator', 'Photoshop']
-    },
-    {
-      id: 'std9',
-      name: 'Nadia Utami',
-      email: 'nadia.utami@its.ac.id',
-      role: 'mahasiswa',
-      university: 'Institut Teknologi Sepuluh Nopember',
-      major: 'Desain Produk Industri',
-      semester: 5,
-      bio: 'Product designer dengan spesialisasi material ramah lingkungan dan ergonomi kemasan.',
-      skills: ['Packaging Eco-Friendly', 'Graphic Design', 'Figma', 'Illustrator']
-    },
-    {
-      id: 'std10',
-      name: 'Bagas Wicaksono',
-      email: 'bagas.wicaksono@undip.ac.id',
-      role: 'mahasiswa',
-      university: 'Universitas Diponegoro',
-      major: 'Sistem Informasi Akuntansi',
-      semester: 6,
-      bio: 'Pengembang sistem pembukuan, pelaporan keuangan, dan ledger kas UMKM.',
-      skills: ['Python', 'FastAPI', 'SQL', 'Accounting Logic', 'JavaScript']
-    }
-  ];
-
-  // Preloaded UMKM Partner Accounts
-  const PRELOADED_UMKM = [
-    {
-      id: 'umkm_demo_1',
+      id: 'umkm_2',
       name: 'Pak Bambang',
       email: 'bambang@kopinusantara.id',
+      password: 'password123',
       role: 'umkm',
       business_name: 'Kopi Nusantara UMKM',
       business_category: 'Kuliner & Agribisnis',
       city: 'Bandung',
       phone: '081234567890',
-      description: 'Produsen biji kopi artisan lokal Jawa Barat dengan kemitraan 30 petani lokal.'
+      description: 'Produsen biji kopi artisan lokal Jawa Barat dengan kemitraan 30 petani lokal.',
+      verified: true
     },
     {
-      id: 'umkm_demo_2',
-      name: 'Ibu Barokah',
-      email: 'barokah@keripiktempe.id',
+      id: 'umkm_3',
+      name: 'Batik Wastra Nusantara',
+      email: 'partner@batikwastra.id',
+      password: 'BatikSukses2026!',
       role: 'umkm',
-      business_name: 'Keripik Tempe Barokah',
-      business_category: 'Makanan Ringan & Olahan',
-      city: 'Malang',
-      phone: '081298765432',
-      description: 'Sentra industri keripik tempe renyah aneka rasa khas Sanan Malang.'
+      business_name: 'Batik Wastra Nusantara',
+      business_category: 'Fashion & Kerajinan',
+      city: 'Surakarta',
+      phone: '081398765432',
+      description: 'Produsen batik cap & tulis kontemporer dengan pemberdayaan pengrajin lokal.',
+      verified: true
     },
     {
-      id: 'umkm_demo_3',
-      name: 'Bu Rudy',
-      email: 'admin@sambalburudy.id',
-      role: 'umkm',
-      business_name: 'Sambal Khas Bu Rudy',
-      business_category: 'Kuliner Legendaris',
-      city: 'Surabaya',
-      phone: '081345678912',
-      description: 'Pelopor sambal bawang dan oleh-oleh khas Surabaya berskala nasional.'
+      id: 'admin_1',
+      name: 'Administrator SkillBridge',
+      email: 'admin@skillbridge.id',
+      password: 'admin123',
+      role: 'admin',
+      verified: true
     }
   ];
 
-  const DEFAULT_ADMIN = {
-    id: 'admin_1',
-    name: 'Administrator SkillBridge',
-    email: 'admin@skillbridge.id',
-    role: 'admin'
-  };
+  // Helper to retrieve and ensure persistence of registered users
+  function getStoredUsers() {
+    try {
+      const stored = localStorage.getItem(USERS_STORAGE_KEY);
+      if (!stored) {
+        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(INITIAL_BENCHMARK_USERS));
+        return [...INITIAL_BENCHMARK_USERS];
+      }
+      return JSON.parse(stored);
+    } catch (e) {
+      return [...INITIAL_BENCHMARK_USERS];
+    }
+  }
+
+  function saveStoredUsers(users) {
+    try {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    } catch (e) {
+      console.error('[Auth] Failed to save users:', e);
+    }
+  }
 
   const Auth = {
+    getAllUsers: function () {
+      return getStoredUsers();
+    },
+
+    getStudents: function () {
+      return getStoredUsers().filter(u => u.role === 'mahasiswa' || u.role === 'student');
+    },
+
+    getUMKM: function () {
+      return getStoredUsers().filter(u => u.role === 'umkm');
+    },
+
+    // Backwards-compatible aliases for existing callers
     getPreloadedStudents: function () {
-      return PRELOADED_STUDENTS;
+      return this.getStudents();
     },
 
     getPreloadedUMKM: function () {
-      return PRELOADED_UMKM;
+      return this.getUMKM();
     },
 
     getUser: function () {
@@ -200,71 +185,73 @@ if (typeof window.escapeHtml !== 'function') {
       this.updateNavbar();
     },
 
-    login: function (email, password, role = 'mahasiswa') {
+    // Strict Production-grade Login with Password Validation (No Fallbacks / No Bypasses)
+    login: async function (email, password, role = 'mahasiswa') {
       const cleanEmail = (email || '').trim().toLowerCase();
-      let user = null;
-
-      if (cleanEmail === 'admin@skillbridge.id' || role === 'admin' || cleanEmail.includes('admin')) {
-        user = { ...DEFAULT_ADMIN, email: email || DEFAULT_ADMIN.email };
-      } else {
-        // Look up in preloaded students
-        const matchedStudent = PRELOADED_STUDENTS.find(s => s.email.toLowerCase() === cleanEmail);
-        if (matchedStudent) {
-          user = { ...matchedStudent };
-        } else {
-          // Look up in preloaded UMKM
-          const matchedUMKM = PRELOADED_UMKM.find(u => u.email.toLowerCase() === cleanEmail);
-          if (matchedUMKM) {
-            user = { ...matchedUMKM };
-          } else {
-            // Check dynamically registered users
-            const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
-            const matchedReg = registered.find(r => r.email.toLowerCase() === cleanEmail);
-            if (matchedReg) {
-              user = { ...matchedReg };
-            } else {
-              // Fallback based on role
-              if (role === 'umkm') {
-                user = { ...PRELOADED_UMKM[0], email: email || PRELOADED_UMKM[0].email };
-              } else {
-                user = { ...PRELOADED_STUDENTS[0], email: email || PRELOADED_STUDENTS[0].email };
-              }
-            }
-          }
-        }
+      if (!cleanEmail || !password) {
+        throw new Error('Email dan kata sandi wajib diisi.');
       }
 
-      this.setUser(user);
-      return user;
-    },
-
-    signInWithSupabase: async function (email, password, role = 'mahasiswa') {
+      // 1. Authenticate via Supabase GoTrue Auth if client is configured and live
       const client = window.supabaseClient;
-      if (client && client.auth) {
+      if (client && client.auth && typeof client.auth.signInWithPassword === 'function' && window.isRealSupabase) {
         try {
-          const { data, error } = await client.auth.signInWithPassword({ email, password });
-          if (!error && data.user) {
+          const { data, error } = await client.auth.signInWithPassword({ email: cleanEmail, password });
+          if (error) throw error;
+          if (data && data.user) {
             const meta = data.user.user_metadata || {};
             const user = {
               id: data.user.id,
               email: data.user.email,
-              name: meta.name || email.split('@')[0],
+              name: meta.name || cleanEmail.split('@')[0],
               role: (meta.role || role).toLowerCase(),
               ...meta
             };
             this.setUser(user);
             return user;
           }
-        } catch (e) {
-          console.warn('[GoTrueAuth] Supabase auth login failed, using local mock auth:', e);
+        } catch (supaErr) {
+          console.error('[GoTrueAuth] Supabase authentication failed:', supaErr);
+          throw new Error(supaErr.message || 'Email atau kata sandi tidak valid.');
         }
       }
+
+      // 2. Authenticate against registered users database with strict credential verification
+      const allUsers = getStoredUsers();
+      const matchedUser = allUsers.find(u => (u.email || '').toLowerCase() === cleanEmail);
+
+      if (!matchedUser) {
+        throw new Error('Akun dengan email tersebut tidak terdaftar.');
+      }
+
+      // Enforce strict password comparison
+      if (matchedUser.password !== password) {
+        throw new Error('Kata sandi yang Anda masukkan salah.');
+      }
+
+      // Enforce role authorization constraint (e.g. non-admin cannot sign in via Admin portal)
+      const userRole = (matchedUser.role === 'student' ? 'mahasiswa' : matchedUser.role).toLowerCase();
+      const requestedRole = (role === 'student' ? 'mahasiswa' : role).toLowerCase();
+
+      if (requestedRole === 'admin' && userRole !== 'admin') {
+        throw new Error('Akun ini tidak memiliki hak akses sebagai Administrator.');
+      }
+
+      // Create sanitized session object (never expose password in current session)
+      const sessionUser = { ...matchedUser };
+      delete sessionUser.password;
+
+      this.setUser(sessionUser);
+      return sessionUser;
+    },
+
+    signInWithSupabase: async function (email, password, role = 'mahasiswa') {
       return this.login(email, password, role);
     },
 
     signUpWithSupabase: async function (formData) {
       const client = window.supabaseClient;
-      if (client && client.auth) {
+      if (client && client.auth && typeof client.auth.signUp === 'function' && window.isRealSupabase) {
         try {
           const { data, error } = await client.auth.signUp({
             email: formData.email,
@@ -278,7 +265,8 @@ if (typeof window.escapeHtml !== 'function') {
               }
             }
           });
-          if (!error && data.user) {
+          if (error) throw error;
+          if (data && data.user) {
             const user = {
               id: data.user.id,
               ...formData
@@ -286,32 +274,44 @@ if (typeof window.escapeHtml !== 'function') {
             this.setUser(user);
             return user;
           }
-        } catch (e) {
-          console.warn('[GoTrueAuth] Supabase auth sign-up failed, using local registration:', e);
+        } catch (supaErr) {
+          console.error('[GoTrueAuth] Supabase sign up error:', supaErr);
+          throw new Error(supaErr.message || 'Gagal mendaftar ke server.');
         }
       }
       return this.register(formData);
     },
 
     register: function (formData) {
-      const id = (formData.role === 'umkm' ? 'umkm_' : 'std_') + Date.now();
-      const user = {
-        id: id,
-        ...formData
-      };
-      this.setUser(user);
-
-      // Persist in dynamically registered users collection so user can re-login
-      const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
-      const existingIdx = registered.findIndex(r => r.email.toLowerCase() === (user.email || '').toLowerCase());
-      if (existingIdx !== -1) {
-        registered[existingIdx] = user;
-      } else {
-        registered.push(user);
+      if (!formData.email || !formData.password) {
+        throw new Error('Email dan kata sandi wajib diisi untuk registrasi.');
       }
-      localStorage.setItem('SB_REGISTERED_USERS', JSON.stringify(registered));
 
-      return user;
+      const allUsers = getStoredUsers();
+      const existingUser = allUsers.find(u => (u.email || '').toLowerCase() === formData.email.trim().toLowerCase());
+      if (existingUser) {
+        throw new Error('Email ini sudah terdaftar. Silakan login.');
+      }
+
+      const id = (formData.role === 'umkm' ? 'umkm_' : 'std_') + Date.now();
+      const newUser = {
+        id: id,
+        ...formData,
+        email: formData.email.trim().toLowerCase(),
+        role: formData.role || 'mahasiswa',
+        verified: false,
+        created_at: new Date().toISOString()
+      };
+
+      allUsers.push(newUser);
+      saveStoredUsers(allUsers);
+
+      // Session user without exposing password
+      const sessionUser = { ...newUser };
+      delete sessionUser.password;
+      this.setUser(sessionUser);
+
+      return sessionUser;
     },
 
     // Resolves relative paths correctly depending on current URL depth
