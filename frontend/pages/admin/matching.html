@@ -305,7 +305,7 @@
 
         <!-- Filter Pills -->
         <div class="filter-pills-row">
-          <button class="filter-tab-pill active" onclick="setMatchFilter('all', this)">All Matches (6)</button>
+          <button id="btn-filter-all" class="filter-tab-pill active" onclick="setMatchFilter('all', this)">All Matches</button>
           <button class="filter-tab-pill" onclick="setMatchFilter('high', this)">High Compatibility (≥90%)</button>
           <button class="filter-tab-pill" onclick="setMatchFilter('medium', this)">Moderate Match (75-89%)</button>
           <button class="filter-tab-pill" onclick="setMatchFilter('review', this)">Needs Review (&lt;75%)</button>
@@ -438,6 +438,11 @@
     function renderMatches() {
       const container = document.getElementById('matches-cards-container');
       const q = (document.getElementById('match-search-input')?.value || '').toLowerCase().trim();
+
+      const allBtn = document.getElementById('btn-filter-all');
+      if (allBtn) {
+        allBtn.textContent = `All Matches (${matchesData.length})`;
+      }
 
       const filtered = matchesData.filter(m => {
         const matchesCat = activeFilter === 'all' || m.category === activeFilter;

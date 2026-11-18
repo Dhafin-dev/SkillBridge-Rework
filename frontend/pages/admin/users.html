@@ -332,6 +332,17 @@
       const tbody = document.getElementById('users-tbody');
       const esc = window.escapeHtml || (s => s);
 
+      // Dynamically update dashboard metric cards
+      const totalEl = document.getElementById('stat-total-users');
+      const stdEl = document.getElementById('stat-students');
+      const umkmEl = document.getElementById('stat-umkms');
+      const verifEl = document.getElementById('stat-verified');
+
+      if (totalEl) totalEl.textContent = usersList.length;
+      if (stdEl) stdEl.textContent = usersList.filter(u => u.role === 'student').length;
+      if (umkmEl) umkmEl.textContent = usersList.filter(u => u.role === 'umkm').length;
+      if (verifEl) verifEl.textContent = usersList.filter(u => u.verified).length;
+
       const filtered = usersList.filter(u => {
         const matchesRole = currentRoleFilter === 'all' || u.role.toLowerCase() === currentRoleFilter;
         const matchesSearch = (u.name || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q);
