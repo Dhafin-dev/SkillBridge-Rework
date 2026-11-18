@@ -443,7 +443,7 @@
     function viewUserDetail(id) {
       const u = usersList.find(x => x.id === id);
       if (u) {
-        alert(`Detail Pengguna:\n\nNama: ${u.name}\nEmail: ${u.email}\nPeran: ${u.role}\nStatus Verifikasi: ${u.verified ? 'Terverifikasi' : 'Pending'}`);
+        window.toast.info(`Pengguna: ${u.name} | ${u.role.toUpperCase()} | Status: ${u.verified ? 'Terverifikasi' : 'Pending'}`);
       }
     }
 

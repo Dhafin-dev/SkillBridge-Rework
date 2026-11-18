@@ -326,7 +326,7 @@
         deadline,
         skills,
         description: desc,
-        umkm_id: user.id || 'umkm_demo_1',
+        umkm_id: user.id,
         umkm_name: user.company_name || user.name || 'Mitra UMKM',
         umkm_desc: user.bio || 'Mitra UMKM terpercaya.',
         status: 'open'
@@ -441,8 +441,7 @@
         document.getElementById('umkm-avatar-circle').textContent = (user.company_name || user.name)[0].toUpperCase();
       }
 
-      // Initialize default values for budget and deadline
-      document.getElementById('proj-budget').value = 3000000;
+      // Initialize default deadline
       setDeadlinePreset(30, document.querySelector('.deadline-chip.active'));
     });
   </script>
