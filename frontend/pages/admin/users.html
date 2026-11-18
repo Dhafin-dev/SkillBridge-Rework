@@ -313,39 +313,14 @@
   <script>
     function loadSystemUsers() {
       const auth = window.SkillBridgeAuth;
-      const stds = (auth && auth.getPreloadedStudents ? auth.getPreloadedStudents() : []).map(s => ({
-        id: s.id,
-        name: s.name,
-        email: s.email,
-        role: 'student',
-        verified: true
-      }));
-
-      const umkms = (auth && auth.getPreloadedUMKM ? auth.getPreloadedUMKM() : []).map(u => ({
+      const all = (auth && auth.getAllUsers ? auth.getAllUsers() : []);
+      return all.map(u => ({
         id: u.id,
-        name: u.business_name || u.name,
+        name: u.name || u.business_name || 'Pengguna',
         email: u.email,
-        role: 'umkm',
-        verified: true
+        role: u.role === 'umkm' ? 'umkm' : (u.role === 'admin' ? 'admin' : 'student'),
+        verified: u.verified !== false
       }));
-
-      const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]').map(r => ({
-        id: r.id,
-        name: r.name || r.business_name || 'Pengguna Baru',
-        email: r.email,
-        role: r.role === 'umkm' ? 'umkm' : 'student',
-        verified: r.verified || false
-      }));
-
-      const admin = [{
-        id: 'admin_1',
-        name: 'Administrator SkillBridge',
-        email: 'admin@skillbridge.id',
-        role: 'admin',
-        verified: true
-      }];
-
-      return [...stds, ...umkms, ...registered, ...admin];
     }
 
     let usersList = loadSystemUsers();
