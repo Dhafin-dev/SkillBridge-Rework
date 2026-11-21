@@ -60,8 +60,25 @@
       };
     },
 
-    savePreferences: function (prefs) {
+    savePreferences: async function (prefs) {
       localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+
+      // Visibilitas profil dan status ketersediaan adalah data profil nyata,
+      // bukan sekadar preferensi tampilan. Simpan ke Supabase untuk mahasiswa.
+      const user = window.SkillBridgeAuth?.getUser?.();
+      if (user?.role === 'student' && window.SkillBridgeAuth?.updateCurrentUser) {
+        try {
+          await window.SkillBridgeAuth.updateCurrentUser({
+            profile_visible: Boolean(prefs.profile_visible),
+            available_status: Boolean(prefs.available_status)
+          });
+        } catch (error) {
+          console.warn('[Settings] Gagal menyimpan preferensi profil ke database:', error);
+          window.toast?.error(error.message || 'Preferensi tampilan tersimpan, tetapi profil gagal diperbarui.');
+          return;
+        }
+      }
+
       window.toast?.success('Preferensi akun dan privasi berhasil disimpan!');
     },
 
@@ -180,7 +197,7 @@
       if (modal) modal.classList.remove('active');
     },
 
-    handleSavePrefsModal: function () {
+    handleSavePrefsModal: async function () {
       const prefs = {
         notify_projects: document.getElementById('pref-notify-projects')?.checked ?? true,
         notify_messages: document.getElementById('pref-notify-messages')?.checked ?? true,
@@ -188,7 +205,7 @@
         profile_visible: document.getElementById('pref-profile-visible')?.checked ?? true,
         available_status: document.getElementById('pref-available-status')?.checked ?? true
       };
-      this.savePreferences(prefs);
+      await this.savePreferences(prefs);
       this.closeModal();
     },
 
@@ -210,8 +227,9 @@
       }
 
       // Check user context
+      const esc = window.escapeHtml || (value => String(value ?? ''));
       const user = window.SkillBridgeAuth ? window.SkillBridgeAuth.getUser() : null;
-      const userRole = (user && user.role) ? user.role.toLowerCase() : 'mahasiswa';
+      const userRole = (user && user.role) ? user.role.toLowerCase() : 'student';
       const userName = user ? (user.name || user.fullName || (userRole === 'admin' ? 'Administrator' : 'Pengguna')) : 'Pengguna';
       const userEmail = user ? (user.email || 'user@skillbridge.id') : 'user@skillbridge.id';
       const roleLabel = userRole === 'umkm' ? 'Pemilik UMKM' : (userRole === 'admin' ? 'System Administrator' : 'Mahasiswa');
@@ -268,8 +286,8 @@
 
       menu.innerHTML = `
         <div class="dropdown-user-header">
-          <div class="dropdown-user-name">${userName}</div>
-          <div class="dropdown-user-meta">${userEmail}</div>
+          <div class="dropdown-user-name">${esc(userName)}</div>
+          <div class="dropdown-user-meta">${esc(userEmail)}</div>
           <span class="dropdown-user-role-badge">${roleLabel}</span>
         </div>
 
@@ -334,7 +352,8 @@
 
   window.SkillBridgeSettings = Settings;
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
+    await window.SkillBridgeAuth?.ready?.();
     Settings.initProfileDropdown();
   });
 })();

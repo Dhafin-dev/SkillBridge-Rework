@@ -6,18 +6,6 @@
   <title>Admin Dashboard — SkillBridge</title>
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
-  <script>
-    (function () {
-      try {
-        var user = localStorage.getItem('SKILLBRIDGE_CURRENT_USER') || localStorage.getItem('skillbridge_user');
-        if (!user) {
-          window.location.replace('../auth/login.html');
-        }
-      } catch (e) {
-        window.location.replace('../auth/login.html');
-      }
-    })();
-  </script>
   <style>
     .admin-stats-row {
       display: grid;
@@ -310,7 +298,8 @@
       </div>
     </main>
   </div>
-
+  <script src="../../assets/vendor/supabase.js"></script>
+  <script src="../../assets/js/config.js"></script>
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>

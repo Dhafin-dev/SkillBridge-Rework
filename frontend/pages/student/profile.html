@@ -4,69 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Profile — SkillBridge</title>
+
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+
   <style>
     .profile-hero-card {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
+      background: #fff;
+      border: 1px solid #e2e8f0;
       border-radius: 1.5rem;
       padding: 2rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1.5rem;
       flex-wrap: wrap;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
     }
 
     .profile-hero-left {
       display: flex;
       align-items: center;
       gap: 1.75rem;
+      flex-wrap: wrap;
     }
 
     .profile-avatar-lg {
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #2563EB, #1D4ED8);
-      color: #FFFFFF;
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 2.25rem;
       font-weight: 800;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
-      border: 4px solid #EFF6FF;
+      border: 4px solid #eff6ff;
       flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .kpi-chip-group {
-      display: flex;
-      gap: 1.5rem;
-      margin-top: 0.75rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .kpi-chip-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .kpi-badge-num {
-      width: 36px;
-      height: 36px;
-      border-radius: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1rem;
     }
 
     .profile-grid-two {
@@ -76,596 +52,1551 @@
       margin-bottom: 1.5rem;
     }
 
+    .info-box-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 1.5rem;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+
+    .info-box-card h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 1rem;
+    }
+
+    .profile-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .profile-section-header h3 {
+      margin: 0;
+    }
+
+    .kpi-chip-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .kpi-chip-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .kpi-badge-num {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 7px;
+      border-radius: .75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .kpi-label {
+      font-size: .7rem;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+
+    .kpi-description {
+      font-size: .85rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .skill-pill-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: .45rem 1rem;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #1e293b;
+      font-size: .825rem;
+      font-weight: 600;
+      border: 1px solid #e2e8f0;
+    }
+
+    .skills-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .profile-muted {
+      color: #94a3b8;
+      font-size: .85rem;
+      line-height: 1.7;
+    }
+
+    .profile-info-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: .85rem;
+    }
+
+    .profile-info-row span {
+      color: #64748b;
+    }
+
+    .profile-info-row strong {
+      color: #334155;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .certificate-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: .75rem;
+    }
+
+    .certificate-icon {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 20px;
+    }
+
+    .certificate-item-name {
+      font-size: .9rem;
+      font-weight: 800;
+      color: #0f172a;
+      overflow-wrap: anywhere;
+    }
+
+    .reviews-amber-box {
+      background: #fffdf5;
+      border: 1.5px solid #fef3c7;
+      border-radius: 1.5rem;
+      padding: 1.75rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .review-card-item {
+      background: #fff;
+      border: 1px solid #fde68a;
+      border-radius: 1.25rem;
+      padding: 1.25rem;
+      margin-bottom: .75rem;
+    }
+
+    .review-card-item p {
+      color: #475569;
+      font-size: .85rem;
+      line-height: 1.7;
+      margin: 10px 0 0;
+    }
+
+    .profile-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.6);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      padding: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-modal.active {
+      display: flex;
+    }
+
+    .profile-modal-content {
+      width: min(100%,580px);
+      background: #fff;
+      border-radius: 20px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 70px rgba(0,0,0,.18);
+    }
+
+    .profile-modal-header,
+    .profile-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 25px;
+    }
+
+    .profile-modal-header {
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .profile-modal-footer {
+      border-top: 1px solid #e2e8f0;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .profile-modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .profile-modal-close {
+      border: 0;
+      background: transparent;
+      font-size: 27px;
+      cursor: pointer;
+      color: #94a3b8;
+    }
+
+    .profile-modal-body {
+      padding: 25px;
+    }
+
+    .profile-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+    }
+
+    .profile-form-error {
+      display: none;
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 10px;
+      color: #b91c1c;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      font-size: 12px;
+    }
+
+    .profile-loading,
+    .profile-error {
+      text-align: center;
+      padding: 28px;
+      margin-bottom: 20px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      color: #64748b;
+    }
+
+    .profile-error {
+      color: #b91c1c;
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    .profile-save-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
     @media (max-width: 900px) {
       .profile-grid-two {
         grid-template-columns: 1fr;
       }
     }
 
-    .info-box-card {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 1.5rem;
-      padding: 1.75rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
+    @media (max-width: 600px) {
+      .profile-hero-card,
+      .info-box-card,
+      .reviews-amber-box {
+        padding: 1.25rem;
+      }
 
-    .skill-pill-tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.45rem 1rem;
-      border-radius: 9999px;
-      background: #F1F5F9;
-      color: #1E293B;
-      font-size: 0.825rem;
-      font-weight: 600;
-      border: 1px solid #E2E8F0;
-    }
+      .profile-avatar-lg {
+        width: 75px;
+        height: 75px;
+        font-size: 28px;
+      }
 
-    .reviews-amber-box {
-      background: #FFFDF5;
-      border: 1.5px solid #FEF3C7;
-      border-radius: 1.5rem;
-      padding: 1.75rem;
-    }
-
-    .review-card-item {
-      background: #FFFFFF;
-      border: 1px solid #FDE68A;
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.05);
+      .profile-form-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body class="dashboard-body">
+
   <div class="dashboard-layout">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-      <div class="sidebar-header">
-        <a href="../../index.html" class="nav-brand-lockup">
-          <div class="nav-brand-logo-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-          </div>
-          <span class="sidebar-brand-title">SkillBridge</span>
-        </a>
-      </div>
 
-      <div class="sidebar-nav">
-        <div class="sidebar-section-title">STUDENT MENU</div>
-        <a href="dashboard.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-            <polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
-          <span>Home</span>
-        </a>
-        <a href="../projects.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-            <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
-            <path d="M2 7h20"/>
-          </svg>
-          <span>Market</span>
-        </a>
-        <a href="my-projects.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-          </svg>
-          <span>My Projects</span>
-        </a>
-        <a href="workspace.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          <span>Messages</span>
-        </a>
-        <a href="profile.html" class="sidebar-item active">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          <span>Profile</span>
-        </a>
-      </div>
+    <!-- SIDEBAR ASLI STUDENT PROFILE -->
+    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
 
-      <div class="sidebar-footer">
-        <button onclick="window.SkillBridgeSettings.openModal()" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-          <span>Pengaturan &amp; Tema</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Main Canvas -->
+    <!-- MAIN -->
     <main class="dashboard-main">
-      <!-- Topbar -->
-      <header class="dashboard-topbar">
-        <div class="topbar-search">
-          <div class="input-with-icon">
-            <svg class="input-icon-prefix" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-            </svg>
-            <input type="text" class="form-input" placeholder="Search..." style="border-radius: var(--radius-full); padding-left: 2.5rem; background-color: #F8FAFC; font-size: 0.85rem;">
-          </div>
-        </div>
 
-        <div class="topbar-actions">
-          <div class="notif-wrapper">
-            <button class="notif-bell-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-              </svg>
-              <span class="notif-badge"></span>
-            </button>
-          </div>
+      <!-- TOPBAR ASLI -->
+      <header class="dashboard-topbar" id="shared-topbar"></header>
 
-          <div class="topbar-avatar-pill">
-            <div class="avatar-circle" id="student-avatar-circle">A</div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </div>
-        </div>
-      </header>
-
-      <!-- Dashboard Canvas -->
+      <!-- PROFILE CONTENT -->
       <div class="dashboard-canvas">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-          <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0;">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:2rem;">
+          <h1 style="font-size:2.25rem;font-weight:800;color:#0f172a;margin:0;">
             My Profile
           </h1>
-          <button onclick="window.SkillBridgeSettings.openModal()" title="Pengaturan &amp; Tema" style="background: none; border: none; color: #64748B; cursor: pointer; padding: 6px;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+          <button
+            type="button"
+            onclick="window.SkillBridgeSettings.openModal()"
+            title="Pengaturan & Tema"
+            style="border:none;background:transparent;color:#64748b;cursor:pointer;"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              <path d="M19 12h2M3 12h2M12 3v2M12 19v2"/>
             </svg>
           </button>
         </div>
 
-        <!-- Hero Card (Matching 08_student_profile.png) -->
+        <div id="profile-error" class="profile-error" hidden></div>
+
+        <!-- HERO -->
         <div class="profile-hero-card">
+
           <div class="profile-hero-left">
+
             <div class="profile-avatar-lg" id="profile-hero-avatar">
-              A
+              S
             </div>
+
             <div>
-              <h2 id="prof-display-name" style="font-size: 1.75rem; font-weight: 800; color: #0F172A; margin: 0 0 4px; letter-spacing: -0.01em;">
-                Ahmad Dhafin Al Farisy
+              <h2
+                id="prof-display-name"
+                style="font-size:1.75rem;font-weight:800;color:#0f172a;margin:0 0 4px;"
+              >
+                Memuat profil...
               </h2>
-              <div id="prof-display-uni" style="font-size: 0.95rem; color: #64748B; font-weight: 500;">
-                Universitas Indonesia
+
+              <div
+                id="prof-display-uni"
+                style="font-size:.95rem;color:#64748b;font-weight:500;"
+              >
+                Informasi pendidikan belum dilengkapi
               </div>
 
-              <!-- Badges/KPI chips -->
               <div class="kpi-chip-group">
+
                 <div class="kpi-chip-item">
-                  <div class="kpi-badge-num" style="background: #EFF6FF; color: #2563EB;">98</div>
+                  <div class="kpi-badge-num" id="prof-portfolio-score">
+                    —
+                  </div>
                   <div>
-                    <div style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">PORTFOLIO SCORE</div>
-                    <div style="font-size: 0.85rem; font-weight: 700; color: #0F172A;">Top 5% Student</div>
+                    <div class="kpi-label">PORTFOLIO SCORE</div>
+                    <div class="kpi-description">
+                      Skor profil
+                    </div>
                   </div>
                 </div>
 
                 <div class="kpi-chip-item">
-                  <div class="kpi-badge-num" style="background: #ECFDF5; color: #10B981;">12</div>
+                  <div
+                    class="kpi-badge-num"
+                    id="prof-completed-projects"
+                    style="background:#ecfdf5;color:#10b981;"
+                  >
+                    0
+                  </div>
                   <div>
-                    <div style="font-size: 0.7rem; font-weight: 800; color: #94A3B8; text-transform: uppercase;">PROJECTS</div>
-                    <div style="font-size: 0.85rem; font-weight: 700; color: #0F172A;">Successfully Completed</div>
+                    <div class="kpi-label">PROJECTS</div>
+                    <div class="kpi-description">
+                      Successfully Completed
+                    </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
 
-          <div id="btn-edit-profile-wrapper">
-            <button onclick="openEditProfileModal()" class="btn btn-outline" style="border-radius: 0.875rem; padding: 0.65rem 1.25rem; font-weight: 700;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9"/>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
-              <span>Edit Profile</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            id="btn-edit-profile"
+            class="btn btn-outline"
+            style="border-radius:.875rem;padding:.65rem 1.25rem;font-weight:700;"
+          >
+            ✎ Edit Profile
+          </button>
+
         </div>
 
-        <!-- Middle Row: About & Expertise + Certificates -->
+        <!-- ABOUT + CERTIFICATES -->
         <div class="profile-grid-two">
-          <!-- About & Expertise -->
-          <div class="info-box-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-              <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; margin: 0;">About & Expertise</h3>
-              <button id="btn-edit-about" onclick="openEditProfileModal()" style="background: none; border: none; color: #2563EB; cursor: pointer;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 20h9"/>
-                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                </svg>
+
+          <section class="info-box-card">
+
+            <div class="profile-section-header">
+              <h3>About &amp; Expertise</h3>
+
+              <button
+                type="button"
+                id="btn-edit-about"
+                style="border:none;background:transparent;color:#2563eb;cursor:pointer;"
+              >
+                ✎
               </button>
             </div>
 
-            <p id="prof-display-bio" style="font-size: 0.925rem; line-height: 1.6; color: #475569; margin-bottom: 1.5rem;">
-              Full-Stack AI Engineer & Lead Student Developer. Top 1% academic achiever passionate about connecting student talent with thriving Indonesian MSMEs.
+            <p
+              id="prof-display-bio"
+              style="font-size:.925rem;line-height:1.7;color:#475569;margin-bottom:1.5rem;white-space:pre-wrap;"
+            >
+              Bio belum diisi.
             </p>
 
-            <div style="font-size: 0.725rem; font-weight: 800; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+            <div style="font-size:.725rem;font-weight:800;color:#94a3b8;margin-bottom:.75rem;">
               CORE SKILLS
             </div>
 
-            <div id="skills-cloud" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-              <span class="skill-pill-tag">React</span>
-              <span class="skill-pill-tag">TypeScript</span>
-              <span class="skill-pill-tag">Python</span>
-              <span class="skill-pill-tag">Machine Learning</span>
-              <span class="skill-pill-tag">Node.js</span>
-              <span class="skill-pill-tag">UI/UX Design</span>
-              <span class="skill-pill-tag">Tailwind CSS</span>
-              <span class="skill-pill-tag">Next.js</span>
-              <span class="skill-pill-tag">Prisma</span>
-              <span class="skill-pill-tag">Cloud Architecture</span>
-              <button onclick="promptAddSkill()" class="btn btn-sm btn-outline" style="border-radius: 9999px; font-size: 0.75rem; border-style: dashed; padding: 4px 10px;">
-                + Add Skill
+            <div id="skills-cloud" class="skills-cloud">
+              <span class="profile-muted">
+                Belum ada keahlian.
+              </span>
+            </div>
+
+            <div class="profile-info-row" style="margin-top:22px;">
+              <span>Major</span>
+              <strong id="prof-major">Belum diisi</strong>
+            </div>
+
+            <div class="profile-info-row">
+              <span>Semester</span>
+              <strong id="prof-semester">Belum diisi</strong>
+            </div>
+
+            <div class="profile-info-row">
+              <span>Portfolio</span>
+              <div id="prof-portfolio-link">
+                <span class="profile-muted">Belum ada</span>
+              </div>
+            </div>
+
+          </section>
+
+          <section class="info-box-card">
+
+            <div class="profile-section-header">
+              <h3>Certificates</h3>
+
+              <button
+                type="button"
+                id="btn-edit-certificates"
+                class="btn btn-outline"
+                style="border-radius:999px;font-size:12px;"
+              >
+                + Tambah
               </button>
             </div>
-          </div>
 
-          <!-- Certificates -->
-          <div class="info-box-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; font-weight: 800; color: #0F172A;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5">
-                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-                  <path d="M4 22h16"/>
-                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
-                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
-                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
-                </svg>
-                <span>Certificates</span>
-              </div>
-              <button onclick="window.toast.info('Sertifikat dapat diunggah melalui menu Verifikasi')" style="background: none; border: none; color: #2563EB; cursor: pointer;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 20h9"/>
-                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                </svg>
-              </button>
+            <div id="certificates-list">
+              <p class="profile-muted">
+                Belum ada sertifikat yang tercatat.
+              </p>
             </div>
 
-            <!-- Certificate Card Item Matching Figma -->
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 1rem; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
-              <div style="width: 44px; height: 44px; border-radius: 0.75rem; background: #EFF6FF; color: #2563EB; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="8" r="6"/>
-                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-                </svg>
-              </div>
-              <div>
-                <div style="font-weight: 800; font-size: 0.95rem; color: #0F172A;">AWS Certified Cloud Practitioner</div>
-                <div style="font-size: 0.8rem; color: #64748B;">Amazon Web Services • 2026 - 2029</div>
-              </div>
-            </div>
+            <p class="profile-muted" style="margin-top:14px;">
+              Sertifikat pada bagian ini disimpan sebagai nama sertifikat,
+              bukan file PDF atau bukti verifikasi.
+            </p>
+          </section>
 
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 1rem; padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
-              <div style="width: 44px; height: 44px; border-radius: 0.75rem; background: #ECFDF5; color: #10B981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="8" r="6"/>
-                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-                </svg>
-              </div>
-              <div>
-                <div style="font-weight: 800; font-size: 0.95rem; color: #0F172A;">TensorFlow Developer Certificate</div>
-                <div style="font-size: 0.8rem; color: #64748B;">Google Cloud Training • 2025 - Verified</div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Bottom: UMKM Reviews Section Matching Figma -->
-        <div class="reviews-amber-box">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.2rem; font-weight: 800; color: #92400E;">
-              <span>⭐ UMKM Reviews</span>
-            </div>
-            <span class="badge" style="background: #FEF3C7; color: #B45309; font-weight: 800; border-radius: 9999px; padding: 4px 12px; font-size: 0.8rem;">
-              3 Reviews
+        <!-- UMKM REVIEWS -->
+        <section class="reviews-amber-box">
+
+          <div class="profile-section-header">
+            <h3 style="color:#92400e;margin:0;">
+              ⭐ UMKM Reviews
+            </h3>
+
+            <span
+              id="reviews-count"
+              style="background:#fef3c7;color:#b45309;font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;"
+            >
+              0 Reviews
             </span>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
-            <!-- Review 1 -->
-            <div class="review-card-item">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <div>
-                  <div style="font-weight: 800; color: #0F172A; font-size: 1rem;">Batik Wastra Nusantara</div>
-                  <div style="font-size: 0.75rem; color: #64748B;">Batik Virtual Showroom & Digital E-Commerce</div>
-                </div>
-                <div style="color: #F59E0B; font-size: 0.9rem; letter-spacing: 2px;">★★★★★</div>
-              </div>
-              <p style="font-size: 0.85rem; color: #334155; line-height: 1.5; margin: 0; font-style: italic;">
-                "Exceptional UI/UX and full-stack engineering work. Highly recommended for any serious digital initiative."
-              </p>
-            </div>
-
-            <!-- Review 2 -->
-            <div class="review-card-item">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <div>
-                  <div style="font-weight: 800; color: #0F172A; font-size: 1rem;">Lumina Beans Roastery</div>
-                  <div style="font-size: 0.75rem; color: #64748B;">Coffee Subscription App & Checkout Platform</div>
-                </div>
-                <div style="color: #F59E0B; font-size: 0.9rem; letter-spacing: 2px;">★★★★★</div>
-              </div>
-              <p style="font-size: 0.85rem; color: #334155; line-height: 1.5; margin: 0; font-style: italic;">
-                "Dhafin is an extraordinary developer. Exceeded our expectations in quality, speed, and communication."
-              </p>
-            </div>
-
-            <!-- Review 3 -->
-            <div class="review-card-item">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                <div>
-                  <div style="font-weight: 800; color: #0F172A; font-size: 1rem;">GreenTech Solutions ID</div>
-                  <div style="font-size: 0.75rem; color: #64748B;">Solar ROI Calculator Mobile App</div>
-                </div>
-                <div style="color: #F59E0B; font-size: 0.9rem; letter-spacing: 2px;">★★★★★</div>
-              </div>
-              <p style="font-size: 0.85rem; color: #334155; line-height: 1.5; margin: 0; font-style: italic;">
-                "John delivered exceptional work on our web revamp. Very communicative and proactive throughout the project!"
-              </p>
-            </div>
+          <div id="reviews-list">
+            <p class="profile-muted">
+              Belum ada review dari UMKM.
+            </p>
           </div>
-        </div>
 
-        <!-- Account Security & Dedicated Logout Zone (Per User Rule) -->
-        <div class="info-box-card" style="margin-top: 1.75rem; border-color: #FECACA; background: #FFFBFB;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        </section>
+
+        <!-- LOGOUT -->
+        <section
+          class="info-box-card"
+          style="border-color:#fecaca;background:#fffbfb;"
+        >
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;">
+
             <div>
-              <div style="display: flex; align-items: center; gap: 0.5rem; color: #DC2626; font-weight: 800; font-size: 1.05rem;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                  <polyline points="16 17 21 12 16 7"/>
-                  <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-                <span>Pengaturan Akun &amp; Sesi Masuk</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #64748B; margin: 0.25rem 0 0;">
-                Keluar dari sesi peramban ini secara aman untuk menjaga privasi akun Anda.
+              <h3 style="color:#dc2626;margin:0 0 7px;">
+                Pengaturan Akun &amp; Sesi Masuk
+              </h3>
+
+              <p style="color:#64748b;font-size:.85rem;margin:0;">
+                Keluar dari sesi peramban ini untuk menjaga privasi akun.
               </p>
             </div>
-            <button onclick="window.SkillBridgeAuth.logout(true)" class="btn btn-outline-danger" style="border-radius: 0.875rem; padding: 0.65rem 1.25rem; font-weight: 700;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-              </svg>
-              <span>Keluar dari Akun (Logout)</span>
+
+            <button
+              type="button"
+              id="btn-logout"
+              class="btn btn-outline-danger"
+            >
+              Keluar dari Akun (Logout)
             </button>
+
           </div>
-        </div>
+        </section>
 
       </div>
     </main>
   </div>
 
-  <!-- Comprehensive Edit Profile Modal -->
-  <div class="modal" id="edit-profile-modal">
-    <div class="modal-content" style="max-width: 580px;">
-      <div class="modal-header">
-        <h3 style="font-weight: 800; margin: 0;">Edit Profil Mahasiswa</h3>
-        <button class="modal-close" onclick="closeEditProfileModal()">&times;</button>
+  <!-- EDIT PROFILE MODAL -->
+  <div id="edit-profile-modal" class="profile-modal">
+
+    <div class="profile-modal-content">
+
+      <div class="profile-modal-header">
+        <h2>Edit Student Profile</h2>
+
+        <button
+          type="button"
+          id="close-profile-modal"
+          class="profile-modal-close"
+        >
+          &times;
+        </button>
       </div>
-      <form id="edit-profile-form" onsubmit="handleSaveProfile(event)">
-        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+
+      <form id="edit-profile-form">
+
+        <div class="profile-modal-body">
+
+          <div
+            id="profile-form-error"
+            class="profile-form-error"
+          ></div>
+
           <div class="form-group">
-            <label class="form-label">Nama Lengkap</label>
-            <input type="text" id="input-prof-name" class="form-input" required placeholder="Contoh: Ahmad Dhafin Al Farisy">
+            <label class="form-label" for="input-prof-name">
+              Nama Lengkap
+            </label>
+
+            <input
+              id="input-prof-name"
+              type="text"
+              class="form-input"
+              required
+            >
           </div>
-          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 0.75rem;">
+
+          <div class="profile-form-row">
+
             <div class="form-group">
-              <label class="form-label">Universitas / Institusi</label>
-              <input type="text" id="input-prof-uni" class="form-input" required placeholder="Contoh: Universitas Indonesia">
+              <label class="form-label" for="input-prof-uni">
+                Universitas
+              </label>
+
+              <input
+                id="input-prof-uni"
+                type="text"
+                class="form-input"
+                required
+              >
             </div>
+
             <div class="form-group">
-              <label class="form-label">Semester</label>
-              <input type="number" id="input-prof-semester" class="form-input" min="1" max="14" placeholder="5">
+              <label class="form-label" for="input-prof-semester">
+                Semester
+              </label>
+
+              <input
+                id="input-prof-semester"
+                type="number"
+                min="1"
+                max="14"
+                class="form-input"
+              >
             </div>
+
           </div>
+
           <div class="form-group">
-            <label class="form-label">Program Studi / Jurusan</label>
-            <input type="text" id="input-prof-major" class="form-input" placeholder="Contoh: Sistem Informasi / Teknik Informatika">
+            <label class="form-label" for="input-prof-major">
+              Jurusan / Program Studi
+            </label>
+
+            <input
+              id="input-prof-major"
+              type="text"
+              class="form-input"
+            >
           </div>
+
           <div class="form-group">
-            <label class="form-label">Bio &amp; Ambisi Profesional</label>
-            <textarea id="input-prof-bio" class="form-textarea" rows="3" required placeholder="Ceritakan latar belakang, fokus keahlian, dan tujuan Anda..."></textarea>
+            <label class="form-label" for="input-prof-bio">
+              Bio Profesional
+            </label>
+
+            <textarea
+              id="input-prof-bio"
+              class="form-textarea"
+              rows="4"
+              placeholder="Ceritakan tentang dirimu dan keahlianmu..."
+            ></textarea>
           </div>
+
           <div class="form-group">
-            <label class="form-label">Keahlian Utama (Pisahkan dengan koma)</label>
-            <input type="text" id="input-prof-skills" class="form-input" placeholder="Contoh: React, TypeScript, Python, UI/UX Design, Node.js">
+            <label class="form-label" for="input-prof-skills">
+              Skills (pisahkan dengan koma)
+            </label>
+
+            <input
+              id="input-prof-skills"
+              type="text"
+              class="form-input"
+              placeholder="Figma, UI/UX Design, HTML, JavaScript"
+            >
           </div>
+
           <div class="form-group">
-            <label class="form-label">Tautan Portofolio / GitHub / LinkedIn</label>
-            <input type="url" id="input-prof-portfolio" class="form-input" placeholder="https://github.com/username">
+            <label class="form-label" for="input-prof-portfolio">
+              Portfolio / GitHub URL
+            </label>
+
+            <input
+              id="input-prof-portfolio"
+              type="url"
+              class="form-input"
+              placeholder="https://github.com/username"
+            >
           </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-prof-certificates">
+              Nama Sertifikat (pisahkan dengan koma)
+            </label>
+
+            <input
+              id="input-prof-certificates"
+              type="text"
+              class="form-input"
+              placeholder="Contoh: Google UX Design Certificate"
+            >
+          </div>
+
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="closeEditProfileModal()">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+
+        <div class="profile-modal-footer">
+
+          <button
+            type="button"
+            id="cancel-profile-modal"
+            class="btn btn-outline"
+          >
+            Batal
+          </button>
+
+          <button
+            type="submit"
+            id="save-profile-btn"
+            class="btn btn-primary profile-save-btn"
+          >
+            Simpan Perubahan
+          </button>
+
         </div>
       </form>
+
     </div>
   </div>
 
+  <!-- SCRIPT ASLI SKILLBRIDGE -->
   <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/vendor/supabase.js"></script>
+  <script src="../../assets/js/config.js"></script>
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/settings.js"></script>
-  <script>
-    function renderSkillsList(skills) {
-      const cloud = document.getElementById('skills-cloud');
-      if (!cloud) return;
-      if (!skills || skills.length === 0) {
-        skills = ['React', 'TypeScript', 'Python', 'Machine Learning', 'Node.js', 'UI/UX Design'];
+
+    <script src="../../assets/js/layout.js"></script>
+<script>
+    "use strict";
+
+    const supabaseDB = window.supabaseClient;
+    const SkillAuth = window.SkillBridgeAuth;
+
+    let studentProfile = null;
+    let studentUser = null;
+    let isSaving = false;
+
+    function element(id) {
+      return document.getElementById(id);
+    }
+
+    function setText(id, value) {
+      const target = element(id);
+
+      if (target) {
+        target.textContent = String(value ?? "");
       }
-      cloud.innerHTML = `
-        ${skills.map(s => `<span class="skill-pill-tag">${s.trim()}</span>`).join('')}
-        <button onclick="promptAddSkill()" class="btn btn-sm btn-outline" style="border-radius: 9999px; font-size: 0.75rem; border-style: dashed; padding: 4px 10px;">
-          + Add Skill
-        </button>
-      `;
     }
 
-    function openEditProfileModal() {
-      const user = window.SkillBridgeAuth.getUser() || {};
-      document.getElementById('input-prof-name').value = user.name || document.getElementById('prof-display-name').textContent.trim();
-      document.getElementById('input-prof-uni').value = user.university || document.getElementById('prof-display-uni').textContent.trim();
-      document.getElementById('input-prof-major').value = user.major || '';
-      document.getElementById('input-prof-semester').value = user.semester || 5;
-      document.getElementById('input-prof-bio').value = user.bio || document.getElementById('prof-display-bio').textContent.trim();
-      const currentSkills = user.skills || ['React', 'TypeScript', 'Python', 'UI/UX Design', 'Node.js'];
-      document.getElementById('input-prof-skills').value = Array.isArray(currentSkills) ? currentSkills.join(', ') : currentSkills;
-      document.getElementById('input-prof-portfolio').value = user.portfolio_url || '';
-      document.getElementById('edit-profile-modal').classList.add('active');
+    function showError(message) {
+      const box = element("profile-error");
+
+      box.hidden = false;
+      box.textContent = message;
     }
 
-    function closeEditProfileModal() {
-      document.getElementById('edit-profile-modal').classList.remove('active');
+    function clearError() {
+      const box = element("profile-error");
+
+      box.hidden = true;
+      box.textContent = "";
     }
 
-    function handleSaveProfile(e) {
-      e.preventDefault();
-      const name = document.getElementById('input-prof-name').value.trim();
-      const uni = document.getElementById('input-prof-uni').value.trim();
-      const major = document.getElementById('input-prof-major').value.trim();
-      const semester = parseInt(document.getElementById('input-prof-semester').value) || 5;
-      const bio = document.getElementById('input-prof-bio').value.trim();
-      const skillsRaw = document.getElementById('input-prof-skills').value.trim();
-      const portfolio_url = document.getElementById('input-prof-portfolio').value.trim();
+    function showFormError(message) {
+      const box = element("profile-form-error");
 
-      const skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      box.textContent = message;
+      box.style.display = "block";
+    }
 
-      // Update DOM instantly
-      document.getElementById('prof-display-name').textContent = name;
-      document.getElementById('prof-display-uni').textContent = major ? `${uni} • ${major} (Smtr ${semester})` : uni;
-      document.getElementById('prof-display-bio').textContent = bio;
-      
-      const initial = (name || 'A')[0].toUpperCase();
-      document.getElementById('profile-hero-avatar').textContent = initial;
-      const navAvatar = document.getElementById('student-avatar-circle');
-      if (navAvatar) navAvatar.textContent = initial;
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
 
-      renderSkillsList(skills);
+    function getInitial(name) {
+      return String(name || "S")
+        .charAt(0)
+        .toUpperCase();
+    }
 
-      // Persist in Auth state
-      window.SkillBridgeAuth.updateCurrentUser({
-        name,
-        university: uni,
-        major,
-        semester,
-        bio,
-        skills,
-        portfolio_url
+    function toArray(value) {
+      return Array.isArray(value) ? value : [];
+    }
+
+    function parseCommaList(value) {
+      return String(value || "")
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean);
+    }
+
+    function formatUniversity(profile) {
+      const parts = [];
+
+      if (profile.university) {
+        parts.push(profile.university);
+      }
+
+      if (profile.major) {
+        parts.push(profile.major);
+      }
+
+      if (profile.semester) {
+        parts.push("Semester " + profile.semester);
+      }
+
+      return parts.join(" • ") ||
+        "Informasi pendidikan belum dilengkapi";
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return "";
+      }
+
+      return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
       });
-
-      closeEditProfileModal();
-      window.toast.success('Profil mahasiswa berhasil diperbarui dan disimpan!');
     }
 
-    function promptAddSkill() {
-      const skill = prompt('Masukkan keahlian baru (misal: Docker, GraphQL, Kubernetes):');
-      if (skill && skill.trim()) {
-        const user = window.SkillBridgeAuth.getUser() || {};
-        const currentSkills = Array.isArray(user.skills) ? [...user.skills] : ['React', 'TypeScript', 'Python', 'UI/UX Design'];
-        currentSkills.push(skill.trim());
-        window.SkillBridgeAuth.updateCurrentUser({ skills: currentSkills });
-        renderSkillsList(currentSkills);
-        window.toast.success(`Keahlian "${skill.trim()}" berhasil ditambahkan!`);
+    // =====================================
+    // LOAD DATA REAL SUPABASE
+    // =====================================
+
+    async function loadStudentProfile() {
+      clearError();
+
+      if (!supabaseDB) {
+        throw new Error(
+          "Supabase belum terhubung. Periksa supabase.js."
+        );
       }
+
+      if (!SkillAuth) {
+        throw new Error(
+          "SkillBridgeAuth tidak ditemukan."
+        );
+      }
+
+      await SkillAuth.ready();
+
+      const sessionUser = SkillAuth.getUser();
+
+      if (!sessionUser?.id) {
+        throw new Error(
+          "Kamu belum login. Silakan login sebagai mahasiswa."
+        );
+      }
+
+      if (sessionUser.role !== "student") {
+        throw new Error(
+          "Halaman ini hanya untuk akun Student."
+        );
+      }
+
+      const userId = sessionUser.id;
+
+      // Mengambil data langsung dari database,
+      // bukan dari objek dummy/localStorage.
+
+      const [
+        userResult,
+        profileResult,
+        workspaceResult,
+        reviewResult
+      ] = await Promise.all([
+
+        supabaseDB
+          .from("users")
+          .select("id,name,email,bio,avatar_url,role")
+          .eq("id", userId)
+          .single(),
+
+        supabaseDB
+          .from("student_profiles")
+          .select("*")
+          .eq("user_id", userId)
+          .maybeSingle(),
+
+        supabaseDB
+          .from("workspaces")
+          .select("id,status")
+          .eq("student_id", userId),
+
+        supabaseDB
+          .from("reviews")
+          .select("id,rating,comment,created_at,reviewer_id,project_id")
+          .eq("target_id", userId)
+          .order("created_at", {
+            ascending: false
+          })
+
+      ]);
+
+      if (userResult.error) {
+        throw userResult.error;
+      }
+
+      if (profileResult.error) {
+        throw profileResult.error;
+      }
+
+      if (workspaceResult.error) {
+        throw workspaceResult.error;
+      }
+
+      if (reviewResult.error) {
+        throw reviewResult.error;
+      }
+
+      studentUser = userResult.data;
+
+      studentProfile = {
+        ...userResult.data,
+        ...(profileResult.data || {})
+      };
+
+      const completedProjects = (
+        workspaceResult.data || []
+      ).filter(
+        workspace => workspace.status === "completed"
+      ).length;
+
+      renderStudentProfile(
+        studentProfile,
+        completedProjects
+      );
+
+      await renderReviews(
+        reviewResult.data || []
+      );
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const queryName = urlParams.get('name');
-      const queryId = urlParams.get('id');
+    // =====================================
+    // RENDER STUDENT PROFILE
+    // =====================================
 
-      // If viewing another talent's profile (e.g. UMKM or Admin browsing)
-      if (queryName || queryId) {
-        window.SkillBridgeAuth.requireAuth(['mahasiswa', 'umkm', 'admin']);
-        const preloaded = window.SkillBridgeAuth.getPreloadedStudents() || [];
-        const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
-        const allStudents = [...preloaded, ...registered.filter(u => u.role === 'mahasiswa' || u.role === 'student')];
+    function renderStudentProfile(
+      profile,
+      completedProjects
+    ) {
+      const name = profile.name || "Mahasiswa";
 
-        const target = allStudents.find(s => 
-          (queryId && s.id === queryId) || 
-          (queryName && s.name && s.name.toLowerCase() === queryName.toLowerCase())
-        ) || {
-          name: queryName || 'Mahasiswa Berbakat',
-          university: 'Universitas Indonesia',
-          major: 'Teknologi Informasi',
-          semester: 5,
-          bio: 'Mahasiswa berprestasi siap berkontribusi pada proyek transformasi digital UMKM.',
-          skills: ['React', 'JavaScript', 'Python', 'UI/UX Design']
-        };
+      setText("prof-display-name", name);
 
-        // Populate Target Student Profile
-        document.title = `${target.name} — Profil Talenta SkillBridge`;
-        document.getElementById('prof-display-name').textContent = target.name;
-        const initial = (target.name || 'T')[0].toUpperCase();
-        document.getElementById('profile-hero-avatar').textContent = initial;
-        document.getElementById('prof-display-uni').textContent = target.major 
-          ? `${target.university} • ${target.major} (Smtr ${target.semester || 5})`
-          : target.university;
-        document.getElementById('prof-display-bio').textContent = target.bio || 'Mahasiswa berdedikasi tinggi siap bermitra dengan UMKM lokal.';
-        renderSkillsList(target.skills);
+      setText(
+        "prof-display-uni",
+        formatUniversity(profile)
+      );
 
-        // Hide Edit Buttons for Viewers
-        const editWrapper = document.getElementById('btn-edit-profile-wrapper');
-        if (editWrapper) {
-          const currentUser = window.SkillBridgeAuth.getUser() || {};
-          if (currentUser.role === 'umkm') {
-            editWrapper.innerHTML = `
-              <a href="../umkm/talent-search.html" class="btn btn-outline" style="border-radius: 0.875rem; padding: 0.65rem 1.25rem; font-weight: 700; text-decoration: none;">
-                ← Kembali ke Talent Search
-              </a>
-            `;
-          } else {
-            editWrapper.style.display = 'none';
-          }
-        }
-        const editAboutBtn = document.getElementById('btn-edit-about');
-        if (editAboutBtn) editAboutBtn.style.display = 'none';
+      setText(
+        "prof-display-bio",
+        profile.bio ||
+        "Bio belum diisi. Klik Edit Profile untuk menambahkan bio."
+      );
+
+      setText(
+        "prof-major",
+        profile.major || "Belum diisi"
+      );
+
+      setText(
+        "prof-semester",
+        profile.semester || "Belum diisi"
+      );
+
+      // Portfolio score dari kolom database.
+      // Bukan skor AI yang dihitung di frontend.
+      setText(
+        "prof-portfolio-score",
+        profile.portfolio_score ?? "—"
+      );
+
+      setText(
+        "prof-completed-projects",
+        completedProjects
+      );
+
+      const initial = getInitial(name);
+
+      setText(
+        "profile-hero-avatar",
+        initial
+      );
+
+      setText(
+        "student-avatar-circle",
+        initial
+      );
+
+      renderSkills(
+        toArray(profile.skills)
+      );
+
+      renderCertificates(
+        toArray(profile.certificates)
+      );
+
+      renderPortfolioLink(
+        profile.portfolio_url
+      );
+    }
+
+    // =====================================
+    // SKILLS
+    // =====================================
+
+    function renderSkills(skills) {
+      const container = element("skills-cloud");
+
+      container.innerHTML = "";
+
+      if (!skills.length) {
+        const empty = document.createElement("span");
+
+        empty.className = "profile-muted";
+
+        empty.textContent =
+          "Belum ada skill. Klik Edit Profile untuk menambahkan.";
+
+        container.appendChild(empty);
+      } else {
+        skills.forEach(skill => {
+          const tag = document.createElement("span");
+
+          tag.className = "skill-pill-tag";
+          tag.textContent = skill;
+
+          container.appendChild(tag);
+        });
+      }
+
+      const addButton = document.createElement("button");
+
+      addButton.type = "button";
+      addButton.className = "btn btn-sm btn-outline";
+
+      addButton.style.cssText =
+        "border-radius:999px;font-size:.75rem;border-style:dashed;padding:4px 10px;";
+
+      addButton.textContent = "+ Add Skill";
+
+      addButton.addEventListener(
+        "click",
+        openEditProfileModal
+      );
+
+      container.appendChild(addButton);
+    }
+
+    // =====================================
+    // CERTIFICATES
+    // =====================================
+
+    function renderCertificates(certificates) {
+      const container = element(
+        "certificates-list"
+      );
+
+      container.innerHTML = "";
+
+      if (!certificates.length) {
+        const text = document.createElement("p");
+
+        text.className = "profile-muted";
+        text.textContent =
+          "Belum ada sertifikat yang tercatat.";
+
+        container.appendChild(text);
         return;
       }
 
-      // Default: Own profile view
-      window.SkillBridgeAuth.requireAuth('mahasiswa');
-      const user = window.SkillBridgeAuth.getUser();
-      if (user) {
-        if (user.name) {
-          document.getElementById('prof-display-name').textContent = user.name;
-          const initial = user.name[0].toUpperCase();
-          document.getElementById('profile-hero-avatar').textContent = initial;
-          const navAvatar = document.getElementById('student-avatar-circle');
-          if (navAvatar) navAvatar.textContent = initial;
-        }
-        if (user.university) {
-          document.getElementById('prof-display-uni').textContent = user.major 
-            ? `${user.university} • ${user.major} (Smtr ${user.semester || 5})`
-            : user.university;
-        }
-        if (user.bio) {
-          document.getElementById('prof-display-bio').textContent = user.bio;
-        }
-        renderSkillsList(user.skills);
+      certificates.forEach(certificate => {
+        const card = document.createElement("div");
+
+        card.className = "certificate-item";
+
+        const icon = document.createElement("div");
+
+        icon.className = "certificate-icon";
+        icon.textContent = "🏅";
+
+        const name = document.createElement("div");
+
+        name.className = "certificate-item-name";
+        name.textContent = certificate;
+
+        card.appendChild(icon);
+        card.appendChild(name);
+
+        container.appendChild(card);
+      });
+    }
+
+    // =====================================
+    // PORTFOLIO LINK
+    // =====================================
+
+    function renderPortfolioLink(value) {
+      const container = element(
+        "prof-portfolio-link"
+      );
+
+      container.innerHTML = "";
+
+      if (!value) {
+        const empty = document.createElement("span");
+
+        empty.className = "profile-muted";
+        empty.textContent = "Belum ada";
+
+        container.appendChild(empty);
+        return;
       }
-    });
+
+      try {
+        const url = new URL(value);
+
+        if (
+          url.protocol !== "https:" &&
+          url.protocol !== "http:"
+        ) {
+          throw new Error("Invalid URL");
+        }
+
+        const link = document.createElement("a");
+
+        link.href = url.href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+
+        link.style.cssText =
+          "color:#2563eb;font-weight:700;text-decoration:none;";
+
+        link.textContent = "Lihat Portofolio ↗";
+
+        container.appendChild(link);
+
+      } catch {
+        container.textContent =
+          "URL portofolio tidak valid";
+      }
+    }
+
+    // =====================================
+    // REAL UMKM REVIEWS
+    // =====================================
+
+    async function renderReviews(reviews) {
+      const container = element("reviews-list");
+
+      container.innerHTML = "";
+
+      setText(
+        "reviews-count",
+        reviews.length + " Reviews"
+      );
+
+      if (!reviews.length) {
+        const empty = document.createElement("p");
+
+        empty.className = "profile-muted";
+        empty.textContent =
+          "Belum ada review dari UMKM untuk akun ini.";
+
+        container.appendChild(empty);
+        return;
+      }
+
+      const reviewerIds = [
+        ...new Set(
+          reviews
+            .map(review => review.reviewer_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const projectIds = [
+        ...new Set(
+          reviews
+            .map(review => review.project_id)
+            .filter(Boolean)
+        )
+      ];
+
+      const reviewerNames = {};
+      const projectTitles = {};
+
+      // View publik dipakai untuk nama pemberi review.
+      // Jika akses dibatasi RLS, review tetap tampil
+      // dengan nama generik.
+      if (reviewerIds.length) {
+        const { data, error } = await supabaseDB
+          .from("public_profiles")
+          .select("id,name")
+          .in("id", reviewerIds);
+
+        if (!error) {
+          (data || []).forEach(user => {
+            reviewerNames[user.id] = user.name;
+          });
+        } else {
+          console.warn(
+            "Reviewer names unavailable:",
+            error
+          );
+        }
+      }
+
+      if (projectIds.length) {
+        const { data, error } = await supabaseDB
+          .from("projects")
+          .select("id,title")
+          .in("id", projectIds);
+
+        if (!error) {
+          (data || []).forEach(project => {
+            projectTitles[project.id] =
+              project.title;
+          });
+        }
+      }
+
+      reviews.forEach(review => {
+        const card = document.createElement("div");
+
+        card.className = "review-card-item";
+
+        const heading = document.createElement("strong");
+
+        heading.textContent =
+          reviewerNames[review.reviewer_id] ||
+          "Mitra UMKM";
+
+        const projectTitle = document.createElement("div");
+
+        projectTitle.className = "profile-muted";
+        projectTitle.textContent =
+          projectTitles[review.project_id] ||
+          "Project Review";
+
+        const rating = document.createElement("div");
+
+        rating.style.cssText =
+          "color:#f59e0b;margin-top:8px;";
+
+        const stars = Math.max(
+          0,
+          Math.min(5, Number(review.rating) || 0)
+        );
+
+        rating.textContent =
+          "★".repeat(stars) +
+          "☆".repeat(5 - stars);
+
+        const comment = document.createElement("p");
+
+        comment.textContent = review.comment || "";
+
+        const date = document.createElement("small");
+
+        date.className = "profile-muted";
+        date.textContent = formatDate(
+          review.created_at
+        );
+
+        card.appendChild(heading);
+        card.appendChild(projectTitle);
+        card.appendChild(rating);
+        card.appendChild(comment);
+        card.appendChild(date);
+
+        container.appendChild(card);
+      });
+    }
+
+    // =====================================
+    // OPEN EDIT PROFILE MODAL
+    // =====================================
+
+    function openEditProfileModal() {
+      if (!studentProfile) {
+        showError(
+          "Data profil belum selesai dimuat."
+        );
+        return;
+      }
+
+      element("input-prof-name").value =
+        studentProfile.name || "";
+
+      element("input-prof-uni").value =
+        studentProfile.university || "";
+
+      element("input-prof-major").value =
+        studentProfile.major || "";
+
+      element("input-prof-semester").value =
+        studentProfile.semester ?? "";
+
+      element("input-prof-bio").value =
+        studentProfile.bio || "";
+
+      element("input-prof-skills").value =
+        toArray(studentProfile.skills)
+          .join(", ");
+
+      element("input-prof-portfolio").value =
+        studentProfile.portfolio_url || "";
+
+      element("input-prof-certificates").value =
+        toArray(studentProfile.certificates)
+          .join(", ");
+
+      element("profile-form-error").style.display =
+        "none";
+
+      element("edit-profile-modal").classList.add(
+        "active"
+      );
+
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeEditProfileModal() {
+      element("edit-profile-modal").classList.remove(
+        "active"
+      );
+
+      document.body.style.overflow = "";
+    }
+
+    // =====================================
+    // SAVE REAL PROFILE TO SUPABASE
+    // =====================================
+
+    async function handleSaveProfile(event) {
+      event.preventDefault();
+
+      if (isSaving) return;
+
+      const name = element(
+        "input-prof-name"
+      ).value.trim();
+
+      const university = element(
+        "input-prof-uni"
+      ).value.trim();
+
+      const major = element(
+        "input-prof-major"
+      ).value.trim();
+
+      const semesterRaw = element(
+        "input-prof-semester"
+      ).value;
+
+      const semester = semesterRaw
+        ? Number(semesterRaw)
+        : null;
+
+      const bio = element(
+        "input-prof-bio"
+      ).value.trim();
+
+      const skills = parseCommaList(
+        element("input-prof-skills").value
+      );
+
+      const portfolioUrl = element(
+        "input-prof-portfolio"
+      ).value.trim();
+
+      const certificates = parseCommaList(
+        element("input-prof-certificates").value
+      );
+
+      if (!name || !university) {
+        showFormError(
+          "Nama dan universitas wajib diisi."
+        );
+        return;
+      }
+
+      if (
+        semester !== null &&
+        (
+          !Number.isInteger(semester) ||
+          semester < 1 ||
+          semester > 14
+        )
+      ) {
+        showFormError(
+          "Semester harus antara 1 sampai 14."
+        );
+        return;
+      }
+
+      const button = element("save-profile-btn");
+
+      isSaving = true;
+      button.disabled = true;
+      button.textContent = "Menyimpan...";
+
+      element("profile-form-error").style.display =
+        "none";
+
+      try {
+        await SkillAuth.ready();
+
+        // Simpan identitas dan profil akademik
+        // menggunakan fungsi auth.js asli.
+        await SkillAuth.updateCurrentUser({
+          name,
+          university,
+          major,
+          semester,
+          bio,
+          skills,
+          portfolio_url: portfolioUrl || null
+        });
+
+        // Certificates adalah kolom text[] asli
+        // pada tabel student_profiles.
+        // Simpan terpisah karena mapping updateCurrentUser
+        // belum mencakup kolom certificates.
+        const { data, error } = await supabaseDB
+          .from("student_profiles")
+          .update({
+            certificates
+          })
+          .eq("user_id", studentUser.id)
+          .select("user_id");
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data || data.length === 0) {
+          throw new Error(
+            "Sertifikat belum berhasil disimpan. Periksa izin akses profil."
+          );
+        }
+
+        // Jangan langsung ubah DOM menjadi sukses.
+        // Baca ulang data dari Supabase terlebih dahulu.
+        await loadStudentProfile();
+
+        closeEditProfileModal();
+
+        if (window.toast?.success) {
+          window.toast.success(
+            "Profil berhasil disimpan ke Supabase!"
+          );
+        }
+
+      } catch (error) {
+        console.error(
+          "[SkillBridge Save Student Profile]",
+          error
+        );
+
+        showFormError(
+          error.message ||
+          "Gagal menyimpan profil."
+        );
+
+      } finally {
+        isSaving = false;
+        button.disabled = false;
+        button.textContent = "Simpan Perubahan";
+      }
+    }
+
+    // =====================================
+    // EVENTS
+    // =====================================
+
+    element("btn-edit-profile").addEventListener(
+      "click",
+      openEditProfileModal
+    );
+
+    element("btn-edit-about").addEventListener(
+      "click",
+      openEditProfileModal
+    );
+
+    element("btn-edit-certificates").addEventListener(
+      "click",
+      openEditProfileModal
+    );
+
+    element("close-profile-modal").addEventListener(
+      "click",
+      closeEditProfileModal
+    );
+
+    element("cancel-profile-modal").addEventListener(
+      "click",
+      closeEditProfileModal
+    );
+
+    element("edit-profile-form").addEventListener(
+      "submit",
+      handleSaveProfile
+    );
+
+    element("edit-profile-modal").addEventListener(
+      "click",
+      event => {
+        if (event.target === element("edit-profile-modal")) {
+          closeEditProfileModal();
+        }
+      }
+    );
+
+    document.addEventListener(
+      "keydown",
+      event => {
+        if (event.key === "Escape") {
+          closeEditProfileModal();
+        }
+      }
+    );
+
+    element("btn-logout").addEventListener(
+      "click",
+      () => SkillAuth.logout(true)
+    );
+
+    // =====================================
+    // INITIALIZATION
+    // =====================================
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+        try {
+          await loadStudentProfile();
+
+        } catch (error) {
+          console.error(
+            "[SkillBridge Student Profile]",
+            error
+          );
+
+          showError(
+            "Gagal memuat profil: " +
+            (error.message || "Unknown error")
+          );
+        }
+      }
+    );
   </script>
+
 </body>
 </html>

@@ -1,19 +1,29 @@
 /**
  * SkillBridge Rework — In-App Notification Center (notifications.js)
- * Manages unread badge counter, notification dropdown, and user notification navigation.
+ *
+ * Notifikasi dibaca dari tabel public.notifications dan dilindungi RLS.
+ * Tidak ada data notifikasi demo di localStorage.
  */
 
 (function () {
+  let currentWrapper = null;
+  let globalListenersBound = false;
+
+  function esc(value) {
+    return window.escapeHtml ? window.escapeHtml(value) : String(value ?? '');
+  }
+
   const NotificationCenter = {
     async init() {
+      await window.SkillBridgeAuth?.ready?.();
       const authActions = document.getElementById('navbar-auth-actions');
-      if (!authActions) return;
+      const user = window.SkillBridgeAuth?.getUser?.();
+      if (!authActions || !user) return;
 
-      const user = window.SkillBridgeAuth?.getUser();
-      if (!user) return; // Only show for logged in users
-
-      // Check if bell already rendered
-      if (document.getElementById('notif-bell-container')) return;
+      if (document.getElementById('notif-bell-container')) {
+        await this.loadNotifications();
+        return;
+      }
 
       const bellWrapper = document.createElement('div');
       bellWrapper.id = 'notif-bell-container';
@@ -37,50 +47,67 @@
       `;
 
       authActions.prepend(bellWrapper);
+      currentWrapper = bellWrapper;
 
       const toggleBtn = document.getElementById('notif-bell-toggle');
       const dropdown = document.getElementById('notif-dropdown-menu');
 
-      toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+      toggleBtn.addEventListener('click', event => {
+        event.stopPropagation();
         dropdown.classList.toggle('show');
         this.loadNotifications();
       });
 
-      document.addEventListener('click', (e) => {
-        if (!bellWrapper.contains(e.target)) {
-          dropdown.classList.remove('show');
-        }
-      });
-
-      document.getElementById('notif-mark-all').addEventListener('click', () => {
+      document.getElementById('notif-mark-all').addEventListener('click', event => {
+        event.stopPropagation();
         this.markAllAsRead();
       });
+
+      if (!globalListenersBound) {
+        globalListenersBound = true;
+        document.addEventListener('click', event => {
+          if (currentWrapper && !currentWrapper.contains(event.target)) {
+            document.getElementById('notif-dropdown-menu')?.classList.remove('show');
+          }
+        });
+      }
 
       await this.loadNotifications();
     },
 
     async loadNotifications() {
-      const user = window.SkillBridgeAuth?.getUser();
+      const user = window.SkillBridgeAuth?.getUser?.();
       if (!user) return;
 
-      const notifs = await window.SkillBridgeDB.getNotifications(user.role);
-      const unread = notifs.filter(n => !n.is_read);
+      const list = document.getElementById('notif-list-container');
+      let notifs = [];
+      try {
+        notifs = await window.SkillBridgeDB.getNotifications();
+      } catch (error) {
+        console.error('[Notifications] Gagal memuat:', error);
+        if (list) {
+          list.innerHTML = `
+            <div style="padding: var(--space-4); text-align: center; color: var(--color-danger); font-size: var(--font-size-xs);">
+              Notifikasi tidak dapat dimuat.
+            </div>
+          `;
+        }
+        return;
+      }
 
+      const unread = notifs.filter(notification => !notification.is_read);
       const badge = document.getElementById('notif-unread-count');
       if (badge) {
         if (unread.length > 0) {
-          badge.textContent = unread.length > 9 ? '9+' : unread.length;
+          badge.textContent = unread.length > 9 ? '9+' : String(unread.length);
           badge.style.display = 'flex';
         } else {
           badge.style.display = 'none';
         }
       }
 
-      const list = document.getElementById('notif-list-container');
       if (!list) return;
-
-      if (notifs.length === 0) {
+      if (!notifs.length) {
         list.innerHTML = `
           <div style="padding: var(--space-6); text-align: center; color: var(--color-text-muted); font-size: var(--font-size-xs);">
             Belum ada notifikasi baru.
@@ -89,56 +116,83 @@
         return;
       }
 
-      list.innerHTML = notifs.map(n => `
-        <div class="notif-item ${n.is_read ? '' : 'unread'}" onclick="window.SkillBridgeNotifications.handleClick('${n.id}', '${n.link || '#'}')">
-          <div style="display: flex; justify-content: space-between; align-items: baseline;">
-            <strong style="font-size: var(--font-size-xs); color: var(--color-text-main);">${n.title}</strong>
-            <span style="font-size: 10px; color: var(--color-text-muted);">${n.created_at}</span>
+      list.innerHTML = notifs.map(notification => `
+        <div class="notif-item ${notification.is_read ? '' : 'unread'}"
+             data-notif-id="${esc(notification.id)}"
+             data-notif-link="${esc(notification.link || '#')}">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem;">
+            <strong style="font-size: var(--font-size-xs); color: var(--color-text-main);">${esc(notification.title)}</strong>
+            <span style="font-size: 10px; color: var(--color-text-muted); white-space: nowrap;">${esc(notification.created_at)}</span>
           </div>
           <div style="font-size: 11px; color: var(--color-text-secondary); line-height: 1.4;">
-            ${n.message}
+            ${esc(notification.message)}
           </div>
         </div>
       `).join('');
+
+      list.querySelectorAll('.notif-item').forEach(item => {
+        item.addEventListener('click', () => {
+          this.handleClick(item.getAttribute('data-notif-id'), item.getAttribute('data-notif-link'));
+        });
+      });
+    },
+
+    resolveLink(link) {
+      if (!link || link === '#') return null;
+      if (/^https?:\/\//i.test(link)) return link;
+
+      // Link dari trigger database berupa path absolut dari root, misalnya
+      // /pages/student/workspace.html?workspace_id=...
+      if (link.startsWith('/')) return `${window.location.origin}${link}`;
+
+      if (window.SkillBridgeAuth) {
+        if (link.includes('workspace.html')) {
+          const query = link.includes('?') ? link.substring(link.indexOf('?')) : '';
+          return window.SkillBridgeAuth.getPathTo('workspace') + query;
+        }
+        if (link.includes('applicants.html')) {
+          const query = link.includes('?') ? link.substring(link.indexOf('?')) : '';
+          return window.SkillBridgeAuth.getPathTo('umkm/applicants.html') + query;
+        }
+        if (link.includes('projects.html')) {
+          return window.SkillBridgeAuth.getPathTo('projects');
+        }
+      }
+
+      return new URL(link, `${window.location.origin}/`).href;
     },
 
     async handleClick(notifId, link) {
-      window.SkillBridgeDB.markNotificationRead(notifId);
-      const dropdown = document.getElementById('notif-dropdown-menu');
-      if (dropdown) dropdown.classList.remove('show');
+      try {
+        await window.SkillBridgeDB.markNotificationRead(notifId);
+      } catch (error) {
+        console.warn('[Notifications] Gagal menandai dibaca:', error);
+      }
+
+      document.getElementById('notif-dropdown-menu')?.classList.remove('show');
       this.loadNotifications();
 
-      if (link && link !== '#') {
-        let target = link;
-        if (window.SkillBridgeAuth) {
-          if (link.includes('workspace.html')) {
-            target = window.SkillBridgeAuth.getPathTo('workspace');
-          } else if (link.includes('applicants.html')) {
-            const query = link.includes('?') ? link.substring(link.indexOf('?')) : '';
-            target = window.SkillBridgeAuth.getPathTo('umkm/applicants.html') + query;
-          } else if (link.includes('projects.html')) {
-            target = window.SkillBridgeAuth.getPathTo('projects');
-          }
-        }
-        window.location.href = target;
-      }
+      const target = this.resolveLink(link);
+      if (target) window.location.href = target;
     },
 
     async markAllAsRead() {
-      const user = window.SkillBridgeAuth?.getUser();
+      const user = window.SkillBridgeAuth?.getUser?.();
       if (!user) return;
-      const notifs = await window.SkillBridgeDB.getNotifications(user.role);
-      notifs.forEach(n => window.SkillBridgeDB.markNotificationRead(n.id));
-      window.toast?.info('Semua notifikasi ditandai telah dibaca.');
+      try {
+        await window.SkillBridgeDB.markAllNotificationsRead();
+        window.toast?.info('Semua notifikasi ditandai telah dibaca.');
+      } catch (error) {
+        window.toast?.error(error.message || 'Gagal menandai notifikasi.');
+      }
       this.loadNotifications();
     }
   };
 
   window.SkillBridgeNotifications = NotificationCenter;
 
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      NotificationCenter.init();
-    }, 200);
+  document.addEventListener('DOMContentLoaded', async () => {
+    await window.SkillBridgeAuth?.ready?.();
+    NotificationCenter.init();
   });
 })();
