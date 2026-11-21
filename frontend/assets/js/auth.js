@@ -1,536 +1,720 @@
+
 /**
- * SkillBridge Rework — Auth Module & Session Guard (auth.js)
- * Manages user sessions, role-based access control, robust path resolution, and dynamic navbar state.
+ * SKILLBRIDGE REWORK — AUTH.JS
+ * Supabase Authentication & Role Guard
+ *
+ * Roles:
+ * - student
+ * - umkm
+ * - admin
+ *
+ * Password tidak disimpan di localStorage.
+ * Role selalu diambil dari public.users.
  */
 
-// Universal HTML Escaper for XSS Prevention
-if (typeof window.escapeHtml !== 'function') {
-  window.escapeHtml = function (str) {
-    if (str === null || str === undefined) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+if (typeof window.escapeHtml !== "function") {
+  window.escapeHtml = function (value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   };
 }
 
 (function () {
-  const STORAGE_KEY = 'SKILLBRIDGE_CURRENT_USER';
-  const USERS_STORAGE_KEY = 'SB_USERS';
+  "use strict";
 
-  // Benchmark Verified Accounts (Seeded into persistent storage with enforced credentials)
-  const INITIAL_BENCHMARK_USERS = [
-    {
-      id: 'std_1',
-      name: 'Ahmad Dhafin Al Farisy',
-      email: 'johnkerja@gmail.com',
-      password: 'PasswordKuat2026!',
-      role: 'mahasiswa',
-      university: 'Universitas Indonesia',
-      major: 'Teknologi Informasi',
-      semester: 5,
-      bio: 'Pengembang Web & Mobile yang bersemangat membantu digitalisasi UMKM lokal.',
-      skills: ['HTML/CSS', 'JavaScript', 'Python', 'UI/UX Design', 'SQL'],
-      portfolio_score: 98,
-      verified: true
-    },
-    {
-      id: 'std_2',
-      name: 'Budi Santoso',
-      email: 'budi.santoso@itb.ac.id',
-      password: 'password123',
-      role: 'mahasiswa',
-      university: 'Institut Teknologi Bandung',
-      major: 'Teknik Informatika',
-      semester: 5,
-      bio: 'Fullstack developer dengan fokus pada performa web app dan database.',
-      skills: ['HTML/CSS', 'JavaScript', 'Python', 'React', 'SQL'],
-      portfolio_score: 95,
-      verified: true
-    },
-    {
-      id: 'std_3',
-      name: 'Maya Lestari',
-      email: 'maya.lestari@ugm.ac.id',
-      password: 'password123',
-      role: 'mahasiswa',
-      university: 'Universitas Gadjah Mada',
-      major: 'Ilmu Komputer',
-      semester: 6,
-      bio: 'Mobile App Developer spesialis Flutter dan integrasi REST API modern.',
-      skills: ['Flutter', 'Dart', 'Firebase', 'Mobile Development'],
-      portfolio_score: 96,
-      verified: true
-    },
-    {
-      id: 'std_4',
-      name: 'Siti Rahmawati',
-      email: 'siti.rahmawati@ui.ac.id',
-      password: 'password123',
-      role: 'mahasiswa',
-      university: 'Universitas Indonesia',
-      major: 'Sistem Informasi',
-      semester: 5,
-      bio: 'Spesialis Frontend React & UI/UX design modern.',
-      skills: ['Frontend', 'React', 'Tailwind CSS', 'Figma'],
-      portfolio_score: 92,
-      verified: true
-    },
-    {
-      id: 'umkm_1',
-      name: 'Lumina Beans Roastery',
-      email: 'hello@luminabeans.com',
-      password: 'password123',
-      role: 'umkm',
-      business_name: 'Lumina Beans Roastery',
-      business_category: 'Kuliner & Agribisnis',
-      city: 'Bandung',
-      phone: '081234567890',
-      description: 'Roastery kopi artisan lokal Jawa Barat dengan kemitraan puluhan petani kopi.',
-      verified: true
-    },
-    {
-      id: 'umkm_2',
-      name: 'Pak Bambang',
-      email: 'bambang@kopinusantara.id',
-      password: 'password123',
-      role: 'umkm',
-      business_name: 'Kopi Nusantara UMKM',
-      business_category: 'Kuliner & Agribisnis',
-      city: 'Bandung',
-      phone: '081234567890',
-      description: 'Produsen biji kopi artisan lokal Jawa Barat dengan kemitraan 30 petani lokal.',
-      verified: true
-    },
-    {
-      id: 'umkm_3',
-      name: 'Batik Wastra Nusantara',
-      email: 'partner@batikwastra.id',
-      password: 'BatikSukses2026!',
-      role: 'umkm',
-      business_name: 'Batik Wastra Nusantara',
-      business_category: 'Fashion & Kerajinan',
-      city: 'Surakarta',
-      phone: '081398765432',
-      description: 'Produsen batik cap & tulis kontemporer dengan pemberdayaan pengrajin lokal.',
-      verified: true
-    },
-    {
-      id: 'admin_1',
-      name: 'Administrator SkillBridge',
-      email: 'admin@skillbridge.id',
-      password: 'admin123',
-      role: 'admin',
-      verified: true
+  const client = window.supabaseClient || null;
+
+  let currentUser = null;
+  let readyPromise = null;
+
+  // -----------------------------------------
+  // HELPERS
+  // -----------------------------------------
+
+  function normalizeRole(role) {
+    const value = String(role || "")
+      .trim()
+      .toLowerCase();
+
+    if (value === "mahasiswa" || value === "student") {
+      return "student";
     }
-  ];
 
-  // Helper to retrieve and ensure persistence of registered users
-  function getStoredUsers() {
-    try {
-      const stored = localStorage.getItem(USERS_STORAGE_KEY);
-      if (!stored) {
-        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(INITIAL_BENCHMARK_USERS));
-        return [...INITIAL_BENCHMARK_USERS];
+    if (value === "umkm") return "umkm";
+    if (value === "admin") return "admin";
+
+    return "student";
+  }
+
+  function roleLabel(role) {
+    if (role === "admin") return "Admin";
+    if (role === "umkm") return "UMKM";
+    return "Mahasiswa";
+  }
+
+  function ensureClient() {
+    if (!client) {
+      throw new Error(
+        "Koneksi Supabase belum tersedia. " +
+        "Periksa config.js dan supabase-client.js."
+      );
+    }
+
+    return client;
+  }
+
+  function friendlyError(error) {
+    const message = String(error?.message || error || "");
+
+    if (/invalid login credentials/i.test(message)) {
+      return "Email atau password salah.";
+    }
+
+    if (/email not confirmed/i.test(message)) {
+      return "Email belum dikonfirmasi. Periksa inbox kamu.";
+    }
+
+    if (/already registered/i.test(message)) {
+      return "Email sudah terdaftar.";
+    }
+
+    if (/rate limit|too many requests/i.test(message)) {
+      return "Terlalu banyak percobaan. Coba lagi nanti.";
+    }
+
+    return message || "Terjadi kesalahan autentikasi.";
+  }
+
+  // -----------------------------------------
+  // PROFILE DATABASE
+  // -----------------------------------------
+
+  async function fetchProfile(userId) {
+    const supabase = ensureClient();
+
+    const { data: user, error } = await supabase
+      .from("users")
+      .select(
+        "id,email,name,role,avatar_url,bio,is_verified"
+      )
+      .eq("id", userId)
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    if (!user) {
+      throw new Error(
+        "Profil tidak ditemukan di database SkillBridge."
+      );
+    }
+
+    const profile = {
+      ...user,
+      role: normalizeRole(user.role),
+      fullName: user.name,
+      verified: Boolean(user.is_verified)
+    };
+
+    if (profile.role === "student") {
+      const { data, error: profileError } = await supabase
+        .from("student_profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (profileError) throw new Error(profileError.message);
+
+      if (data) {
+        Object.assign(profile, data);
+        profile.completed_projects =
+          data.completed_projects_count || 0;
       }
-      return JSON.parse(stored);
-    } catch (e) {
-      return [...INITIAL_BENCHMARK_USERS];
+    }
+
+    if (profile.role === "umkm") {
+      const { data, error: profileError } = await supabase
+        .from("umkm_profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (profileError) throw new Error(profileError.message);
+
+      if (data) {
+        Object.assign(profile, data);
+
+        profile.business_name = data.company_name;
+        profile.business_category = data.industry;
+        profile.company_description = data.description;
+        profile.logo_url = data.company_logo_url;
+      }
+    }
+
+    return profile;
+  }
+
+  // -----------------------------------------
+  // SESSION
+  // -----------------------------------------
+
+  async function initializeAuth() {
+    if (!client) {
+      console.error("[Auth] Supabase belum terhubung.");
+      return null;
+    }
+
+    try {
+      const { data, error } = await client.auth.getUser();
+
+      if (error || !data.user) {
+        currentUser = null;
+      } else {
+        currentUser = await fetchProfile(data.user.id);
+      }
+
+      return currentUser;
+
+    } catch (error) {
+      console.error("[Auth] Session error:", error);
+      currentUser = null;
+      return null;
     }
   }
 
-  function saveStoredUsers(users) {
-    try {
-      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-    } catch (e) {
-      console.error('[Auth] Failed to save users:', e);
+  // -----------------------------------------
+  // PATHS
+  // -----------------------------------------
+
+  function basePrefix() {
+    const path = location.pathname.replace(/\\/g, "/");
+
+    if (/\/pages\/(auth|student|umkm|admin)\//.test(path)) {
+      return {
+        root: "../../",
+        pages: "../"
+      };
+    }
+
+    if (path.includes("/pages/")) {
+      return {
+        root: "../",
+        pages: ""
+      };
+    }
+
+    return {
+      root: "",
+      pages: "pages/"
+    };
+  }
+
+  function getPathTo(target) {
+    const prefix = basePrefix();
+
+    const paths = {
+      login: "auth/login.html",
+      register: "auth/register.html",
+      projects: "projects.html",
+      student_dashboard: "student/dashboard.html",
+      umkm_dashboard: "umkm/dashboard.html",
+      admin_dashboard: "admin/dashboard.html",
+      workspace: "student/workspace.html"
+    };
+
+    if (target === "home") {
+      return prefix.root + "index.html";
+    }
+
+    return prefix.pages + (paths[target] || target);
+  }
+
+  function dashboardFor(role) {
+    switch (normalizeRole(role)) {
+      case "admin":
+        return getPathTo("admin_dashboard");
+      case "umkm":
+        return getPathTo("umkm_dashboard");
+      default:
+        return getPathTo("student_dashboard");
     }
   }
+
+  // -----------------------------------------
+  // PUBLIC AUTH OBJECT
+  // -----------------------------------------
 
   const Auth = {
-    getAllUsers: function () {
-      return getStoredUsers();
-    },
 
-    getStudents: function () {
-      return getStoredUsers().filter(u => u.role === 'mahasiswa' || u.role === 'student');
-    },
-
-    getUMKM: function () {
-      return getStoredUsers().filter(u => u.role === 'umkm');
-    },
-
-    // Backwards-compatible aliases for existing callers
-    getPreloadedStudents: function () {
-      return this.getStudents();
-    },
-
-    getPreloadedUMKM: function () {
-      return this.getUMKM();
-    },
-
-    getUser: function () {
-      try {
-        const data = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('skillbridge_user');
-        return data ? JSON.parse(data) : null;
-      } catch (e) {
-        return null;
+    ready() {
+      if (!readyPromise) {
+        readyPromise = initializeAuth();
       }
+
+      return readyPromise;
     },
 
-    setUser: function (user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-      this.updateNavbar();
+    getUser() {
+      return currentUser;
     },
 
-    // Strict Production-grade Login with Password Validation (No Fallbacks / No Bypasses)
-    login: async function (email, password, role = 'mahasiswa') {
-      const cleanEmail = (email || '').trim().toLowerCase();
+    normalizeRole,
+
+    roleLabel,
+
+    getPathTo,
+
+    getBasePrefix() {
+      const prefix = basePrefix();
+      return {
+        toRoot: prefix.root,
+        toPages: prefix.pages
+      };
+    },
+
+    // ---------------------------------------
+    // LOGIN
+    // ---------------------------------------
+
+    async login(email, password) {
+      const supabase = ensureClient();
+
+      const cleanEmail = String(email || "")
+        .trim()
+        .toLowerCase();
+
       if (!cleanEmail || !password) {
-        throw new Error('Email dan kata sandi wajib diisi.');
+        throw new Error(
+          "Email dan password wajib diisi."
+        );
       }
 
-      // 1. Authenticate via Supabase GoTrue Auth if client is configured and live
-      const client = window.supabaseClient;
-      if (client && client.auth && typeof client.auth.signInWithPassword === 'function' && window.isRealSupabase) {
-        try {
-          const { data, error } = await client.auth.signInWithPassword({ email: cleanEmail, password });
-          if (error) throw error;
-          if (data && data.user) {
-            const meta = data.user.user_metadata || {};
-            const user = {
-              id: data.user.id,
-              email: data.user.email,
-              name: meta.name || cleanEmail.split('@')[0],
-              role: (meta.role || role).toLowerCase(),
-              ...meta
-            };
-            this.setUser(user);
-            return user;
-          }
-        } catch (supaErr) {
-          console.error('[GoTrueAuth] Supabase authentication failed:', supaErr);
-          throw new Error(supaErr.message || 'Email atau kata sandi tidak valid.');
-        }
+      const { data, error } =
+        await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password
+        });
+
+      if (error) throw new Error(friendlyError(error));
+
+      if (!data.user) {
+        throw new Error("Login tidak berhasil.");
       }
 
-      // 2. Authenticate against registered users database with strict credential verification
-      const allUsers = getStoredUsers();
-      const matchedUser = allUsers.find(u => (u.email || '').toLowerCase() === cleanEmail);
-
-      if (!matchedUser) {
-        throw new Error('Akun dengan email tersebut tidak terdaftar.');
+      try {
+        currentUser = await fetchProfile(data.user.id);
+      } catch (error) {
+        await supabase.auth.signOut();
+        currentUser = null;
+        throw error;
       }
 
-      // Enforce strict password comparison
-      if (matchedUser.password !== password) {
-        throw new Error('Kata sandi yang Anda masukkan salah.');
-      }
+      this.updateNavbar();
 
-      // Enforce role authorization constraint (e.g. non-admin cannot sign in via Admin portal)
-      const userRole = (matchedUser.role === 'student' ? 'mahasiswa' : matchedUser.role).toLowerCase();
-      const requestedRole = (role === 'student' ? 'mahasiswa' : role).toLowerCase();
-
-      if (requestedRole === 'admin' && userRole !== 'admin') {
-        throw new Error('Akun ini tidak memiliki hak akses sebagai Administrator.');
-      }
-
-      // Create sanitized session object (never expose password in current session)
-      const sessionUser = { ...matchedUser };
-      delete sessionUser.password;
-
-      this.setUser(sessionUser);
-      return sessionUser;
+      return currentUser;
     },
 
-    signInWithSupabase: async function (email, password, role = 'mahasiswa') {
-      return this.login(email, password, role);
+    signInWithSupabase(email, password) {
+      return this.login(email, password);
     },
 
-    signUpWithSupabase: async function (formData) {
-      const client = window.supabaseClient;
-      if (client && client.auth && typeof client.auth.signUp === 'function' && window.isRealSupabase) {
-        try {
-          const { data, error } = await client.auth.signUp({
-            email: formData.email,
-            password: formData.password || 'password123',
-            options: {
-              data: {
-                name: formData.name,
-                role: formData.role,
-                university: formData.university,
-                business_name: formData.business_name
-              }
-            }
-          });
-          if (error) throw error;
-          if (data && data.user) {
-            const user = {
-              id: data.user.id,
-              ...formData
-            };
-            this.setUser(user);
-            return user;
-          }
-        } catch (supaErr) {
-          console.error('[GoTrueAuth] Supabase sign up error:', supaErr);
-          throw new Error(supaErr.message || 'Gagal mendaftar ke server.');
-        }
+    // ---------------------------------------
+    // REGISTER
+    // ---------------------------------------
+
+    async register(formData) {
+      const supabase = ensureClient();
+
+      const name = String(formData.name || "").trim();
+
+      const email = String(formData.email || "")
+        .trim()
+        .toLowerCase();
+
+      const password = String(formData.password || "");
+      const role = normalizeRole(formData.role);
+
+      if (!name || !email || !password) {
+        throw new Error("Lengkapi semua data.");
       }
+
+      if (password.length < 8) {
+        throw new Error("Password minimal 8 karakter.");
+      }
+
+      if (role === "admin") {
+        throw new Error(
+          "Admin tidak dapat dibuat melalui halaman register."
+        );
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+            role,
+            university:
+              formData.university || "Universitas",
+            business_name:
+              formData.business_name || name
+          }
+        }
+      });
+
+      if (error) throw new Error(friendlyError(error));
+
+      if (data.session && data.user) {
+        currentUser = await fetchProfile(data.user.id);
+        this.updateNavbar();
+      }
+
+      return {
+        user: currentUser || data.user,
+        needsConfirmation: !data.session
+      };
+    },
+
+    signUp(formData) {
       return this.register(formData);
     },
 
-    register: function (formData) {
-      if (!formData.email || !formData.password) {
-        throw new Error('Email dan kata sandi wajib diisi untuk registrasi.');
-      }
-
-      const allUsers = getStoredUsers();
-      const existingUser = allUsers.find(u => (u.email || '').toLowerCase() === formData.email.trim().toLowerCase());
-      if (existingUser) {
-        throw new Error('Email ini sudah terdaftar. Silakan login.');
-      }
-
-      const id = (formData.role === 'umkm' ? 'umkm_' : 'std_') + Date.now();
-      const newUser = {
-        id: id,
-        ...formData,
-        email: formData.email.trim().toLowerCase(),
-        role: formData.role || 'mahasiswa',
-        verified: false,
-        created_at: new Date().toISOString()
-      };
-
-      allUsers.push(newUser);
-      saveStoredUsers(allUsers);
-
-      // Session user without exposing password
-      const sessionUser = { ...newUser };
-      delete sessionUser.password;
-      this.setUser(sessionUser);
-
-      return sessionUser;
+    signUpWithSupabase(formData) {
+      return this.register(formData);
     },
 
-    // Resolves relative paths correctly depending on current URL depth
-    getBasePrefix: function () {
-      const path = (window.location.pathname || '').replace(/\\/g, '/');
-      // Depth 2: pages/auth/, pages/student/, pages/umkm/, pages/admin/
-      if (path.match(/\/pages\/(auth|student|umkm|admin)\//)) {
-        return {
-          toRoot: '../../',
-          toPages: '../'
-        };
-      }
-      // Depth 1: direct children of /pages/ (projects.html, project-detail.html)
-      if (path.includes('/pages/')) {
-        return {
-          toRoot: '../',
-          toPages: ''
-        };
-      }
-      // Depth 0: root (index.html or /)
-      return {
-        toRoot: '',
-        toPages: 'pages/'
-      };
-    },
+    // ---------------------------------------
+    // LOGOUT
+    // ---------------------------------------
 
-    getPathTo: function (target) {
-      const prefix = this.getBasePrefix();
-      switch (target) {
-        case 'login':
-          return prefix.toPages + 'auth/login.html';
-        case 'register':
-          return prefix.toPages + 'auth/register.html';
-        case 'projects':
-          return prefix.toPages + 'projects.html';
-        case 'student_dashboard':
-          return prefix.toPages + 'student/dashboard.html';
-        case 'umkm_dashboard':
-          return prefix.toPages + 'umkm/dashboard.html';
-        case 'admin_dashboard':
-          return prefix.toPages + 'admin/dashboard.html';
-        case 'workspace':
-          return prefix.toPages + 'student/workspace.html';
-        case 'home':
-          return prefix.toRoot + 'index.html';
-        default:
-          return prefix.toPages + target;
-      }
-    },
-
-    updateCurrentUser: function (updatedFields) {
-      const user = this.getUser() || {};
-      const merged = { ...user, ...updatedFields };
-      this.setUser(merged);
-      const registered = JSON.parse(localStorage.getItem('SB_REGISTERED_USERS') || '[]');
-      const idx = registered.findIndex(u => u.id === merged.id || u.email === merged.email);
-      if (idx !== -1) {
-        registered[idx] = merged;
-        localStorage.setItem('SB_REGISTERED_USERS', JSON.stringify(registered));
-      }
-      return merged;
-    },
-
-    logout: function (promptConfirm = false) {
-      if (promptConfirm && !confirm('Apakah Anda yakin ingin keluar dari akun SkillBridge?')) {
-        return;
-      }
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem('skillbridge_user');
-      localStorage.removeItem('skillbridge_token');
-      sessionStorage.clear();
-      window.toast?.info('Anda telah keluar dari akun.');
-      setTimeout(() => {
-        window.location.replace(this.getPathTo('login'));
-      }, 350);
-    },
-
-    enforceUniversalGuard: function () {
-      const rawPath = (window.location.pathname || '').replace(/\\/g, '/');
-      const path = rawPath.toLowerCase();
-
-      // Check if current page is within /pages/
-      const isInsidePages = path.includes('/pages/');
-      if (!isInsidePages) {
-        return true; // Root or index.html is freely accessible
-      }
-
-      // Check if current page is an auth page (login or register)
-      const isAuthPage = path.includes('/pages/auth/') || path.endsWith('/login.html') || path.endsWith('/register.html');
-      if (isAuthPage) {
-        return true; // Login & register are freely accessible
-      }
-
-      // Public Market browsing is accessible to everyone (guests included)
-      const isMarketPage = path.endsWith('/projects.html') || path.includes('/project-detail.html');
-      if (isMarketPage) {
-        return true;
-      }
-
-      // Every other page inside /pages/ (student, umkm, admin) requires active authentication!
-      const user = this.getUser();
-      if (!user) {
-        const target = this.getPathTo('login');
-        const returnUrl = encodeURIComponent(window.location.href);
-        window.location.replace(`${target}?redirect=${returnUrl}`);
+    async logout(askConfirmation = false) {
+      if (
+        askConfirmation &&
+        !confirm("Yakin ingin logout dari SkillBridge?")
+      ) {
         return false;
       }
+
+      const supabase = ensureClient();
+
+      const { error } = await supabase.auth.signOut();
+
+      if (error) throw new Error(friendlyError(error));
+
+      currentUser = null;
+
+      // Hapus hanya credential/demo auth lama,
+      // bukan seluruh data aplikasi.
+      [
+        "SKILLBRIDGE_CURRENT_USER",
+        "SB_USERS",
+        "SB_REGISTERED_USERS",
+        "skillbridge_token",
+        "skillbridge_user"
+      ].forEach(key => localStorage.removeItem(key));
+
+      window.location.replace(getPathTo("login"));
 
       return true;
     },
 
-    requireAuth: function (allowedRoles = []) {
-      const user = this.getUser();
-      if (!user) {
-        const target = this.getPathTo('login');
-        const returnUrl = encodeURIComponent(window.location.href);
-        window.location.replace(`${target}?redirect=${returnUrl}`);
-        return false;
+    // ---------------------------------------
+    // RESET PASSWORD REQUEST
+    // ---------------------------------------
+
+    async requestPasswordReset(email) {
+      const supabase = ensureClient();
+
+      const cleanEmail = String(email || "")
+        .trim()
+        .toLowerCase();
+
+      if (!cleanEmail.includes("@")) {
+        throw new Error("Format email tidak valid.");
       }
 
-      if (typeof allowedRoles === 'string') {
-        allowedRoles = [allowedRoles];
-      }
+      const redirectTo = new URL(
+        getPathTo("login"),
+        location.href
+      ).href;
 
-      const normalizedUserRole = (user.role === 'student' ? 'mahasiswa' : user.role);
-      const normalizedAllowed = allowedRoles.map(r => r === 'student' ? 'mahasiswa' : r);
+      const { error } =
+        await supabase.auth.resetPasswordForEmail(
+          cleanEmail,
+          { redirectTo }
+        );
 
-      if (normalizedAllowed.length > 0 && !normalizedAllowed.includes(normalizedUserRole)) {
-        window.toast?.error('Akses ditolak: Peran akun Anda tidak memiliki izin.');
-        if (normalizedUserRole === 'mahasiswa') {
-          window.location.href = this.getPathTo('student_dashboard');
-        } else if (normalizedUserRole === 'umkm') {
-          window.location.href = this.getPathTo('umkm_dashboard');
-        } else if (normalizedUserRole === 'admin') {
-          window.location.href = this.getPathTo('admin_dashboard');
-        }
-        return false;
-      }
+      if (error) throw new Error(friendlyError(error));
 
-      return user;
+      return true;
     },
 
-    updateNavbar: function () {
-      const user = this.getUser();
-      const authContainer = document.getElementById('navbar-auth-actions');
-      const marketLink = document.getElementById('nav-link-market');
-      const heroCta = document.getElementById('hero-cta-btn');
+    // ---------------------------------------
+    // AUTHORIZATION
+    // ---------------------------------------
+
+    async requireAuth(allowedRoles = []) {
+      await this.ready();
+
+      if (!currentUser) {
+        const loginURL = getPathTo("login");
+
+        const returnURL = encodeURIComponent(
+          location.href
+        );
+
+        location.replace(
+          loginURL + "?redirect=" + returnURL
+        );
+
+        return false;
+      }
+
+      const roles = Array.isArray(allowedRoles)
+        ? allowedRoles
+        : [allowedRoles];
+
+      const normalized = roles.map(normalizeRole);
+
+      if (
+        normalized.length &&
+        !normalized.includes(currentUser.role)
+      ) {
+        window.toast?.error(
+          "Kamu tidak memiliki akses ke halaman ini."
+        );
+
+        location.replace(
+          dashboardFor(currentUser.role)
+        );
+
+        return false;
+      }
+
+      return currentUser;
+    },
+
+    async enforceUniversalGuard() {
+      const path = location.pathname.toLowerCase();
+
+      if (!path.includes("/pages/")) return true;
+
+      if (path.includes("/pages/auth/")) return true;
+
+      if (
+        path.endsWith("/projects.html") ||
+        path.includes("/project-detail.html")
+      ) {
+        return true;
+      }
+
+      const roles = {
+        "/pages/admin/": ["admin"],
+        "/pages/umkm/": ["umkm"],
+        "/pages/student/": ["student"]
+      };
+
+      for (const [area, allowed] of Object.entries(roles)) {
+        if (path.includes(area)) {
+          return this.requireAuth(allowed);
+        }
+      }
+
+      return this.requireAuth();
+    },
+
+    // ---------------------------------------
+    // UPDATE PROFILE
+    // ---------------------------------------
+
+    async updateCurrentUser(fields) {
+      const supabase = ensureClient();
+
+      await this.ready();
+
+      if (!currentUser) {
+        throw new Error("Silakan login terlebih dahulu.");
+      }
+
+      const userId = currentUser.id;
+      const userFields = {};
+
+      if (fields.name !== undefined) {
+        userFields.name = fields.name;
+      }
+
+      if (fields.fullName !== undefined) {
+        userFields.name = fields.fullName;
+      }
+
+      if (fields.bio !== undefined) {
+        userFields.bio = fields.bio;
+      }
+
+      if (fields.avatar_url !== undefined) {
+        userFields.avatar_url = fields.avatar_url;
+      }
+
+      if (Object.keys(userFields).length > 0) {
+        const { error } = await supabase
+          .from("users")
+          .update(userFields)
+          .eq("id", userId);
+
+        if (error) throw new Error(error.message);
+      }
+
+      if (currentUser.role === "student") {
+        const studentFields = {};
+
+        [
+          "university",
+          "major",
+          "semester",
+          "skills",
+          "portfolio_url",
+          "available_status",
+          "profile_visible"
+        ].forEach(key => {
+          if (fields[key] !== undefined) {
+            studentFields[key] = fields[key];
+          }
+        });
+
+        if (Object.keys(studentFields).length > 0) {
+          const { error } = await supabase
+            .from("student_profiles")
+            .update(studentFields)
+            .eq("user_id", userId);
+
+          if (error) throw new Error(error.message);
+        }
+      }
+
+      if (currentUser.role === "umkm") {
+        const businessFields = {};
+
+        const mapping = {
+          business_name: "company_name",
+          company_name: "company_name",
+          business_category: "industry",
+          industry: "industry",
+          city: "city",
+          phone: "phone",
+          website: "website",
+          instagram: "instagram",
+          description: "description",
+          company_logo_url: "company_logo_url"
+        };
+
+        for (const [key, column] of Object.entries(mapping)) {
+          if (fields[key] !== undefined) {
+            businessFields[column] = fields[key];
+          }
+        }
+
+        if (Object.keys(businessFields).length > 0) {
+          const { error } = await supabase
+            .from("umkm_profiles")
+            .update(businessFields)
+            .eq("user_id", userId);
+
+          if (error) throw new Error(error.message);
+        }
+      }
+
+      currentUser = await fetchProfile(userId);
+
+      this.updateNavbar();
+
+      return currentUser;
+    },
+
+    // ---------------------------------------
+    // NAVBAR
+    // ---------------------------------------
+
+    updateNavbar() {
+      const container = document.getElementById(
+        "navbar-auth-actions"
+      );
+
+      const marketLink = document.getElementById(
+        "nav-link-market"
+      );
 
       if (marketLink) {
-        marketLink.href = this.getPathTo('projects');
+        marketLink.href = getPathTo("projects");
       }
 
-      if (user) {
-        if (heroCta) {
-          heroCta.href = this.getPathTo('projects');
-        }
-        if (authContainer) {
-          const dashboardLink = user.role === 'umkm' 
-            ? this.getPathTo('umkm_dashboard')
-            : (user.role === 'admin' ? this.getPathTo('admin_dashboard') : this.getPathTo('student_dashboard'));
+      if (!container) return;
 
-          const roleLabel = user.role === 'umkm' ? 'UMKM' : (user.role === 'admin' ? 'Admin' : 'Mahasiswa');
+      if (!currentUser) {
+        container.innerHTML = `
+          <a href="${getPathTo("login")}"
+             class="nav-login-btn">Login</a>
+          <a href="${getPathTo("register")}"
+             class="nav-register-btn">Register</a>
+        `;
 
-          authContainer.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <a href="${dashboardLink}" class="btn btn-outline btn-sm">
-                Dashboard (${roleLabel})
-              </a>
-              <button onclick="window.SkillBridgeAuth.logout(true)" class="btn btn-ghost btn-sm" style="color: var(--color-danger);">
-                Keluar
-              </button>
-            </div>
-          `;
-        }
-      } else {
-        if (heroCta) {
-          heroCta.href = this.getPathTo('projects');
-        }
-        if (authContainer) {
-          const loginLink = this.getPathTo('login');
-          const regLink = this.getPathTo('register');
-          authContainer.innerHTML = `
-            <a href="${loginLink}" class="nav-login-btn">Login</a>
-            <a href="${regLink}" class="nav-register-btn">Register</a>
-          `;
-        }
+        return;
       }
+
+      const dashboard = dashboardFor(currentUser.role);
+
+      container.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;">
+          <a href="${dashboard}"
+             class="btn btn-outline btn-sm">
+            Dashboard (${roleLabel(currentUser.role)})
+          </a>
+          <button id="sbNavbarLogout"
+                  class="btn btn-ghost btn-sm">
+            Keluar
+          </button>
+        </div>
+      `;
+
+      document.getElementById("sbNavbarLogout")
+        ?.addEventListener("click", () => this.logout(true));
+    },
+
+    // Compatibility for pages still being migrated.
+    getStudents() {
+      return window.SkillBridgeDB?.getStudents?.() || [];
+    },
+
+    getUMKM() {
+      return window.SkillBridgeDB?.getUMKM?.() || [];
+    },
+
+    getAllUsers() {
+      return window.SkillBridgeDB?.getAllUsers?.() || [];
+    },
+
+    getPreloadedStudents() {
+      return this.getStudents();
+    },
+
+    getPreloadedUMKM() {
+      return this.getUMKM();
     }
   };
 
   window.SkillBridgeAuth = Auth;
-  
-  // Universal Toast Fallback Safeguard (Guarantees window.toast is never undefined)
-  if (!window.toast) {
-    window.toast = {
-      show: function(msg, type = 'info') {
-        const c = document.querySelector('.toast-container') || (() => {
-          const el = document.createElement('div');
-          el.className = 'toast-container';
-          document.body.appendChild(el);
-          return el;
-        })();
-        const t = document.createElement('div');
-        t.className = `toast toast-${type}`;
-        t.innerHTML = `<span class="toast-text">${window.escapeHtml ? window.escapeHtml(msg) : msg}</span>`;
-        c.appendChild(t);
-        setTimeout(() => { t.remove(); }, 3500);
-      },
-      success: function(msg) { this.show(msg, 'success'); },
-      error: function(msg) { this.show(msg, 'error'); },
-      warning: function(msg) { this.show(msg, 'warning'); },
-      info: function(msg) { this.show(msg, 'info'); }
-    };
-  }
 
-  // Enforce universal route guard immediately on script evaluation
-  Auth.enforceUniversalGuard();
+  // Restore session.
+  Auth.ready();
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", async () => {
+    await Auth.ready();
+
     Auth.updateNavbar();
+    await Auth.enforceUniversalGuard();
   });
+
 })();

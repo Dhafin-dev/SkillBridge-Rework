@@ -1,295 +1,688 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Market — SkillBridge</title>
+  <title>Marketplace — SkillBridge</title>
+
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+
   <style>
+    .market-page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 8px;
+    }
+
+    .market-page-subtitle {
+      color: #64748b;
+      font-size: 14px;
+      margin: 0 0 27px;
+    }
+
     .market-filter-card {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 1.25rem;
-      padding: 1rem 1.25rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      margin-bottom: 2rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    }
-
-    .market-search-box {
-      flex: 1;
-      position: relative;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 17px;
       display: flex;
       align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
-    .market-search-box svg {
-      position: absolute;
-      left: 1rem;
-      color: #94A3B8;
+    .market-search-input,
+    .market-category-select {
+      padding: 13px 15px;
+      border: 1px solid #e2e8f0;
+      border-radius: 11px;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 13px;
+      outline: none;
     }
 
     .market-search-input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 0.5rem 1rem 0.5rem 2.75rem;
-      font-size: 0.95rem;
-      color: #0F172A;
-      outline: none;
+      flex: 1;
+      min-width: 0;
     }
 
     .market-category-select {
       width: 220px;
-      border: 1px solid #E2E8F0;
-      border-radius: 0.75rem;
-      padding: 0.6rem 1rem;
-      font-size: 0.85rem;
+    }
+
+    .market-project-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 19px;
+      padding: 25px;
+      margin-bottom: 18px;
+    }
+
+    .market-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .market-card-company {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .market-company-avatar {
+      width: 51px;
+      height: 51px;
+      background: #eff6ff;
+      color: #2563eb;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .company-name-text {
+      color: #64748b;
+      font-size: 12px;
       font-weight: 600;
-      color: #1E293B;
-      background-color: #F8FAFC;
-      outline: none;
-      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    .project-title-text {
+      color: #0f172a;
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .project-stipend-badge {
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: 10px;
+      padding: 11px 15px;
+    }
+
+    .market-description {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.8;
+      margin: 0 0 17px;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .skill-tags-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 19px;
+    }
+
+    .skill-tag-pill {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 7px 11px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .project-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 19px;
+      color: #64748b;
+      font-size: 12px;
+      padding: 15px 0;
+      border-top: 1px solid #edf2f7;
+      margin-bottom: 13px;
+    }
+
+    .project-meta-row strong {
+      color: #334155;
+    }
+
+    .market-action {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 11px;
+      padding: 13px 20px;
+      font-weight: 700;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .market-action:hover {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .market-state {
+      text-align: center;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 55px 20px;
+    }
+
+    .market-state h3 {
+      color: #0f172a;
+      margin: 0 0 12px;
+    }
+
+    .market-state p {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .market-error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .market-filter-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .market-category-select {
+        width: 100%;
+      }
+
+      .market-project-card {
+        padding: 19px;
+      }
+
+      .market-page-title {
+        font-size: 26px;
+      }
     }
   </style>
 </head>
-<body>
+
+<body class="dashboard-body">
 
   <div class="dashboard-layout">
-    <!-- Left Sidebar -->
-    <aside class="dashboard-sidebar">
-      <div class="sidebar-header">
-        <a href="../index.html" class="nav-brand-lockup">
-          <div class="nav-brand-logo-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-          </div>
-          <span class="sidebar-brand-title">SkillBridge</span>
-        </a>
-      </div>
 
-      <div class="sidebar-nav">
-        <div class="sidebar-section-title">STUDENT MENU</div>
-        <a href="student/dashboard.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-            <polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
-          <span>Home</span>
-        </a>
-        <a href="projects.html" class="sidebar-item active">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-            <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
-            <path d="M2 7h20"/>
-          </svg>
-          <span>Market</span>
-        </a>
-        <a href="student/my-projects.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-          </svg>
-          <span>My Projects</span>
-        </a>
-        <a href="student/workspace.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          <span>Messages</span>
-        </a>
-        <a href="student/profile.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          <span>Profile</span>
-        </a>
-      </div>
+    <!-- SIDEBAR -->
+    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
 
-      <div class="sidebar-footer">
-        <button onclick="window.SkillBridgeSettings ? window.SkillBridgeSettings.openModal() : null" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-          <span>Pengaturan & Tema</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Main Canvas -->
+    <!-- MAIN -->
     <main class="dashboard-main">
-      <!-- Topbar Header -->
-      <header class="dashboard-topbar">
-        <div class="topbar-search">
-          <div class="input-with-icon">
-            <svg class="input-icon-prefix" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-            </svg>
-            <input type="text" class="form-input" placeholder="Search..." style="border-radius: var(--radius-full); padding-left: 2.5rem; background-color: #F8FAFC; font-size: 0.85rem;">
-          </div>
-        </div>
 
-        <div class="topbar-actions">
-          <div class="notif-wrapper">
-            <button class="notif-bell-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-              </svg>
-              <span class="notif-badge"></span>
-            </button>
-          </div>
+      <header class="dashboard-topbar" id="shared-topbar"></header>
 
-          <div class="topbar-avatar-pill">
-            <div class="avatar-circle">A</div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </div>
-        </div>
-      </header>
-
-      <!-- Content Area -->
       <div class="dashboard-canvas">
-        <!-- Filter Card -->
+
+        <h1 class="market-page-title">
+          Make Your Portfolio Now!
+        </h1>
+
+        <p class="market-page-subtitle">
+          Temukan proyek UMKM yang sesuai
+          dengan minat dan keahlianmu.
+        </p>
+
+        <!-- SEARCH & FILTER -->
         <div class="market-filter-card">
-          <div class="market-search-box">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-            </svg>
-            <input type="text" id="marketSearchInput" class="market-search-input" placeholder="Search projects or companies...">
-          </div>
-          <select id="marketCategorySelect" class="market-category-select">
-            <option value="all">Semua Kategori</option>
-            <option value="Web Development">Web Development</option>
-            <option value="Mobile App">Mobile App</option>
-            <option value="Graphic Design & UI/UX">Graphic Design & UI/UX</option>
-            <option value="Digital Marketing & SEO">Digital Marketing & SEO</option>
-            <option value="Financial & Accounting System">Financial & Accounting System</option>
+          <input
+            type="search"
+            id="marketSearchInput"
+            class="market-search-input"
+            placeholder="Search projects, companies, or skills..."
+          >
+
+          <select
+            id="marketCategorySelect"
+            class="market-category-select"
+          >
+            <option value="all">
+              Semua Kategori
+            </option>
           </select>
         </div>
 
-        <div style="margin-bottom: 2rem;">
-          <h1 style="font-size: 2rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em;">
-            Make your Portofolio Now!
-          </h1>
+        <!-- REAL PROJECTS -->
+        <div id="market-projects-container">
+          <div class="market-state">
+            <h3>Loading projects...</h3>
+            <p>Mengambil proyek dari Supabase.</p>
+          </div>
         </div>
 
-        <!-- Project Cards Grid/List -->
-        <div id="market-projects-container">
-          <!-- Dynamic projects injected here -->
-        </div>
       </div>
     </main>
   </div>
 
-  <script src="../assets/js/toast.js"></script>
+  <!-- DEPENDENCIES -->
+  <script src="../assets/vendor/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
   <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/toast.js"></script>
   <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/database.js"></script>
   <script src="../assets/js/settings.js"></script>
-  <script>
-    const container = document.getElementById('market-projects-container');
-    const searchInput = document.getElementById('marketSearchInput');
-    const categorySelect = document.getElementById('marketCategorySelect');
 
-    const companyImages = {
-      'Batik Wastra Nusantara': 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=120&auto=format&fit=crop&q=80',
-      'Lumina Beans Roastery': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=120&auto=format&fit=crop&q=80',
-      'Jepara Woodcraft Studio': 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=120&auto=format&fit=crop&q=80',
-      'Kopi Nusantara Roastery': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=120&auto=format&fit=crop&q=80'
-    };
+    <script src="../assets/js/layout.js"></script>
+<script>
+    "use strict";
 
-    async function renderProjects() {
-      const allProjects = (await window.SkillBridgeDB.getProjects()) || [];
-      const term = searchInput.value.toLowerCase();
-      const cat = categorySelect.value;
+    const db = window.supabaseClient;
 
-      const filtered = allProjects.filter(p => {
-        const bName = p.business_name || p.umkm_name || '';
-        const catName = p.category || p.category_name || '';
-        const matchesTerm = (p.title || '').toLowerCase().includes(term) ||
-                            bName.toLowerCase().includes(term) ||
-                            (p.description || '').toLowerCase().includes(term);
-        const matchesCat = (cat === 'all') || (catName === cat) || (p.category_id === cat);
-        return matchesTerm && matchesCat;
+    const container = document.getElementById(
+      "market-projects-container"
+    );
+
+    const searchInput = document.getElementById(
+      "marketSearchInput"
+    );
+
+    const categorySelect = document.getElementById(
+      "marketCategorySelect"
+    );
+
+    let allProjects = [];
+
+    function esc(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function formatMoney(amount) {
+      const value = Number(amount);
+
+      if (!Number.isFinite(value) || value <= 0) {
+        return "Budget tidak dicantumkan";
+      }
+
+      return "Rp " + value.toLocaleString("id-ID");
+    }
+
+    function formatDate(value) {
+      if (!value) return "Tidak ditentukan";
+
+      const date = new Date(
+        String(value).length === 10
+          ? value + "T00:00:00"
+          : value
+      );
+
+      if (Number.isNaN(date.getTime())) {
+        return "Tidak ditentukan";
+      }
+
+      return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function showError(error) {
+      container.innerHTML = `
+        <div class="market-error">
+          Gagal memuat Marketplace:
+          ${esc(error.message || error)}
+        </div>
+      `;
+    }
+
+    // ======================================
+    // LOAD PROJECTS FROM SUPABASE
+    // ======================================
+
+    async function loadProjects() {
+      container.innerHTML = `
+        <div class="market-state">
+          <h3>Loading projects...</h3>
+          <p>Mengambil data terbaru dari Supabase.</p>
+        </div>
+      `;
+
+      try {
+        if (!db) {
+          throw new Error(
+            "Supabase client tidak tersedia."
+          );
+        }
+
+        if (
+          typeof window.SkillBridgeAuth?.ready ===
+          "function"
+        ) {
+          await window.SkillBridgeAuth.ready();
+        }
+
+        const user =
+          window.SkillBridgeAuth?.getUser?.();
+
+        if (user?.name) {
+          document.getElementById(
+            "market-avatar"
+          ).textContent =
+            user.name.charAt(0).toUpperCase();
+        }
+
+        // HANYA proyek yang sedang membuka lamaran.
+        const { data: projects, error: projectsError } =
+          await db
+            .from("projects")
+            .select("*")
+            .eq("status", "recruiting")
+            .order("created_at", {
+              ascending: false
+            });
+
+        if (projectsError) throw projectsError;
+
+        allProjects = projects || [];
+
+        // Ambil kategori asli.
+        const categoryIds = [
+          ...new Set(
+            allProjects
+              .map(project => project.category_id)
+              .filter(Boolean)
+          )
+        ];
+
+        const categoriesById = {};
+
+        if (categoryIds.length) {
+          const { data: categories, error: categoryError } =
+            await db
+              .from("categories")
+              .select("id,name")
+              .in("id", categoryIds);
+
+          if (categoryError) {
+            console.warn(
+              "Could not load categories:",
+              categoryError
+            );
+          } else {
+            (categories || []).forEach(category => {
+              categoriesById[category.id] =
+                category.name;
+            });
+          }
+        }
+
+        // Ambil profil bisnis PUBLIK, bukan
+        // data privat pengguna.
+        const ownerIds = [
+          ...new Set(
+            allProjects
+              .map(project => project.owner_id)
+              .filter(Boolean)
+          )
+        ];
+
+        const businessesById = {};
+
+        if (ownerIds.length) {
+          const { data: businesses, error: businessError } =
+            await db
+              .from("public_umkm_profiles")
+              .select("user_id,company_name,city")
+              .in("user_id", ownerIds);
+
+          if (businessError) {
+            console.warn(
+              "Could not load business profiles:",
+              businessError
+            );
+          } else {
+            (businesses || []).forEach(business => {
+              businessesById[business.user_id] =
+                business;
+            });
+          }
+        }
+
+        allProjects = allProjects.map(project => ({
+          ...project,
+          category_name:
+            categoriesById[project.category_id] ||
+            "Uncategorized",
+
+          business_name:
+            businessesById[project.owner_id]
+              ?.company_name ||
+            "Nama bisnis belum dilengkapi",
+
+          business_city:
+            businessesById[project.owner_id]
+              ?.city ||
+            project.location ||
+            null
+        }));
+
+        // Isi filter dari kategori yang memang ada.
+        const categoryNames = [
+          ...new Set(
+            allProjects.map(project => project.category_name)
+          )
+        ].filter(Boolean).sort();
+
+        categorySelect.innerHTML =
+          '<option value="all">Semua Kategori</option>';
+
+        categoryNames.forEach(name => {
+          const option = document.createElement(
+            "option"
+          );
+
+          option.value = name;
+          option.textContent = name;
+
+          categorySelect.appendChild(option);
+        });
+
+        renderProjects();
+
+      } catch (error) {
+        console.error(
+          "[SkillBridge Marketplace]",
+          error
+        );
+
+        showError(error);
+      }
+    }
+
+    // ======================================
+    // RENDER PROJECT CARDS
+    // ======================================
+
+    function renderProjects() {
+      const search = searchInput.value
+        .trim()
+        .toLowerCase();
+
+      const category = categorySelect.value;
+
+      const filtered = allProjects.filter(project => {
+        const text = [
+          project.title,
+          project.description,
+          project.business_name,
+          project.category_name,
+          ...(Array.isArray(project.required_skills)
+            ? project.required_skills
+            : [])
+        ].join(" ").toLowerCase();
+
+        const matchesSearch =
+          text.includes(search);
+
+        const matchesCategory =
+          category === "all" ||
+          project.category_name === category;
+
+        return matchesSearch && matchesCategory;
       });
 
-      if (filtered.length === 0) {
+      if (!filtered.length) {
         container.innerHTML = `
-          <div class="card" style="text-align: center; padding: 3rem 1rem;">
-            <p style="color: #64748B;">Tidak ada proyek yang sesuai dengan kriteria pencarian.</p>
+          <div class="market-state">
+            <h3>Tidak ada proyek yang ditemukan</h3>
+            <p>
+              ${allProjects.length === 0
+                ? "Belum ada proyek recruiting yang dapat diakses."
+                : "Coba ubah kata pencarian atau kategori."}
+            </p>
           </div>
         `;
+
         return;
       }
 
-      container.innerHTML = filtered.map(p => {
-        const esc = window.escapeHtml || (s => s);
-        const bName = p.business_name || p.umkm_name || 'UMKM PARTNER';
-        const logoUrl = companyImages[bName] || 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=120&auto=format&fit=crop&q=80';
-        const stipendVal = p.stipend_amount || p.budget || 0;
-        const stipendFormatted = (stipendVal > 0) ? `Rp ${stipendVal.toLocaleString('id-ID')}` : 'Unpaid';
-        const skillsList = Array.isArray(p.required_skills) ? p.required_skills : (Array.isArray(p.skills) ? p.skills : []);
-        const tagsHtml = skillsList.map(s => `<span class="skill-tag-pill">${esc(s)}</span>`).join('');
-        const applicantsCount = p.applicants_count || 1;
+      container.innerHTML = filtered.map(project => {
+        const skills = Array.isArray(
+          project.required_skills
+        )
+          ? project.required_skills
+          : [];
+
+        const skillsHTML = skills.map(skill => `
+          <span class="skill-tag-pill">
+            ${esc(skill)}
+          </span>
+        `).join("");
+
+        const name = project.business_name;
+
+        const initial =
+          name === "Nama bisnis belum dilengkapi"
+            ? "U"
+            : name.charAt(0).toUpperCase();
+
+        const duration =
+          Number(project.duration_weeks) > 0
+            ? `${project.duration_weeks} Minggu`
+            : "Tidak ditentukan";
+
+        const difficulty =
+          project.difficulty_level ||
+          "Tidak ditentukan";
 
         return `
-          <div class="market-project-card">
+          <article class="market-project-card">
+
             <div class="market-card-header">
               <div class="market-card-company">
-                <img src="${logoUrl}" alt="${esc(bName)}" class="company-avatar-img">
-                <div>
-                  <div class="company-name-text">${esc(bName)}</div>
-                  <h3 class="project-title-text">${esc(p.title)}</h3>
+
+                <div class="market-company-avatar">
+                  ${esc(initial)}
                 </div>
+
+                <div>
+                  <div class="company-name-text">
+                    ${esc(name)}
+                  </div>
+
+                  <h3 class="project-title-text">
+                    ${esc(project.title)}
+                  </h3>
+                </div>
+
               </div>
-              <div class="project-stipend-badge">${stipendFormatted}</div>
+
+              <div class="project-stipend-badge">
+                ${esc(formatMoney(project.budget))}
+              </div>
             </div>
 
-            <p style="color: #475569; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
-              ${esc(p.description)}
+            <p class="market-description">
+              ${esc(project.description)}
             </p>
 
             <div class="skill-tags-group">
-              ${tagsHtml}
+              ${skillsHTML}
             </div>
 
             <div class="project-meta-row">
-              <span style="display: flex; align-items: center; gap: 0.35rem;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
-                ${esc(p.difficulty_level || 'Menengah')}
+              <span>
+                <strong>Kategori:</strong>
+                ${esc(project.category_name)}
               </span>
-              <span>•</span>
-              <span style="display: flex; align-items: center; gap: 0.35rem;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                ${p.duration_weeks ? esc(p.duration_weeks) + ' Minggu' : '4 Minggu'}
+
+              <span>
+                <strong>Lokasi:</strong>
+                ${esc(project.location || "Tidak dicantumkan")}
               </span>
-              <span>•</span>
-              <span style="display: flex; align-items: center; gap: 0.35rem;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                ${applicantsCount} Pelamar
+
+              <span>
+                <strong>Durasi:</strong>
+                ${esc(duration)}
+              </span>
+
+              <span>
+                <strong>Level:</strong>
+                ${esc(difficulty)}
+              </span>
+
+              <span>
+                <strong>Deadline:</strong>
+                ${esc(formatDate(project.deadline))}
               </span>
             </div>
 
-            <a href="project-detail.html?id=${p.id}" class="btn btn-primary btn-block btn-lg" style="border-radius: 0.875rem;">
-              Lihat Detail &amp; Lamar
+            <a
+              href="project-detail.html?id=${encodeURIComponent(project.id)}"
+              class="market-action"
+            >
+              Lihat Detail & Lamar
             </a>
-          </div>
+
+          </article>
         `;
-      }).join('');
+      }).join("");
     }
 
-    searchInput.addEventListener('input', renderProjects);
-    categorySelect.addEventListener('change', renderProjects);
-    renderProjects();
+    searchInput.addEventListener(
+      "input",
+      renderProjects
+    );
+
+    categorySelect.addEventListener(
+      "change",
+      renderProjects
+    );
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      loadProjects
+    );
   </script>
+
 </body>
 </html>

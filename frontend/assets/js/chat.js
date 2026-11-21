@@ -1,6 +1,8 @@
 /**
- * SkillBridge Rework — Real-time Collaboration & Chat Module (chat.js)
- * Implements Supabase Realtime Channels (WebSocket) with offline LocalStorage fallback.
+ * SkillBridge Rework — Real-time Workspace Chat (chat.js)
+ *
+ * Memakai Supabase Realtime. Tidak ada fallback localStorage untuk isi pesan;
+ * riwayat selalu dibaca dari tabel public.messages melalui data layer.
  */
 
 (function () {
@@ -8,94 +10,87 @@
     constructor() {
       this.channel = null;
       this.subscribers = new Set();
-      this.workspaceId = 'ws1';
+      this.workspaceId = null;
       this.isRealtimeConnected = false;
-      this.init();
     }
 
-    init() {
+    setWorkspace(workspaceId) {
+      if (!workspaceId || workspaceId === this.workspaceId) return;
+      this.workspaceId = workspaceId;
+      this.unsubscribe();
+      this.subscribe();
+    }
+
+    subscribe() {
       const client = window.supabaseClient;
-      if (client && typeof client.channel === 'function' && window.SkillBridgeDB && window.SkillBridgeDB.isLive()) {
+      if (!client || !this.workspaceId) return;
+
+      try {
+        this.channel = client
+          .channel(`skillbridge-workspace-${this.workspaceId}`)
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'messages',
+              filter: `workspace_id=eq.${this.workspaceId}`
+            },
+            payload => {
+              this.notifySubscribers(payload.new);
+            }
+          )
+          .subscribe(status => {
+            this.isRealtimeConnected = status === 'SUBSCRIBED';
+            if (this.isRealtimeConnected) {
+              console.log('[RealtimeChat] Terhubung ke channel workspace:', this.workspaceId);
+            }
+          });
+      } catch (error) {
+        console.warn('[RealtimeChat] Gagal berlangganan Realtime:', error);
+      }
+    }
+
+    unsubscribe() {
+      if (this.channel && window.supabaseClient) {
         try {
-          this.channel = client
-            .channel(`workspace-${this.workspaceId}`)
-            .on(
-              'postgres_changes',
-              { event: 'INSERT', schema: 'public', table: 'messages', filter: `workspace_id=eq.${this.workspaceId}` },
-              (payload) => {
-                this.notifySubscribers(payload.new);
-              }
-            )
-            .subscribe((status) => {
-              if (status === 'SUBSCRIBED') {
-                this.isRealtimeConnected = true;
-                console.log('[RealtimeChat] Connected to Supabase Realtime channel.');
-              }
-            });
-        } catch (e) {
-          console.warn('[RealtimeChat] Supabase Realtime subscription error, using local fallback:', e);
+          window.supabaseClient.removeChannel(this.channel);
+        } catch (error) {
+          console.warn('[RealtimeChat] Gagal melepas channel:', error);
         }
       }
-
-      // Offline / Multi-tab Broadcast Fallback
-      window.addEventListener('storage', (e) => {
-        if (e.key === 'SB_MESSAGES' || e.key === 'SB_MOCK_MESSAGES') {
-          try {
-            const msgs = JSON.parse(e.newValue || '[]');
-            if (msgs.length > 0) {
-              const latest = msgs[msgs.length - 1];
-              this.notifySubscribers(latest);
-            }
-          } catch (err) {
-            // Ignore parse errors
-          }
-        }
-      });
+      this.channel = null;
+      this.isRealtimeConnected = false;
     }
 
     onMessage(callback) {
-      if (typeof callback === 'function') {
-        this.subscribers.add(callback);
-      }
+      if (typeof callback === 'function') this.subscribers.add(callback);
       return () => this.subscribers.delete(callback);
     }
 
     notifySubscribers(message) {
-      this.subscribers.forEach((cb) => {
+      this.subscribers.forEach(callback => {
         try {
-          cb(message);
-        } catch (err) {
-          console.error('[RealtimeChat] Subscriber handler error:', err);
+          callback(message);
+        } catch (error) {
+          console.error('[RealtimeChat] Subscriber error:', error);
         }
       });
     }
 
     async getHistory() {
-      if (window.SkillBridgeDB && window.SkillBridgeDB.getMessages) {
-        return await window.SkillBridgeDB.getMessages(this.workspaceId);
-      }
-      return [];
+      if (!this.workspaceId) return [];
+      return window.SkillBridgeDB.getMessages(this.workspaceId);
     }
 
     async postMessage(content) {
-      const user = window.SkillBridgeAuth ? window.SkillBridgeAuth.getUser() : null;
-      const senderName = user ? (user.name || user.business_name || 'Pengguna') : 'Mahasiswa';
-      const senderRole = user ? (user.role || 'mahasiswa') : 'mahasiswa';
-
-      const newMsg = {
+      if (!this.workspaceId) throw new Error('Workspace belum dipilih.');
+      const saved = await window.SkillBridgeDB.sendMessage({
         workspace_id: this.workspaceId,
-        sender_name: senderName,
-        sender_role: senderRole,
-        content: content,
-        created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-
-      if (window.SkillBridgeDB && window.SkillBridgeDB.sendMessage) {
-        const saved = await window.SkillBridgeDB.sendMessage(newMsg);
-        this.notifySubscribers(saved);
-        return saved;
-      }
-      return newMsg;
+        content
+      });
+      this.notifySubscribers(saved);
+      return saved;
     }
   }
 

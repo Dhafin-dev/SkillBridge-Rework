@@ -325,15 +325,18 @@
     </div>
   </main>
 
+  <script src="../../assets/vendor/supabase.js"></script>
+  <script src="../../assets/js/config.js"></script>
+  <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script>
-    let selectedRole = 'mahasiswa';
+    let selectedRole = 'student';
     const roleStudentCard = document.getElementById('roleStudent');
     const roleUmkmCard = document.getElementById('roleUmkm');
 
     roleStudentCard.addEventListener('click', () => {
-      selectedRole = 'mahasiswa';
+      selectedRole = 'student';
       roleStudentCard.classList.add('active');
       roleUmkmCard.classList.remove('active');
     });
@@ -344,35 +347,68 @@
       roleStudentCard.classList.remove('active');
     });
 
-    document.getElementById('registerForm').addEventListener('submit', (e) => {
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('regName').value.trim();
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
       const confirmPassword = document.getElementById('regConfirmPassword').value;
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
 
+      if (!name) {
+        window.toast.error('Nama lengkap wajib diisi.');
+        return;
+      }
+      if (password.length < 6) {
+        window.toast.error('Kata sandi minimal 6 karakter.');
+        return;
+      }
       if (password !== confirmPassword) {
         window.toast.error('Konfirmasi kata sandi tidak cocok!');
         return;
       }
 
-      const newUser = window.SkillBridgeAuth.register({
-        name,
-        email,
-        password,
-        role: selectedRole
-      });
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Mendaftarkan akun...';
+      try {
+        const result = await window.SkillBridgeAuth.signUp({
+          name,
+          email,
+          password,
+          role: selectedRole
+        });
 
-      window.toast.success(`Akun ${newUser.name} berhasil didaftarkan! Mengalihkan...`);
-
-      setTimeout(() => {
-        if (selectedRole === 'umkm') {
-          window.location.href = '../umkm/dashboard.html';
-        } else {
-          window.location.href = '../student/dashboard.html';
+        if (result.needsConfirmation) {
+          window.toast.success('Pendaftaran berhasil. Silakan cek email untuk konfirmasi akun.');
+          setTimeout(() => {
+            window.location.href = window.SkillBridgeAuth.getPathTo('login') +
+              '?registered=1&email=' + encodeURIComponent(email);
+          }, 1200);
+          return;
         }
-      }, 700);
+
+        window.toast.success(`Akun ${result.user?.name || name} berhasil didaftarkan! Mengalihkan...`);
+        setTimeout(() => {
+          window.location.href = window.SkillBridgeAuth.getPathTo(
+            selectedRole === 'umkm' ? 'umkm_dashboard' : 'student_dashboard'
+          );
+        }, 600);
+      } catch (error) {
+        window.toast.error(error.message || 'Gagal mendaftar. Silakan coba lagi.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
     });
+
+    (async () => {
+      await window.SkillBridgeAuth.ready();
+      const user = window.SkillBridgeAuth.getUser();
+      if (!user) return;
+      window.location.replace(window.SkillBridgeAuth.getPathTo(
+        user.role === 'umkm' ? 'umkm_dashboard' : user.role === 'admin' ? 'admin_dashboard' : 'student_dashboard'
+      ));
+    })();
   </script>
 </body>
 </html>

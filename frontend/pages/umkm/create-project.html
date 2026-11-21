@@ -1,11 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Pasang Kebutuhan Proyek Baru — SkillBridge</title>
+
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+
   <style>
     .form-card {
       background: #FFFFFF;
@@ -35,415 +39,1484 @@
       user-select: none;
     }
 
-    .preset-chip:hover, .preset-chip.active {
+    .preset-chip:hover,
+    .preset-chip.active {
       background: #EFF6FF;
       border-color: #93C5FD;
       color: #2563EB;
     }
+
+    .create-project-content {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .create-project-header {
+      margin-bottom: 2rem;
+    }
+
+    .create-project-header h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #0F172A;
+      letter-spacing: -0.02em;
+      margin: 0 0 4px;
+    }
+
+    .create-project-header p {
+      color: #64748B;
+      font-size: 0.95rem;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .ai-promo-banner {
+      background: linear-gradient(
+        135deg,
+        #EFF6FF 0%,
+        #F5F3FF 100%
+      );
+      border: 1.5px solid #BFDBFE;
+      border-radius: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .ai-promo-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .ai-promo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #2563EB;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+      flex-shrink: 0;
+    }
+
+    .ai-promo-title {
+      font-weight: 800;
+      color: #0F172A;
+      font-size: 0.95rem;
+    }
+
+    .ai-promo-desc {
+      color: #64748B;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .ai-promo-button {
+      border-radius: 9999px;
+      padding: 0.55rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .project-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-hint {
+      display: block;
+      color: #64748B;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .project-form-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .project-form-actions .btn {
+      border-radius: 9999px;
+      padding: 0.75rem 1.5rem;
+    }
+
+    .project-form-actions button:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    /* AI BRIEF MODAL */
+
+    .ai-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .ai-modal-content {
+      background: #FFFFFF;
+      border-radius: 1.5rem;
+      max-width: 580px;
+      width: 100%;
+      padding: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .ai-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .ai-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .ai-modal-title h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .ai-modal-close {
+      border: none;
+      background: transparent;
+      font-size: 1.75rem;
+      color: #94A3B8;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .ai-modal-description {
+      color: #64748B;
+      font-size: 0.875rem;
+      margin: 0 0 1.5rem;
+      line-height: 1.6;
+    }
+
+    .ai-loading-state {
+      display: none;
+      text-align: center;
+      padding: 1.5rem;
+      background: #F8FAFC;
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px dashed #BFDBFE;
+    }
+
+    .ai-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .ai-modal-actions .btn {
+      border-radius: 9999px;
+      padding: 0.6rem 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .create-project-header h1 {
+        font-size: 1.75rem;
+      }
+
+      .form-card {
+        padding: 1.25rem;
+      }
+
+      .project-form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-promo-banner {
+        align-items: flex-start;
+      }
+
+      .ai-promo-button {
+        width: 100%;
+      }
+
+      .ai-modal-content {
+        padding: 1.25rem;
+      }
+    }
   </style>
 </head>
+
 <body class="dashboard-body">
+
   <div class="dashboard-layout">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-      <div class="sidebar-header">
-        <a href="../../index.html" class="nav-brand-lockup">
-          <div class="nav-brand-logo-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-          </div>
-          <span class="sidebar-brand-title">SkillBridge</span>
-        </a>
-      </div>
 
-      <div class="sidebar-nav">
-        <div class="sidebar-section-title">UMKM MENU</div>
-        <a href="dashboard.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-            <polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
-          <span>Dashboard</span>
-        </a>
-        <a href="talent-search.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          <span>Talent Search</span>
-        </a>
-        <a href="my-projects.html" class="sidebar-item active">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-          </svg>
-          <span>Projects</span>
-        </a>
-        <a href="../student/workspace.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          <span>Messages</span>
-        </a>
-        <a href="profile.html" class="sidebar-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          <span>Profile</span>
-        </a>
-      </div>
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
 
-      <div class="sidebar-footer">
-        <button onclick="window.SkillBridgeSettings ? window.SkillBridgeSettings.openModal() : window.location.href='settings.html'" class="sidebar-item" style="color: #64748B; width: 100%; border: none; background: transparent; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 0.75rem;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-          <span>Pengaturan & Tema</span>
-        </button>
-      </div>
-    </aside>
+    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
 
-    <!-- Main Canvas -->
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
+
     <main class="dashboard-main">
-      <!-- Topbar -->
-      <header class="dashboard-topbar">
-        <div class="topbar-search">
-          <div class="input-with-icon">
-            <svg class="input-icon-prefix" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-            </svg>
-            <input type="text" class="form-input" placeholder="Search..." style="border-radius: var(--radius-full); padding-left: 2.5rem; background-color: #F8FAFC; font-size: 0.85rem;">
-          </div>
-        </div>
 
-        <div class="topbar-actions">
-          <div class="notif-wrapper">
-            <button class="notif-bell-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-              </svg>
-              <span class="notif-badge"></span>
-            </button>
-          </div>
+      <!-- TOPBAR -->
 
-          <div class="topbar-avatar-pill">
-            <div class="avatar-circle" id="umkm-avatar-circle" style="background: #2563EB; color: #FFFFFF;">L</div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2">
-              <path d="m6 9 6 6 6-6"/>
-            </svg>
-          </div>
-        </div>
-      </header>
+      <header class="dashboard-topbar" id="shared-topbar"></header>
 
-      <!-- Dashboard Canvas -->
+      <!-- DASHBOARD CANVAS -->
+
       <div class="dashboard-canvas">
-        <div style="max-width: 760px; margin: 0 auto;">
-          <div style="margin-bottom: 2rem;">
-            <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0 0 4px;">
-              Pasang Kebutuhan Digitalisasi UMKM
-            </h1>
-            <p style="color: #64748B; font-size: 0.95rem; margin: 0;">
-              Sampaikan permasalahan teknis atau kebutuhan bisnis Anda untuk dicocokkan dengan mahasiswa berkompeten.
+
+        <div class="create-project-content">
+
+          <!-- PAGE HEADER -->
+
+          <div class="create-project-header">
+            <h1>Pasang Kebutuhan Digitalisasi UMKM</h1>
+
+            <p>
+              Sampaikan permasalahan teknis atau kebutuhan
+              bisnis Anda untuk dicocokkan dengan mahasiswa
+              berkompeten.
             </p>
           </div>
 
-          <!-- AI Synthesizer Promotion Banner -->
-          <div style="background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%); border: 1.5px solid #BFDBFE; border-radius: 1.25rem; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <div style="width: 42px; height: 42px; border-radius: 12px; background: #2563EB; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">✨</div>
-              <div>
-                <div style="font-weight: 800; color: #0F172A; font-size: 0.95rem;">Bingung Menyusun Brief Proyek?</div>
-                <div style="color: #64748B; font-size: 0.85rem;">Gunakan Gemini 3.8 Flash untuk merumuskan brief profesional dan estimasi kebutuhan otomatis.</div>
+          <!-- =====================================
+               AI BRIEF PROMOTION
+          ====================================== -->
+
+          <div class="ai-promo-banner">
+
+            <div class="ai-promo-info">
+
+              <div class="ai-promo-icon">
+                ✨
               </div>
+
+              <div>
+                <div class="ai-promo-title">
+                  Bingung Menyusun Brief Proyek?
+                </div>
+
+                <div class="ai-promo-desc">
+                  Gunakan Gemini AI untuk membantu merumuskan
+                  brief profesional dan estimasi kebutuhan.
+                </div>
+              </div>
+
             </div>
-            <button type="button" onclick="openAIBriefModal()" class="btn btn-primary" style="border-radius: 9999px; padding: 0.55rem 1.25rem; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+
+            <button
+              type="button"
+              onclick="openAIBriefModal()"
+              class="btn btn-primary ai-promo-button"
+            >
               ✨ Bantu Buat Brief dengan AI
             </button>
+
           </div>
+
+          <!-- =====================================
+               PROJECT FORM
+          ====================================== -->
 
           <div class="form-card">
+
             <form id="create-project-form">
+
+              <!-- PROJECT TITLE -->
+
               <div class="form-group">
-                <label class="form-label" for="proj-title">Judul Kebutuhan / Proyek</label>
-                <input type="text" id="proj-title" class="form-input" placeholder="Contoh: Pembuatan Website E-Commerce Toko Kue Basah Tradisional" required>
+                <label
+                  class="form-label"
+                  for="proj-title"
+                >
+                  Judul Kebutuhan / Proyek
+                </label>
+
+                <input
+                  type="text"
+                  id="proj-title"
+                  class="form-input"
+                  placeholder="Contoh: Pembuatan Website E-Commerce Toko Kue Basah Tradisional"
+                  minlength="5"
+                  maxlength="200"
+                  required
+                >
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+              <!-- CATEGORY AND LOCATION -->
+
+              <div class="project-form-row">
+
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="proj-category">Kategori Proyek</label>
-                  <select id="proj-category" class="form-select" required>
-                    <option value="Web Development">🌐 Web Development</option>
-                    <option value="Mobile App">📱 Mobile App</option>
-                    <option value="UI/UX Design">🎨 Graphic Design & UI/UX</option>
-                    <option value="Digital Marketing">📈 Digital Marketing & SEO</option>
-                    <option value="Data & Analytics">📊 Data & Analytics</option>
+                  <label
+                    class="form-label"
+                    for="proj-category"
+                  >
+                    Kategori Proyek
+                  </label>
+
+                  <select
+                    id="proj-category"
+                    class="form-select"
+                    required
+                  >
+                    <option value="Web Development">
+                      🌐 Web Development
+                    </option>
+
+                    <option value="Mobile App">
+                      📱 Mobile App
+                    </option>
+
+                    <option value="Graphic Design & UI/UX">
+                      🎨 Graphic Design & UI/UX
+                    </option>
+
+                    <option value="Digital Marketing & SEO">
+                      📈 Digital Marketing & SEO
+                    </option>
+
+                    <option value="Financial & Accounting System">
+                      💰 Financial & Accounting System
+                    </option>
+
+                    <option value="Data & Analytics">
+                      📊 Data & Analytics
+                    </option>
+
+                    <option value="Branding & Creative">
+                      ✨ Branding & Creative
+                    </option>
                   </select>
                 </div>
+
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="proj-city">Kota / Lokasi Usaha</label>
-                  <input type="text" id="proj-city" class="form-input" placeholder="Contoh: Bandung" required>
+                  <label
+                    class="form-label"
+                    for="proj-city"
+                  >
+                    Kota / Lokasi Usaha
+                  </label>
+
+                  <input
+                    type="text"
+                    id="proj-city"
+                    class="form-input"
+                    placeholder="Contoh: Surabaya"
+                    required
+                  >
                 </div>
+
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+              <!-- BUDGET AND DEADLINE -->
+
+              <div class="project-form-row">
+
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="proj-budget">Anggaran Kompensasi (Rp)</label>
-                  <input type="number" id="proj-budget" class="form-input" placeholder="Contoh: 3000000" min="500000" step="100000" required>
+
+                  <label
+                    class="form-label"
+                    for="proj-budget"
+                  >
+                    Anggaran Kompensasi (Rp)
+                  </label>
+
+                  <input
+                    type="number"
+                    id="proj-budget"
+                    class="form-input"
+                    placeholder="Contoh: 3000000"
+                    min="500000"
+                    step="100000"
+                    required
+                  >
+
                   <div class="preset-chips-wrap">
-                    <span class="preset-chip budget-chip" onclick="setBudgetPreset(1000000, this)">1 Juta</span>
-                    <span class="preset-chip budget-chip" onclick="setBudgetPreset(2000000, this)">2 Juta</span>
-                    <span class="preset-chip budget-chip active" onclick="setBudgetPreset(3000000, this)">3 Juta</span>
-                    <span class="preset-chip budget-chip" onclick="setBudgetPreset(4500000, this)">4.5 Juta</span>
+
+                    <button
+                      type="button"
+                      class="preset-chip budget-chip"
+                      onclick="setBudgetPreset(1000000, this)"
+                    >
+                      1 Juta
+                    </button>
+
+                    <button
+                      type="button"
+                      class="preset-chip budget-chip"
+                      onclick="setBudgetPreset(2000000, this)"
+                    >
+                      2 Juta
+                    </button>
+
+                    <button
+                      type="button"
+                      class="preset-chip budget-chip"
+                      onclick="setBudgetPreset(3000000, this)"
+                    >
+                      3 Juta
+                    </button>
+
+                    <button
+                      type="button"
+                      class="preset-chip budget-chip"
+                      onclick="setBudgetPreset(4500000, this)"
+                    >
+                      4.5 Juta
+                    </button>
+
                   </div>
                 </div>
+
                 <div class="form-group" style="margin-bottom: 0;">
-                  <label class="form-label" for="proj-deadline">Batas Waktu Target Selesai</label>
-                  <input type="date" id="proj-deadline" class="form-input" required>
+
+                  <label
+                    class="form-label"
+                    for="proj-deadline"
+                  >
+                    Batas Waktu Target Selesai
+                  </label>
+
+                  <input
+                    type="date"
+                    id="proj-deadline"
+                    class="form-input"
+                    required
+                  >
+
                   <div class="preset-chips-wrap">
-                    <span class="preset-chip deadline-chip" onclick="setDeadlinePreset(14, this)">+2 Minggu</span>
-                    <span class="preset-chip deadline-chip active" onclick="setDeadlinePreset(30, this)">+1 Bulan</span>
-                    <span class="preset-chip deadline-chip" onclick="setDeadlinePreset(60, this)">+2 Bulan</span>
-                    <span class="preset-chip deadline-chip" onclick="setDeadlinePreset(90, this)">+3 Bulan</span>
+
+                    <button
+                      type="button"
+                      class="preset-chip deadline-chip"
+                      onclick="setDeadlinePreset(14, this)"
+                    >
+                      +2 Minggu
+                    </button>
+
+                    <button
+                      type="button"
+                      class="preset-chip deadline-chip"
+                      onclick="setDeadlinePreset(30, this)"
+                    >
+                      +1 Bulan
+                    </button>
+
+                    <button
+                      type="button"
+                      class="preset-chip deadline-chip"
+                      onclick="setDeadlinePreset(60, this)"
+                    >
+                      +2 Bulan
+                    </button>
+
+                    <button
+                      type="button"
+                      class="preset-chip deadline-chip"
+                      onclick="setDeadlinePreset(90, this)"
+                    >
+                      +3 Bulan
+                    </button>
+
                   </div>
                 </div>
+
               </div>
+
+              <!-- REQUIRED SKILLS -->
 
               <div class="form-group">
-                <label class="form-label" for="proj-skills">
-                  <span>Keahlian Utama yang Dibutuhkan</span>
-                  <span style="font-size: 0.75rem; color: #94A3B8; font-weight: normal;">(Pisahkan dengan koma)</span>
+
+                <label
+                  class="form-label"
+                  for="proj-skills"
+                >
+                  Keahlian Utama yang Dibutuhkan
                 </label>
-                <input type="text" id="proj-skills" class="form-input" placeholder="Contoh: HTML/CSS, JavaScript, Responsive Web, Canva, SEO" required>
-                <span class="form-hint" style="color: #64748B; font-size: 0.8rem; margin-top: 4px; display: block;">
-                  Daftar keahlian ini akan digunakan oleh algoritma Gemini 3.8 Flash untuk menghitung skor kecocokan pelamar.
+
+                <input
+                  type="text"
+                  id="proj-skills"
+                  class="form-input"
+                  placeholder="Contoh: HTML/CSS, JavaScript, Responsive Web, Canva, SEO"
+                  required
+                >
+
+                <span class="form-hint">
+                  Pisahkan setiap keahlian dengan koma.
+                  Data skill ini akan digunakan untuk
+                  proses pencocokan mahasiswa.
                 </span>
+
               </div>
+
+              <!-- PROJECT DESCRIPTION -->
 
               <div class="form-group">
-                <label class="form-label" for="proj-desc">Rincian Deskripsi & Luaran yang Diharapkan (Deliverables)</label>
-                <textarea id="proj-desc" class="form-textarea" style="min-height: 140px;" placeholder="Jelaskan alur bisnis Anda saat ini, fitur yang diinginkan, dan hasil akhir yang diharapkan dari mahasiswa..." required></textarea>
+
+                <label
+                  class="form-label"
+                  for="proj-desc"
+                >
+                  Rincian Deskripsi & Luaran yang Diharapkan
+                  (Deliverables)
+                </label>
+
+                <textarea
+                  id="proj-desc"
+                  class="form-textarea"
+                  style="min-height: 140px;"
+                  placeholder="Jelaskan alur bisnis Anda saat ini, fitur yang diinginkan, dan hasil akhir yang diharapkan dari mahasiswa..."
+                  required
+                ></textarea>
+
               </div>
 
-              <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
-                <a href="dashboard.html" class="btn btn-outline" style="border-radius: 9999px; padding: 0.75rem 1.5rem;">Batal</a>
-                <button type="submit" class="btn btn-primary" style="border-radius: 9999px; padding: 0.75rem 1.75rem; font-weight: 700;">
+              <!-- ACTIONS -->
+
+              <div class="project-form-actions">
+
+                <a
+                  href="dashboard.html"
+                  class="btn btn-outline"
+                >
+                  Batal
+                </a>
+
+                <button
+                  type="submit"
+                  id="submit-project-btn"
+                  class="btn btn-primary"
+                  style="font-weight: 700;"
+                >
                   🚀 Publikasikan Lowongan Proyek
                 </button>
+
               </div>
+
             </form>
           </div>
+
         </div>
       </div>
+
     </main>
   </div>
 
-  <!-- AI Brief Synthesizer Modal -->
-  <div id="ai-brief-modal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
-    <div style="background: #FFFFFF; border-radius: 1.5rem; max-width: 580px; width: 100%; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
+  <!-- =====================================
+       AI PROJECT BRIEF MODAL
+  ====================================== -->
+
+  <div
+    id="ai-brief-modal"
+    class="ai-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="ai-modal-heading"
+  >
+
+    <div class="ai-modal-content">
+
+      <div class="ai-modal-header">
+
+        <div class="ai-modal-title">
           <span style="font-size: 1.5rem;">✨</span>
-          <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #0F172A;">AI Project Brief Synthesizer</h3>
+
+          <h3 id="ai-modal-heading">
+            AI Project Brief Synthesizer
+          </h3>
         </div>
-        <button type="button" onclick="closeAIBriefModal()" style="border: none; background: transparent; font-size: 1.75rem; color: #94A3B8; cursor: pointer; line-height: 1;">&times;</button>
+
+        <button
+          type="button"
+          onclick="closeAIBriefModal()"
+          class="ai-modal-close"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+
       </div>
-      <p style="color: #64748B; font-size: 0.875rem; margin-top: 0; margin-bottom: 1.5rem; line-height: 1.5;">
-        Ceritakan secara ringkas bisnis dan kendala Anda. Gemini 3.8 Flash akan merumuskan judul profesional, keahlian, deliverables, dan rekomendasi anggaran secara instan.
+
+      <p class="ai-modal-description">
+        Ceritakan bisnis dan kendala Anda secara ringkas.
+        AI akan membantu menyusun judul proyek, kebutuhan
+        skill, deliverables, dan estimasi anggaran.
       </p>
 
-      <div class="form-group" style="margin-bottom: 1rem;">
-        <label class="form-label" for="ai-business-name">Nama Usaha / Brand Anda</label>
-        <input type="text" id="ai-business-name" class="form-input" placeholder="Contoh: Kopi Roastery Nusantara">
+      <!-- BUSINESS NAME -->
+
+      <div class="form-group">
+        <label
+          class="form-label"
+          for="ai-business-name"
+        >
+          Nama Usaha / Brand Anda
+        </label>
+
+        <input
+          type="text"
+          id="ai-business-name"
+          class="form-input"
+          placeholder="Contoh: Kopi Roastery Nusantara"
+        >
       </div>
 
-      <div class="form-group" style="margin-bottom: 1rem;">
-        <label class="form-label" for="ai-industry">Sektor Industri</label>
-        <select id="ai-industry" class="form-select">
-          <option value="Kuliner & F&B">☕ Kuliner & F&B</option>
-          <option value="Fashion & Kerajinan">👗 Fashion & Kerajinan</option>
-          <option value="Jasa & Konsultasi">💼 Jasa & Konsultasi</option>
-          <option value="Retail & Toko Kelontong">🛒 Retail & Toko Kelontong</option>
-          <option value="Pertanian & Agribisnis">🌱 Pertanian & Agribisnis</option>
-          <option value="Teknologi & Kreatif">🎨 Teknologi & Kreatif</option>
+      <!-- INDUSTRY -->
+
+      <div class="form-group">
+        <label
+          class="form-label"
+          for="ai-industry"
+        >
+          Sektor Industri
+        </label>
+
+        <select
+          id="ai-industry"
+          class="form-select"
+        >
+          <option value="Kuliner & F&B">
+            ☕ Kuliner & F&B
+          </option>
+
+          <option value="Fashion & Kerajinan">
+            👗 Fashion & Kerajinan
+          </option>
+
+          <option value="Jasa & Konsultasi">
+            💼 Jasa & Konsultasi
+          </option>
+
+          <option value="Retail & Toko Kelontong">
+            🛒 Retail & Toko Kelontong
+          </option>
+
+          <option value="Pertanian & Agribisnis">
+            🌱 Pertanian & Agribisnis
+          </option>
+
+          <option value="Teknologi & Kreatif">
+            🎨 Teknologi & Kreatif
+          </option>
         </select>
       </div>
 
-      <div class="form-group" style="margin-bottom: 1rem;">
-        <label class="form-label" for="ai-goal">Apa yang Ingin Anda Buat atau Capai?</label>
-        <input type="text" id="ai-goal" class="form-input" placeholder="Contoh: Website katalog produk dengan pemesanan langsung WhatsApp">
+      <!-- GOAL -->
+
+      <div class="form-group">
+        <label
+          class="form-label"
+          for="ai-goal"
+        >
+          Apa yang Ingin Anda Buat atau Capai?
+        </label>
+
+        <input
+          type="text"
+          id="ai-goal"
+          class="form-input"
+          placeholder="Contoh: Website katalog produk dengan pemesanan melalui WhatsApp"
+        >
       </div>
 
-      <div class="form-group" style="margin-bottom: 1.5rem;">
-        <label class="form-label" for="ai-problem">Masalah atau Kendala Utama Saat Ini</label>
-        <textarea id="ai-problem" class="form-textarea" style="min-height: 80px;" placeholder="Contoh: Pembeli kesulitan melihat katalog terbaru dan kami sering salah mencatat pesanan manual di chat."></textarea>
+      <!-- PROBLEM -->
+
+      <div class="form-group">
+        <label
+          class="form-label"
+          for="ai-problem"
+        >
+          Masalah atau Kendala Utama Saat Ini
+        </label>
+
+        <textarea
+          id="ai-problem"
+          class="form-textarea"
+          style="min-height: 80px;"
+          placeholder="Contoh: Pembeli kesulitan melihat katalog terbaru dan pesanan sering salah dicatat."
+        ></textarea>
       </div>
 
-      <div id="ai-loading-state" style="display: none; text-align: center; padding: 1.5rem; background: #F8FAFC; border-radius: 1rem; margin-bottom: 1.5rem; border: 1px dashed #BFDBFE;">
-        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠⚡</div>
-        <div style="font-weight: 700; color: #2563EB;">Gemini 3.8 Flash sedang merumuskan brief...</div>
-        <div style="font-size: 0.8rem; color: #64748B; margin-top: 4px;">Menyusun deliverables, keahlian teknis, dan estimasi anggaran</div>
+      <!-- AI LOADING -->
+
+      <div
+        id="ai-loading-state"
+        class="ai-loading-state"
+      >
+        <div
+          style="
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+          "
+        >
+          🧠⚡
+        </div>
+
+        <div
+          style="
+            font-weight: 700;
+            color: #2563EB;
+          "
+        >
+          AI sedang merumuskan brief...
+        </div>
+
+        <div
+          style="
+            font-size: 0.8rem;
+            color: #64748B;
+            margin-top: 4px;
+          "
+        >
+          Menyusun deliverables, keahlian teknis,
+          dan estimasi anggaran.
+        </div>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
-        <button type="button" onclick="closeAIBriefModal()" class="btn btn-outline" style="border-radius: 9999px; padding: 0.6rem 1.25rem;">Batal</button>
-        <button type="button" id="btn-run-ai-synthesize" onclick="runAIBriefSynthesis()" class="btn btn-primary" style="border-radius: 9999px; padding: 0.6rem 1.5rem; font-weight: 700;">
+      <!-- MODAL BUTTONS -->
+
+      <div class="ai-modal-actions">
+
+        <button
+          type="button"
+          onclick="closeAIBriefModal()"
+          class="btn btn-outline"
+        >
+          Batal
+        </button>
+
+        <button
+          type="button"
+          id="btn-run-ai-synthesize"
+          onclick="runAIBriefSynthesis()"
+          class="btn btn-primary"
+          style="font-weight: 700;"
+        >
           ✨ Rumuskan Brief Otomatis
         </button>
+
       </div>
+
     </div>
   </div>
 
+  <!-- =====================================
+       JAVASCRIPT DEPENDENCIES
+       URUTAN PENTING
+  ====================================== -->
+  <script src="../../assets/vendor/supabase.js"></script>
+  <script src="../../assets/js/config.js"></script>
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/js/api.js"></script>
   <script src="../../assets/js/auth.js"></script>
+
+  <!-- DATABASE ADAPTER -->
+  <script src="../../assets/js/database.js"></script>
+
   <script src="../../assets/js/settings.js"></script>
-  <script>
-    document.getElementById('create-project-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const user = window.SkillBridgeAuth.getUser() || { name: 'Mitra UMKM', company_name: 'UMKM Mandiri' };
 
-      const title = document.getElementById('proj-title').value.trim();
-      const category = document.getElementById('proj-category').value;
-      const city = document.getElementById('proj-city').value.trim();
-      const budget = parseInt(document.getElementById('proj-budget').value, 10);
-      const deadline = document.getElementById('proj-deadline').value;
-      const skills = document.getElementById('proj-skills').value.split(',').map(s => s.trim()).filter(Boolean);
-      const desc = document.getElementById('proj-desc').value.trim();
+  <!-- =====================================
+       PAGE LOGIC
+  ====================================== -->
 
-      await window.SkillBridgeDB.createProject({
-        title,
-        category,
-        location: city,
-        budget,
-        deadline,
-        skills,
-        description: desc,
-        umkm_id: user.id,
-        umkm_name: user.company_name || user.name || 'Mitra UMKM',
-        umkm_desc: user.bio || 'Mitra UMKM terpercaya.',
-        status: 'open'
+    <script src="../../assets/js/layout.js"></script>
+<script>
+    "use strict";
+
+    // ====================================
+    // NOTIFICATION HELPERS
+    // ====================================
+
+    function showSuccess(message) {
+      if (window.toast?.success) {
+        window.toast.success(message);
+      } else {
+        alert(message);
+      }
+    }
+
+    function showError(message) {
+      if (window.toast?.error) {
+        window.toast.error(message);
+      } else {
+        alert(message);
+      }
+    }
+
+    function showWarning(message) {
+      if (window.toast?.warning) {
+        window.toast.warning(message);
+      } else {
+        alert(message);
+      }
+    }
+
+    // ====================================
+    // CREATE PROJECT
+    // ====================================
+
+    document
+      .getElementById("create-project-form")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+
+        const submitBtn = document.getElementById(
+          "submit-project-btn"
+        );
+
+        const originalButtonText = submitBtn.textContent;
+
+        const user =
+          window.SkillBridgeAuth?.getUser?.();
+
+        // ==================================
+        // AUTH VALIDATION
+        // ==================================
+
+        if (!user?.id) {
+          showError(
+            "Silakan login terlebih dahulu."
+          );
+          return;
+        }
+
+        if (user.role !== "umkm") {
+          showError(
+            "Hanya akun UMKM yang dapat membuat proyek."
+          );
+          return;
+        }
+
+        // ==================================
+        // GET FORM VALUES
+        // ==================================
+
+        const title = document
+          .getElementById("proj-title")
+          .value
+          .trim();
+
+        const category = document
+          .getElementById("proj-category")
+          .value;
+
+        const city = document
+          .getElementById("proj-city")
+          .value
+          .trim();
+
+        const budget = Number(
+          document.getElementById("proj-budget").value
+        );
+
+        const deadline = document
+          .getElementById("proj-deadline")
+          .value;
+
+        const skills = document
+          .getElementById("proj-skills")
+          .value
+          .split(",")
+          .map(skill => skill.trim())
+          .filter(Boolean);
+
+        const description = document
+          .getElementById("proj-desc")
+          .value
+          .trim();
+
+        // ==================================
+        // VALIDATION
+        // ==================================
+
+        if (title.length < 5) {
+          showWarning(
+            "Judul proyek minimal 5 karakter."
+          );
+          return;
+        }
+
+        if (!category) {
+          showWarning(
+            "Pilih kategori proyek."
+          );
+          return;
+        }
+
+        if (!city) {
+          showWarning(
+            "Masukkan lokasi usaha."
+          );
+          return;
+        }
+
+        if (!Number.isFinite(budget) || budget < 500000) {
+          showWarning(
+            "Anggaran minimal Rp500.000."
+          );
+          return;
+        }
+
+        if (!deadline) {
+          showWarning(
+            "Pilih deadline proyek."
+          );
+          return;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const deadlineDate = new Date(
+          deadline + "T00:00:00"
+        );
+
+        if (
+          !Number.isFinite(deadlineDate.getTime()) ||
+          deadlineDate < today
+        ) {
+          showWarning(
+            "Deadline tidak boleh sebelum hari ini."
+          );
+          return;
+        }
+
+        if (skills.length === 0) {
+          showWarning(
+            "Masukkan minimal satu skill."
+          );
+          return;
+        }
+
+        if (!description) {
+          showWarning(
+            "Deskripsi proyek wajib diisi."
+          );
+          return;
+        }
+
+        // ==================================
+        // PREVENT DOUBLE SUBMISSION
+        // ==================================
+
+        submitBtn.disabled = true;
+        submitBtn.textContent =
+          "Memublikasikan Proyek...";
+
+        try {
+          // Pastikan database adapter tersedia
+          if (!window.SkillBridgeDB?.createProject) {
+            throw new Error(
+              "Database adapter belum terhubung. " +
+              "Periksa assets/js/database.js."
+            );
+          }
+
+          // ==================================
+          // SAVE TO SUPABASE
+          // ==================================
+
+          const createdProject =
+            await window.SkillBridgeDB.createProject({
+              title: title,
+
+              category: category,
+
+              location: city,
+
+              budget: budget,
+
+              deadline: deadline,
+
+              skills: skills,
+
+              description: description,
+
+              // Status sesuai SQL database
+              status: "recruiting"
+            });
+
+          console.log(
+            "[SkillBridge] Project created:",
+            createdProject
+          );
+
+          showSuccess(
+            "Proyek baru berhasil dipublikasikan!"
+          );
+
+          // Redirect hanya setelah berhasil
+          window.location.href =
+            "my-projects.html";
+
+        } catch (error) {
+          console.error(
+            "[SkillBridge] Create Project Error:",
+            error
+          );
+
+          showError(
+            error.message ||
+            "Gagal membuat proyek. Silakan coba lagi."
+          );
+
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent =
+            originalButtonText;
+        }
       });
 
-      window.toast.success('Proyek baru berhasil dipublikasikan!');
-      setTimeout(() => window.location.href = 'my-projects.html', 1000);
-    });
+    // ====================================
+    // BUDGET PRESET
+    // ====================================
 
-    function setBudgetPreset(val, el) {
-      document.getElementById('proj-budget').value = val;
-      document.querySelectorAll('.budget-chip').forEach(c => c.classList.remove('active'));
-      if (el) el.classList.add('active');
-    }
+    function setBudgetPreset(value, element) {
+      document.getElementById(
+        "proj-budget"
+      ).value = value;
 
-    function setDeadlinePreset(days, el) {
-      const d = new Date();
-      d.setDate(d.getDate() + days);
-      const formatted = d.toISOString().split('T')[0];
-      document.getElementById('proj-deadline').value = formatted;
-      document.querySelectorAll('.deadline-chip').forEach(c => c.classList.remove('active'));
-      if (el) el.classList.add('active');
-    }
+      document
+        .querySelectorAll(".budget-chip")
+        .forEach(chip => {
+          chip.classList.remove("active");
+        });
 
-    // --- AI BRIEF SYNTHESIZER MODAL LOGIC ---
-    function openAIBriefModal() {
-      const user = window.SkillBridgeAuth.getUser() || {};
-      const nameInput = document.getElementById('ai-business-name');
-      if (nameInput && !nameInput.value) {
-        nameInput.value = user.company_name || user.name || '';
+      if (element) {
+        element.classList.add("active");
       }
-      const modal = document.getElementById('ai-brief-modal');
-      modal.style.display = 'flex';
+    }
+
+    // ====================================
+    // DEADLINE PRESET
+    // ====================================
+
+    function setDeadlinePreset(days, element) {
+      const date = new Date();
+
+      date.setDate(
+        date.getDate() + days
+      );
+
+      // Format YYYY-MM-DD menggunakan
+      // tanggal lokal, bukan UTC.
+      const year = date.getFullYear();
+
+      const month = String(
+        date.getMonth() + 1
+      ).padStart(2, "0");
+
+      const day = String(
+        date.getDate()
+      ).padStart(2, "0");
+
+      const formatted =
+        `${year}-${month}-${day}`;
+
+      document.getElementById(
+        "proj-deadline"
+      ).value = formatted;
+
+      document
+        .querySelectorAll(".deadline-chip")
+        .forEach(chip => {
+          chip.classList.remove("active");
+        });
+
+      if (element) {
+        element.classList.add("active");
+      }
+    }
+
+    // ====================================
+    // AI BRIEF MODAL
+    // ====================================
+
+    function openAIBriefModal() {
+      const user =
+        window.SkillBridgeAuth?.getUser?.() || {};
+
+      const nameInput = document.getElementById(
+        "ai-business-name"
+      );
+
+      if (nameInput && !nameInput.value) {
+        nameInput.value =
+          user.company_name ||
+          user.name ||
+          "";
+      }
+
+      document.getElementById(
+        "ai-brief-modal"
+      ).style.display = "flex";
     }
 
     function closeAIBriefModal() {
-      const modal = document.getElementById('ai-brief-modal');
-      modal.style.display = 'none';
-      document.getElementById('ai-loading-state').style.display = 'none';
-      document.getElementById('btn-run-ai-synthesize').disabled = false;
+      document.getElementById(
+        "ai-brief-modal"
+      ).style.display = "none";
+
+      document.getElementById(
+        "ai-loading-state"
+      ).style.display = "none";
+
+      document.getElementById(
+        "btn-run-ai-synthesize"
+      ).disabled = false;
     }
 
+    // ====================================
+    // AI PROJECT BRIEF SYNTHESIS
+    // ====================================
+
     async function runAIBriefSynthesis() {
-      const businessName = document.getElementById('ai-business-name').value.trim() || 'Mitra UMKM';
-      const industry = document.getElementById('ai-industry').value;
-      const goal = document.getElementById('ai-goal').value.trim();
-      const problem = document.getElementById('ai-problem').value.trim();
+      const businessName = document
+        .getElementById("ai-business-name")
+        .value
+        .trim() || "Mitra UMKM";
+
+      const industry = document
+        .getElementById("ai-industry")
+        .value;
+
+      const goal = document
+        .getElementById("ai-goal")
+        .value
+        .trim();
+
+      const problem = document
+        .getElementById("ai-problem")
+        .value
+        .trim();
+
+      // ==================================
+      // VALIDATION
+      // ==================================
 
       if (!goal || !problem) {
-        window.toast.warning('Silakan isi target proyek dan kendala utama Anda terlebih dahulu.');
+        showWarning(
+          "Isi target proyek dan kendala utama terlebih dahulu."
+        );
         return;
       }
 
-      const btn = document.getElementById('btn-run-ai-synthesize');
-      const loader = document.getElementById('ai-loading-state');
+      if (
+        !window.SkillBridgeAI ||
+        typeof window.SkillBridgeAI.synthesizeBrief !==
+          "function"
+      ) {
+        showError(
+          "Fitur AI belum terhubung ke backend."
+        );
+        return;
+      }
+
+      // ==================================
+      // LOADING STATE
+      // ==================================
+
+      const btn = document.getElementById(
+        "btn-run-ai-synthesize"
+      );
+
+      const loader = document.getElementById(
+        "ai-loading-state"
+      );
+
       btn.disabled = true;
-      loader.style.display = 'block';
+      btn.textContent = "Memproses...";
+
+      loader.style.display = "block";
 
       try {
-        const result = await window.SkillBridgeAI.synthesizeBrief({
-          business_name: businessName,
-          industry: industry,
-          goal: goal,
-          problem_statement: problem,
-          budget_range: 'Rp 2.000.000 - Rp 3.000.000'
-        });
+        // ==================================
+        // CALL EXISTING AI API
+        // ==================================
 
-        if (result) {
-          if (result.title) document.getElementById('proj-title').value = result.title;
-          if (result.category) {
-            const catSelect = document.getElementById('proj-category');
-            for (let opt of catSelect.options) {
-              if (opt.value.toLowerCase().includes(result.category.toLowerCase()) || result.category.toLowerCase().includes(opt.value.toLowerCase())) {
-                catSelect.value = opt.value;
-                break;
-              }
+        const result =
+          await window.SkillBridgeAI.synthesizeBrief({
+            business_name: businessName,
+
+            industry: industry,
+
+            goal: goal,
+
+            problem_statement: problem,
+
+            budget_range:
+              "Rp 2.000.000 - Rp 3.000.000"
+          });
+
+        if (!result) {
+          throw new Error(
+            "AI tidak mengembalikan hasil."
+          );
+        }
+
+        // ==================================
+        // PROJECT TITLE
+        // ==================================
+
+        if (result.title) {
+          document.getElementById(
+            "proj-title"
+          ).value = result.title;
+        }
+
+        // ==================================
+        // CATEGORY
+        // ==================================
+
+        if (result.category) {
+          const categorySelect =
+            document.getElementById(
+              "proj-category"
+            );
+
+          const requestedCategory = String(
+            result.category
+          ).toLowerCase();
+
+          for (const option of categorySelect.options) {
+            const optionValue =
+              option.value.toLowerCase();
+
+            if (
+              optionValue.includes(requestedCategory) ||
+              requestedCategory.includes(optionValue)
+            ) {
+              categorySelect.value =
+                option.value;
+
+              break;
             }
           }
-          if (result.required_skills && result.required_skills.length > 0) {
-            document.getElementById('proj-skills').value = result.required_skills.join(', ');
-          }
-          if (result.estimated_stipend) {
-            document.getElementById('proj-budget').value = result.estimated_stipend;
-          }
-          if (result.timeline_weeks) {
-            setDeadlinePreset(result.timeline_weeks * 7, null);
-          }
-
-          let fullDesc = result.description || '';
-          if (result.deliverables && result.deliverables.length > 0) {
-            fullDesc += '\n\nTarget Luaran / Deliverables:\n' + result.deliverables.map((d, idx) => `${idx + 1}. ${d}`).join('\n');
-          }
-          document.getElementById('proj-desc').value = fullDesc;
-
-          closeAIBriefModal();
-          window.toast.success('✨ Project Brief berhasil dirumuskan oleh Gemini 3.8 Flash!');
-          document.getElementById('proj-title').focus();
         }
-      } catch (err) {
-        console.error('Error synthesize brief:', err);
-        window.toast.error('Gagal merumuskan brief dengan AI. Silakan coba lagi.');
+
+        // ==================================
+        // REQUIRED SKILLS
+        // ==================================
+
+        if (
+          Array.isArray(result.required_skills) &&
+          result.required_skills.length > 0
+        ) {
+          document.getElementById(
+            "proj-skills"
+          ).value =
+            result.required_skills.join(", ");
+        }
+
+        // ==================================
+        // ESTIMATED BUDGET
+        // ==================================
+
+        if (result.estimated_stipend != null) {
+          const estimated = Number(
+            result.estimated_stipend
+          );
+
+          if (
+            Number.isFinite(estimated) &&
+            estimated > 0
+          ) {
+            document.getElementById(
+              "proj-budget"
+            ).value = estimated;
+          }
+        }
+
+        // ==================================
+        // TIMELINE
+        // ==================================
+
+        if (result.timeline_weeks) {
+          const weeks = Number(
+            result.timeline_weeks
+          );
+
+          if (
+            Number.isFinite(weeks) &&
+            weeks > 0
+          ) {
+            setDeadlinePreset(
+              Math.round(weeks * 7),
+              null
+            );
+          }
+        }
+
+        // ==================================
+        // DESCRIPTION & DELIVERABLES
+        // ==================================
+
+        let fullDescription =
+          result.description || "";
+
+        if (
+          Array.isArray(result.deliverables) &&
+          result.deliverables.length > 0
+        ) {
+          fullDescription +=
+            "\n\nTarget Luaran / Deliverables:\n";
+
+          fullDescription +=
+            result.deliverables
+              .map(
+                (deliverable, index) =>
+                  `${index + 1}. ${deliverable}`
+              )
+              .join("\n");
+        }
+
+        if (fullDescription.trim()) {
+          document.getElementById(
+            "proj-desc"
+          ).value = fullDescription;
+        }
+
+        // ==================================
+        // SUCCESS
+        // ==================================
+
+        closeAIBriefModal();
+
+        showSuccess(
+          "Project Brief berhasil dirumuskan!"
+        );
+
+        document.getElementById(
+          "proj-title"
+        ).focus();
+
+      } catch (error) {
+        console.error(
+          "[SkillBridge] AI Brief Error:",
+          error
+        );
+
+        showError(
+          error.message ||
+          "Gagal merumuskan brief dengan AI."
+        );
+
       } finally {
         btn.disabled = false;
-        loader.style.display = 'none';
+
+        btn.textContent =
+          "✨ Rumuskan Brief Otomatis";
+
+        loader.style.display = "none";
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      window.SkillBridgeAuth.requireAuth('umkm');
-      const user = window.SkillBridgeAuth.getUser() || {};
-      if (user.company_name || user.name) {
-        document.getElementById('umkm-avatar-circle').textContent = (user.company_name || user.name)[0].toUpperCase();
-      }
+    // ====================================
+    // PAGE INITIALIZATION
+    // ====================================
 
-      // Initialize default deadline
-      setDeadlinePreset(30, document.querySelector('.deadline-chip.active'));
-    });
+    document.addEventListener(
+      "DOMContentLoaded",
+      async function () {
+        try {
+          // Tunggu session Supabase selesai dipulihkan
+          if (
+            typeof window.SkillBridgeAuth?.ready ===
+            "function"
+          ) {
+            await window.SkillBridgeAuth.ready();
+          }
+
+          window.SkillBridgeAuth.requireAuth("umkm");
+
+          const user =
+            window.SkillBridgeAuth.getUser() || {};
+
+          const avatar = document.getElementById(
+            "umkm-avatar-circle"
+          );
+
+          if (
+            avatar &&
+            (user.company_name || user.name)
+          ) {
+            avatar.textContent =
+              (
+                user.company_name ||
+                user.name
+              )[0].toUpperCase();
+          }
+
+          // Default deadline +30 hari
+          setDeadlinePreset(
+            30,
+            document.querySelectorAll(
+              ".deadline-chip"
+            )[1]
+          );
+
+        } catch (error) {
+          console.error(
+            "[SkillBridge] Initialization Error:",
+            error
+          );
+        }
+      }
+    );
+
+    // Close modal by clicking overlay
+    document
+      .getElementById("ai-brief-modal")
+      .addEventListener("click", function (event) {
+        if (event.target === this) {
+          closeAIBriefModal();
+        }
+      });
+
+    // Close modal using ESC
+    document.addEventListener(
+      "keydown",
+      function (event) {
+        if (event.key === "Escape") {
+          closeAIBriefModal();
+        }
+      }
+    );
   </script>
+
 </body>
 </html>
