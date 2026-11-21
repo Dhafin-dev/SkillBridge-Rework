@@ -1,98 +1,165 @@
-/**
- * SkillBridge Rework — Real-time Workspace Chat (chat.js)
- *
- * Memakai Supabase Realtime. Tidak ada fallback localStorage untuk isi pesan;
- * riwayat selalu dibaca dari tabel public.messages melalui data layer.
- */
 
+/**
+ * SkillBridge — Conversation Chat Service
+ * frontend/assets/js/chat.js
+ *
+ * New messages: public.conversation_messages
+ * Legacy Workspace messages are not deleted.
+ */
 (function () {
+  "use strict";
+
   class SkillBridgeChatService {
     constructor() {
+      this.conversationId = null;
       this.channel = null;
-      this.subscribers = new Set();
-      this.workspaceId = null;
+      this.listeners = new Set();
+      this.version = 0;
       this.isRealtimeConnected = false;
     }
 
-    setWorkspace(workspaceId) {
-      if (!workspaceId || workspaceId === this.workspaceId) return;
-      this.workspaceId = workspaceId;
+    get client() {
+      const client = window.supabaseClient;
+      if (!client) throw new Error("Supabase belum tersedia.");
+      return client;
+    }
+
+    setConversation(id) {
+      const next = id ? String(id) : null;
+
+      if (next === this.conversationId) return;
+
       this.unsubscribe();
-      this.subscribe();
+      this.conversationId = next;
+
+      if (next) this.subscribe();
     }
 
     subscribe() {
-      const client = window.supabaseClient;
-      if (!client || !this.workspaceId) return;
+      if (!this.conversationId) return;
 
-      try {
-        this.channel = client
-          .channel(`skillbridge-workspace-${this.workspaceId}`)
-          .on(
-            'postgres_changes',
-            {
-              event: 'INSERT',
-              schema: 'public',
-              table: 'messages',
-              filter: `workspace_id=eq.${this.workspaceId}`
-            },
-            payload => {
-              this.notifySubscribers(payload.new);
+      const id = this.conversationId;
+      const version = ++this.version;
+
+      this.channel = this.client
+        .channel("sb-conversation-" + id + "-" + version)
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "conversation_messages",
+            filter: "conversation_id=eq." + id
+          },
+          payload => {
+            if (
+              this.version === version &&
+              this.conversationId === id
+            ) {
+              this.listeners.forEach(callback => {
+                try {
+                  callback(payload.new);
+                } catch (error) {
+                  console.error("[Chat Listener]", error);
+                }
+              });
             }
-          )
-          .subscribe(status => {
-            this.isRealtimeConnected = status === 'SUBSCRIBED';
-            if (this.isRealtimeConnected) {
-              console.log('[RealtimeChat] Terhubung ke channel workspace:', this.workspaceId);
-            }
-          });
-      } catch (error) {
-        console.warn('[RealtimeChat] Gagal berlangganan Realtime:', error);
-      }
+          }
+        )
+        .subscribe(status => {
+          if (this.version !== version) return;
+
+          this.isRealtimeConnected =
+            status === "SUBSCRIBED";
+        });
     }
 
     unsubscribe() {
+      this.version++;
+
       if (this.channel && window.supabaseClient) {
-        try {
-          window.supabaseClient.removeChannel(this.channel);
-        } catch (error) {
-          console.warn('[RealtimeChat] Gagal melepas channel:', error);
-        }
+        window.supabaseClient
+          .removeChannel(this.channel);
       }
+
       this.channel = null;
       this.isRealtimeConnected = false;
     }
 
     onMessage(callback) {
-      if (typeof callback === 'function') this.subscribers.add(callback);
-      return () => this.subscribers.delete(callback);
+      if (typeof callback !== "function") {
+        return () => {};
+      }
+
+      this.listeners.add(callback);
+
+      return () => this.listeners.delete(callback);
     }
 
-    notifySubscribers(message) {
-      this.subscribers.forEach(callback => {
-        try {
-          callback(message);
-        } catch (error) {
-          console.error('[RealtimeChat] Subscriber error:', error);
-        }
-      });
-    }
+    async getHistory(conversationId = this.conversationId) {
+      if (!conversationId) return [];
 
-    async getHistory() {
-      if (!this.workspaceId) return [];
-      return window.SkillBridgeDB.getMessages(this.workspaceId);
+      const { data, error } = await this.client
+        .from("conversation_messages")
+        .select("id,conversation_id,sender_id,content,created_at")
+        .eq("conversation_id", conversationId)
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+
+      return data || [];
     }
 
     async postMessage(content) {
-      if (!this.workspaceId) throw new Error('Workspace belum dipilih.');
-      const saved = await window.SkillBridgeDB.sendMessage({
-        workspace_id: this.workspaceId,
-        content
-      });
-      this.notifySubscribers(saved);
-      return saved;
+      if (!this.conversationId) {
+        throw new Error("Pilih percakapan terlebih dahulu.");
+      }
+
+      const value = String(content || "").trim();
+
+      if (!value) throw new Error("Pesan tidak boleh kosong.");
+
+      if (value.length > 4000) {
+        throw new Error("Pesan maksimal 4000 karakter.");
+      }
+
+      const { data: sessionData, error: sessionError } =
+        await this.client.auth.getUser();
+
+      if (sessionError) throw sessionError;
+
+      const userId = sessionData?.user?.id;
+
+      if (!userId) {
+        throw new Error("Sesi login tidak ditemukan.");
+      }
+
+      const { data, error } = await this.client
+        .from("conversation_messages")
+        .insert({
+          conversation_id: this.conversationId,
+          sender_id: userId,
+          content: value
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+    }
+
+    destroy() {
+      this.unsubscribe();
+      this.conversationId = null;
+      this.listeners.clear();
     }
   }
 
-  window.SkillBridgeChat = new SkillBridgeChatService();
+  if (window.SkillBridgeChat) {
+    window.SkillBridgeChat.destroy?.();
+  }
+
+  window.SkillBridgeChat =
+    new SkillBridgeChatService();
 })();

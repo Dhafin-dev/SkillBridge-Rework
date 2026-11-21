@@ -1,137 +1,642 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Workspace — SkillBridge</title>
+
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+
   <style>
-    .ws-wrap{max-width:1250px;margin:auto}.ws-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:25px}
-    .ws-heading-left{display:flex;align-items:center;gap:15px}.ws-heading h1{font-size:27px;font-weight:800;color:#0f172a;margin:4px 0}
-    .ws-back{display:grid;place-items:center;width:42px;height:42px;border:1px solid #e2e8f0;border-radius:50%;background:#fff;color:#64748b;text-decoration:none;font-size:25px}
-    .ws-card{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:25px;margin-bottom:22px;box-shadow:0 1px 4px #0f172a08}
-    .ws-card h2{font-size:19px;font-weight:800;color:#0f172a;margin:0 0 18px}.ws-muted{font-size:13px;color:#64748b;line-height:1.7}
-    .ws-label{font-size:11px;font-weight:800;color:#94a3b8;letter-spacing:.5px}.ws-parties{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:19px;padding-bottom:19px;border-bottom:1px solid #f1f5f9}
-    .ws-party{display:flex;gap:13px;align-items:center}.ws-avatar{width:50px;height:50px;display:grid;place-items:center;flex-shrink:0;border-radius:14px;background:#eff6ff;color:#2563eb;font-weight:800;font-size:20px}
-    .ws-party-name{font-weight:800;font-size:16px;color:#0f172a;margin:4px 0}.ws-meta{display:flex;gap:22px;flex-wrap:wrap;color:#64748b;font-size:13px}
-    .ws-status{display:inline-flex;align-items:center;padding:8px 13px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:800}
-    .ws-status.submitted{background:#fffbeb;color:#b45309}.ws-status.revision_requested{background:#fef2f2;color:#b91c1c}.ws-status.approved{background:#ecfdf5;color:#15803d}
-    .ws-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #2563eb;border-radius:11px;padding:12px 18px;background:#2563eb;color:#fff;cursor:pointer;font-size:13px;font-weight:800}
-    .ws-button.secondary{background:#fff;color:#2563eb}.ws-button.danger{background:#fff;border-color:#fca5a5;color:#dc2626}.ws-button:disabled{opacity:.45;cursor:not-allowed}
-    .ws-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}.ws-card-head h2{margin:0}
-    .ws-asset{padding:17px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc;margin-bottom:11px;overflow-wrap:anywhere}
-    .ws-asset-title{font-size:14px;font-weight:800;color:#0f172a}.ws-asset a{display:inline-block;margin-top:8px;font-size:13px;color:#2563eb;text-decoration:none;font-weight:700}
-    .ws-asset p{font-size:12px;color:#64748b;white-space:pre-wrap;margin:9px 0}.ws-asset small{font-size:11px;color:#94a3b8}
-    .ws-action-row{display:flex;flex-wrap:wrap;gap:11px;margin-top:20px}.ws-note{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;color:#9a3412;font-size:13px;line-height:1.7;white-space:pre-wrap;margin:15px 0}
-    .ws-empty{text-align:center;color:#94a3b8;padding:30px 12px;font-size:13px}.ws-alert{display:none;padding:15px;border-radius:12px;border:1px solid #fecaca;background:#fef2f2;color:#b91c1c;font-size:13px;margin-bottom:20px;white-space:pre-wrap}
-    .ws-alert.success{border-color:#bbf7d0;background:#f0fdf4;color:#166534}
-    .ws-modal{display:none;position:fixed;inset:0;z-index:2000;background:#0f172a99;align-items:center;justify-content:center;padding:18px}
-    .ws-modal.open{display:flex}.ws-modal-card{width:min(100%,520px);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;padding:25px}
-    .ws-field{margin-bottom:16px}.ws-field label{display:block;font-size:12px;font-weight:800;color:#334155;margin-bottom:7px}
-    .ws-field input,.ws-field select,.ws-field textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;font-size:13px;background:#fff;color:#0f172a}
-    .ws-field textarea{min-height:100px;resize:vertical}.ws-modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:15px}
-    .ws-chat-overlay{display:none;position:fixed;inset:0;background:#0f172a70;z-index:1998}.ws-chat-overlay.open{display:block}
-    .ws-chat{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100vh;z-index:1999;background:#fff;box-shadow:-5px 0 25px #0002;display:flex;flex-direction:column;transition:right .25s}
-    .ws-chat.open{right:0}.ws-chat-header{padding:19px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between}
-    .ws-chat-messages{flex:1;min-height:0;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
-    .ws-bubble{max-width:85%;border-radius:15px;padding:12px 15px;background:#f1f5f9;color:#0f172a;align-self:flex-start;overflow-wrap:anywhere}
-    .ws-bubble.mine{background:#2563eb;color:#fff;align-self:flex-end}.ws-chat-form{padding:15px;border-top:1px solid #e2e8f0;display:flex;gap:8px}
-    .ws-chat-form input{flex:1;min-width:0}.ws-revision-form{margin-top:17px}.ws-revision-form textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:11px;min-height:100px;resize:vertical;font:inherit;font-size:13px}
-    @media(max-width:700px){.ws-parties{grid-template-columns:1fr}.ws-card{padding:18px}.ws-chat{right:-100%;width:100%}.ws-heading h1{font-size:22px}}
+    .ws-wrap {
+      max-width: 1250px;
+      margin: auto;
+    }
+
+    .ws-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .ws-heading-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .ws-heading h1 {
+      font-size: 27px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 4px 0;
+    }
+
+    .ws-back {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid #e2e8f0;
+      border-radius: 50%;
+      background: white;
+      color: #64748b;
+      text-decoration: none;
+      font-size: 25px;
+    }
+
+    .ws-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      letter-spacing: .5px;
+    }
+
+    .ws-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 22px;
+      box-shadow: 0 1px 4px #0f172a08;
+    }
+
+    .ws-card h2 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 18px;
+    }
+
+    .ws-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .ws-card-head h2 {
+      margin: 0;
+    }
+
+    .ws-muted {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    .ws-parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 19px;
+      padding-bottom: 19px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .ws-party {
+      display: flex;
+      gap: 13px;
+      align-items: center;
+    }
+
+    .ws-avatar {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 14px;
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .ws-party-name {
+      font-weight: 800;
+      font-size: 16px;
+      color: #0f172a;
+      margin: 4px 0;
+    }
+
+    .ws-meta {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .ws-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid #2563eb;
+      border-radius: 11px;
+      padding: 12px 18px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .ws-button.secondary {
+      background: white;
+      color: #2563eb;
+    }
+
+    .ws-button.danger {
+      background: white;
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+
+    .ws-button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .ws-asset {
+      padding: 17px;
+      border: 1px solid #e2e8f0;
+      border-radius: 13px;
+      background: #f8fafc;
+      margin-bottom: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .ws-asset-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .ws-asset a {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #2563eb;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .ws-asset p {
+      font-size: 12px;
+      color: #64748b;
+      white-space: pre-wrap;
+      margin: 9px 0;
+    }
+
+    .ws-asset small {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .ws-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+      margin-top: 20px;
+    }
+
+    .ws-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ws-status.submitted {
+      background: #fffbeb;
+      color: #b45309;
+    }
+
+    .ws-status.revision_requested {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    .ws-status.approved {
+      background: #ecfdf5;
+      color: #15803d;
+    }
+
+    .ws-note {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      padding: 16px;
+      color: #9a3412;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      margin: 15px 0;
+    }
+
+    .ws-empty {
+      text-align: center;
+      color: #94a3b8;
+      padding: 30px 12px;
+      font-size: 13px;
+    }
+
+    .ws-alert {
+      display: none;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      color: #b91c1c;
+      font-size: 13px;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+
+    .ws-alert.success {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .ws-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: #0f172a99;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .ws-modal.open {
+      display: flex;
+    }
+
+    .ws-modal-card {
+      width: min(100%, 520px);
+      max-height: 90vh;
+      overflow: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+    }
+
+    .ws-field {
+      margin-bottom: 16px;
+    }
+
+    .ws-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 7px;
+    }
+
+    .ws-field input,
+    .ws-field select,
+    .ws-field textarea,
+    .ws-revision-form textarea {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 13px;
+      background: white;
+      color: #0f172a;
+    }
+
+    .ws-field textarea,
+    .ws-revision-form textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .ws-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .ws-revision-form {
+      margin-top: 17px;
+    }
+
+    .ws-revision-form .ws-button {
+      margin-top: 12px;
+    }
+
+    @media(max-width:700px) {
+      .ws-parties {
+        grid-template-columns: 1fr;
+      }
+
+      .ws-card {
+        padding: 18px;
+      }
+
+      .ws-heading h1 {
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
+
 <body class="dashboard-body">
+
   <div class="dashboard-layout">
-    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
+
+    <aside
+      class="dashboard-sidebar"
+      id="shared-sidebar">
+    </aside>
 
     <main class="dashboard-main">
-      <header class="dashboard-topbar" id="shared-topbar"></header>
+
+      <header
+        class="dashboard-topbar"
+        id="shared-topbar">
+      </header>
 
       <div class="dashboard-canvas">
         <div class="ws-wrap">
-          <div class="ws-alert" id="ws-alert" role="alert"></div>
 
-          <div class="ws-heading">
-            <div class="ws-heading-left">
-              <a href="my-projects.html" class="ws-back" id="ws-back">‹</a>
-              <div>
-                <div class="ws-label" style="color:#2563eb">COLLABORATION WORKSPACE</div>
-                <h1 id="ws-title">Memuat proyek...</h1>
-              </div>
-            </div>
-            <button type="button" class="ws-button secondary" id="ws-open-chat">Open Chat</button>
+          <div
+            class="ws-alert"
+            id="ws-alert"
+            role="alert">
           </div>
 
+          <!-- HEADING -->
+          <div class="ws-heading">
+
+            <div class="ws-heading-left">
+
+              <a
+                href="my-projects.html"
+                class="ws-back"
+                id="ws-back">
+                ‹
+              </a>
+
+              <div>
+                <div
+                  class="ws-label"
+                  style="color:#2563eb">
+                  COLLABORATION WORKSPACE
+                </div>
+
+                <h1 id="ws-title">
+                  Memuat proyek...
+                </h1>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="ws-button secondary"
+              id="ws-open-chat">
+              Open Chat
+            </button>
+
+          </div>
+
+          <!-- PROJECT INFORMATION -->
           <section class="ws-card">
+
             <div class="ws-parties">
+
               <div class="ws-party">
                 <div class="ws-avatar">🏢</div>
-                <div><div class="ws-label">BUSINESS CLIENT</div><div class="ws-party-name" id="ws-umkm">Memuat UMKM...</div><div class="ws-muted">Mitra UMKM</div></div>
+
+                <div>
+                  <div class="ws-label">
+                    BUSINESS CLIENT
+                  </div>
+
+                  <div
+                    class="ws-party-name"
+                    id="ws-umkm">
+                    Memuat UMKM...
+                  </div>
+
+                  <div class="ws-muted">
+                    Mitra UMKM
+                  </div>
+                </div>
               </div>
+
               <div class="ws-party">
-                <div class="ws-avatar" id="ws-student-avatar">S</div>
-                <div><div class="ws-label">STUDENT TALENT</div><div class="ws-party-name" id="ws-student">Memuat mahasiswa...</div><div class="ws-muted" id="ws-university">-</div></div>
+                <div
+                  class="ws-avatar"
+                  id="ws-student-avatar">
+                  S
+                </div>
+
+                <div>
+                  <div class="ws-label">
+                    STUDENT TALENT
+                  </div>
+
+                  <div
+                    class="ws-party-name"
+                    id="ws-student">
+                    Memuat mahasiswa...
+                  </div>
+
+                  <div
+                    class="ws-muted"
+                    id="ws-university">
+                    -
+                  </div>
+                </div>
               </div>
+
             </div>
+
             <div class="ws-meta">
-              <span id="ws-start">📅 -</span><span id="ws-budget">💰 -</span><span id="ws-meta-status">📋 -</span>
+              <span id="ws-start">📅 -</span>
+              <span id="ws-budget">💰 -</span>
+              <span id="ws-meta-status">📋 -</span>
             </div>
+
           </section>
 
+          <!-- DELIVERABLES -->
           <section class="ws-card">
+
             <div class="ws-card-head">
               <h2>Project Deliverables</h2>
-              <button type="button" id="ws-add-link" class="ws-button">+ Add Deliverable</button>
+
+              <button
+                type="button"
+                id="ws-add-link"
+                class="ws-button">
+                + Add Deliverable
+              </button>
             </div>
-            <p class="ws-muted">Tambahkan hasil pekerjaan berupa tautan Figma, Google Drive, GitHub, dokumen, atau website sesuai kebutuhan proyek.</p>
-            <div id="ws-deliverables"><div class="ws-empty">Memuat deliverables...</div></div>
+
+            <p class="ws-muted">
+              Tambahkan hasil pekerjaan berupa tautan
+              Figma, Google Drive, GitHub, dokumen,
+              atau website sesuai kebutuhan proyek.
+            </p>
+
+            <div id="ws-deliverables">
+              <div class="ws-empty">
+                Memuat deliverables...
+              </div>
+            </div>
+
           </section>
 
+          <!-- COMPLETION -->
           <section class="ws-card">
-            <h2 id="ws-review-heading">Project Completion</h2>
-            <div id="ws-review"><p class="ws-muted">Memuat status...</p></div>
+
+            <h2 id="ws-review-heading">
+              Project Completion
+            </h2>
+
+            <div id="ws-review">
+              <p class="ws-muted">
+                Memuat status...
+              </p>
+            </div>
+
           </section>
+
         </div>
       </div>
+
     </main>
   </div>
 
-  <div id="ws-chat-overlay" class="ws-chat-overlay"></div>
-  <aside class="ws-chat" id="ws-chat">
-    <div class="ws-chat-header">
-      <div><strong>Workspace Chat</strong><div class="ws-muted" id="ws-chat-participants">-</div></div>
-      <button type="button" id="ws-close-chat" style="background:none;border:0;font-size:25px;cursor:pointer">×</button>
-    </div>
-    <div class="ws-chat-messages" id="ws-chat-messages"></div>
-    <form id="ws-chat-form" class="ws-chat-form">
-      <input class="form-input" id="ws-chat-input" type="text" placeholder="Type a message..." required>
-      <button class="ws-button" type="submit" id="ws-send">Send</button>
-    </form>
-  </aside>
+  <!-- ADD DELIVERABLE MODAL -->
+  <div
+    id="ws-deliverable-modal"
+    class="ws-modal">
 
-  <div id="ws-deliverable-modal" class="ws-modal">
     <div class="ws-modal-card">
-      <div class="ws-card-head"><h2>Add Deliverable</h2><button type="button" id="ws-close-modal" style="background:none;border:0;font-size:25px;cursor:pointer">×</button></div>
+
+      <div class="ws-card-head">
+        <h2>Add Deliverable</h2>
+
+        <button
+          type="button"
+          id="ws-close-modal"
+          style="background:none;border:0;font-size:25px;cursor:pointer">
+          ×
+        </button>
+      </div>
+
       <form id="ws-deliverable-form">
+
         <div class="ws-field">
-          <label for="ws-deliverable-type">Jenis Hasil Pekerjaan</label>
+          <label for="ws-deliverable-type">
+            Jenis Hasil Pekerjaan
+          </label>
+
           <select id="ws-deliverable-type">
-            <option value="design">Design / Figma</option><option value="document">Document / Drive</option>
-            <option value="repository">Source Code / GitHub</option><option value="link">Website / Other Link</option>
-            <option value="file">Other File Link</option>
+            <option value="design">
+              Design / Figma
+            </option>
+
+            <option value="document">
+              Document / Drive
+            </option>
+
+            <option value="repository">
+              Source Code / GitHub
+            </option>
+
+            <option value="link">
+              Website / Other Link
+            </option>
+
+            <option value="file">
+              Other File Link
+            </option>
           </select>
         </div>
-        <div class="ws-field"><label for="ws-deliverable-title">Judul Deliverable</label><input id="ws-deliverable-title" required placeholder="Contoh: Hasil desain final"></div>
-        <div class="ws-field"><label for="ws-deliverable-url">Link Hasil Pekerjaan</label><input id="ws-deliverable-url" type="url" required placeholder="https://..."></div>
-        <div class="ws-field"><label for="ws-deliverable-notes">Catatan (Opsional)</label><textarea id="ws-deliverable-notes" placeholder="Penjelasan singkat hasil pekerjaan..."></textarea></div>
-        <div class="ws-modal-actions">
-          <button type="button" class="ws-button secondary" id="ws-cancel-modal">Cancel</button>
-          <button type="submit" class="ws-button" id="ws-save-link">Save Deliverable</button>
+
+        <div class="ws-field">
+          <label for="ws-deliverable-title">
+            Judul Deliverable
+          </label>
+
+          <input
+            id="ws-deliverable-title"
+            required
+            placeholder="Contoh: Hasil desain final">
         </div>
+
+        <div class="ws-field">
+          <label for="ws-deliverable-url">
+            Link Hasil Pekerjaan
+          </label>
+
+          <input
+            id="ws-deliverable-url"
+            type="url"
+            required
+            placeholder="https://...">
+        </div>
+
+        <div class="ws-field">
+          <label for="ws-deliverable-notes">
+            Catatan (Opsional)
+          </label>
+
+          <textarea
+            id="ws-deliverable-notes"
+            placeholder="Penjelasan singkat hasil pekerjaan..."></textarea>
+        </div>
+
+        <div class="ws-modal-actions">
+
+          <button
+            type="button"
+            class="ws-button secondary"
+            id="ws-cancel-modal">
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="ws-button"
+            id="ws-save-link">
+            Save Deliverable
+          </button>
+
+        </div>
+
       </form>
     </div>
   </div>
+
+  <!-- DEPENDENCIES -->
   <script src="../../assets/vendor/supabase.js"></script>
   <script src="../../assets/js/config.js"></script>
   <script src="../../assets/js/supabase.js"></script>
@@ -139,289 +644,888 @@
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/database.js"></script>
   <script src="../../assets/js/settings.js"></script>
+  <script src="../../assets/js/layout.js"></script>
 
-    <script src="../../assets/js/layout.js"></script>
-<script>
+  <script>
     "use strict";
-    const db = window.supabaseClient, auth = window.SkillBridgeAuth, skillDB = window.SkillBridgeDB;
+
+    const db = window.supabaseClient;
+    const auth = window.SkillBridgeAuth;
+
     const $ = id => document.getElementById(id);
-    const params = new URLSearchParams(location.search), workspaceId = params.get("id") || params.get("workspace_id");
-    let user = null, workspace = null, deliverables = [], busy = false, sending = false;
 
-    const check = result => { if (result.error) throw result.error; return result.data; };
-    const text = (id, value) => { const node = $(id); if (node) node.textContent = String(value ?? ""); };
-    const student = () => user?.id === workspace?.student_id;
-    const umkm = () => user?.id === workspace?.umkm_id;
-    const state = () => workspace?.review_state || "working";
-    const editable = () => workspace?.status === "active" && ["working","revision_requested"].includes(state());
-    const validUrl = value => { try { const u = new URL(value); return ["http:","https:"].includes(u.protocol) ? u.href : null; } catch { return null; } };
-    const formatDate = value => { if (!value) return "-"; const d = new Date(String(value).length === 10 ? value + "T00:00:00" : value); return isNaN(d.getTime()) ? "-" : d.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"}); };
-    const formatMoney = value => value == null ? "Budget tidak tersedia" : "Rp " + Number(value).toLocaleString("id-ID");
+    const params = new URLSearchParams(location.search);
 
-    function alertMessage(message, success = false) {
-      const box = $("ws-alert"); box.className = success ? "ws-alert success" : "ws-alert"; box.textContent = message; box.style.display = "block";
-      box.scrollIntoView({behavior:"smooth",block:"nearest"});
+    const workspaceId =
+      params.get("id") || params.get("workspace_id");
+
+    let user = null;
+    let workspace = null;
+    let deliverables = [];
+    let busy = false;
+
+    function check(result) {
+      if (result.error) throw result.error;
+      return result.data;
     }
-    function node(tag, value, className = "") {
-      const item = document.createElement(tag); item.textContent = String(value ?? ""); if (className) item.className = className; return item;
+
+    function text(id, value) {
+      const element = $(id);
+      if (element) element.textContent = String(value ?? "");
     }
-    function button(label, handler, kind = "") {
-      const item = node("button",label,"ws-button " + kind); item.type = "button"; item.disabled = busy; item.addEventListener("click",handler); return item;
+
+    function isStudent() {
+      return user?.id === workspace?.student_id;
     }
+
+    function isUMKM() {
+      return user?.id === workspace?.umkm_id;
+    }
+
+    function reviewState() {
+      return workspace?.review_state || "working";
+    }
+
+    function editable() {
+      return workspace?.status === "active" &&
+        ["working", "revision_requested"].includes(reviewState());
+    }
+
+    function validURL(value) {
+      try {
+        const url = new URL(value);
+
+        return ["http:", "https:"].includes(url.protocol)
+          ? url.href
+          : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+
+      const date = new Date(
+        String(value).length === 10
+          ? value + "T00:00:00"
+          : value
+      );
+
+      return isNaN(date.getTime())
+        ? "-"
+        : date.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          });
+    }
+
+    function formatMoney(value) {
+      return value == null
+        ? "Budget tidak tersedia"
+        : "Rp " + Number(value).toLocaleString("id-ID");
+    }
+
+    function showAlert(message, success = false) {
+      const box = $("ws-alert");
+
+      box.className = success
+        ? "ws-alert success"
+        : "ws-alert";
+
+      box.textContent = message;
+      box.style.display = "block";
+
+      box.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
+
+    function makeNode(tag, value, className = "") {
+      const element = document.createElement(tag);
+      element.textContent = String(value ?? "");
+
+      if (className) element.className = className;
+
+      return element;
+    }
+
+    function makeButton(label, handler, kind = "") {
+      const element = makeNode(
+        "button",
+        label,
+        "ws-button " + kind
+      );
+
+      element.type = "button";
+      element.disabled = busy;
+      element.addEventListener("click", handler);
+
+      return element;
+    }
+
+    /* =====================================
+       LOAD WORKSPACE
+    ===================================== */
 
     async function loadState() {
-      const current = check(await db.from("workspaces").select("id,status,review_state,revision_note,submitted_at,approved_at").eq("id",workspace.id).single());
-      Object.assign(workspace,current);
+      const current = check(
+        await db
+          .from("workspaces")
+          .select(
+            "id,status,review_state,revision_note,submitted_at,approved_at"
+          )
+          .eq("id", workspace.id)
+          .single()
+      );
+
+      Object.assign(workspace, current);
     }
+
     async function loadDeliverables() {
-      deliverables = check(await db.from("workspace_deliverables").select("*").eq("workspace_id",workspace.id).order("created_at",{ascending:false})) || [];
+      deliverables = check(
+        await db
+          .from("workspace_deliverables")
+          .select("*")
+          .eq("workspace_id", workspace.id)
+          .order("created_at", {
+            ascending: false
+          })
+      ) || [];
     }
-    async function refresh() {
-      await loadState(); await loadDeliverables(); render();
+
+    async function refreshWorkspace() {
+      await loadState();
+      await loadDeliverables();
+      render();
     }
 
     async function initialize() {
-      if (!db || !auth) throw new Error("Koneksi database atau Auth belum tersedia.");
-      if (!workspaceId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(workspaceId)) {
-        throw new Error("ID workspace tidak valid. Buka workspace melalui My Projects.");
+      if (!db || !auth) {
+        throw new Error(
+          "Koneksi database atau Auth belum tersedia."
+        );
       }
+
+      if (
+        !workspaceId ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(workspaceId)
+      ) {
+        throw new Error(
+          "ID workspace tidak valid. Buka Workspace melalui My Projects."
+        );
+      }
+
       await auth.ready();
-      user = await auth.requireAuth(["student","umkm"]);
+
+      user = await auth.requireAuth(["student", "umkm"]);
+
       if (!user) return;
+
       user = auth.getUser();
-      const details = check(await db.from("workspaces_with_details").select("*").eq("id",workspaceId).maybeSingle());
-      if (!details || ![details.student_id,details.umkm_id].includes(user.id)) throw new Error("Workspace tidak ditemukan atau kamu tidak memiliki akses.");
+
+      const details = check(
+        await db
+          .from("workspaces_with_details")
+          .select("*")
+          .eq("id", workspaceId)
+          .maybeSingle()
+      );
+
+      if (
+        !details ||
+        ![details.student_id, details.umkm_id].includes(user.id)
+      ) {
+        throw new Error(
+          "Workspace tidak ditemukan atau kamu tidak memiliki akses."
+        );
+      }
+
       workspace = details;
+
       await loadState();
       await loadDeliverables();
-      text("ws-title",workspace.project_title || "Proyek");
-      text("ws-umkm",workspace.umkm_name || "Nama UMKM belum tersedia");
-      text("ws-student",workspace.student_name || "Mahasiswa");
-      text("ws-student-avatar",(workspace.student_name || "S").charAt(0).toUpperCase());
-      text("ws-university",workspace.student_university || "Universitas belum tersedia");
-      text("ws-avatar",(user.name || "U").charAt(0).toUpperCase());
-      text("ws-start","📅 " + formatDate(workspace.started_at));
-      text("ws-budget","💰 " + formatMoney(workspace.budget));
-      text("ws-chat-participants",(workspace.umkm_name || "UMKM") + " × " + (workspace.student_name || "Mahasiswa"));
-      document.title = (workspace.project_title || "Workspace") + " — SkillBridge";
-      if (umkm()) renderUMKMNavigation();
+
+      text(
+        "ws-title",
+        workspace.project_title || "Proyek"
+      );
+
+      text(
+        "ws-umkm",
+        workspace.umkm_name || "Nama UMKM belum tersedia"
+      );
+
+      text(
+        "ws-student",
+        workspace.student_name || "Mahasiswa"
+      );
+
+      text(
+        "ws-student-avatar",
+        (workspace.student_name || "S")
+          .charAt(0)
+          .toUpperCase()
+      );
+
+      text(
+        "ws-university",
+        workspace.student_university ||
+          "Universitas belum tersedia"
+      );
+
+      text(
+        "ws-start",
+        "📅 " + formatDate(workspace.started_at)
+      );
+
+      text(
+        "ws-budget",
+        "💰 " + formatMoney(workspace.budget)
+      );
+
+      document.title =
+        (workspace.project_title || "Workspace") +
+        " — SkillBridge";
+
+      // UMKM memakai halaman Workspace yang sama
+      // tetapi tombol Back menuju My Projects UMKM.
+      if (isUMKM()) {
+        $("ws-back").href = "../umkm/my-projects.html";
+      }
+
       render();
-      if (params.get("chat") === "1") toggleChat(true);
     }
 
-    function renderUMKMNavigation() {
-      $("ws-back").href = "../umkm/my-projects.html";
-      const sidebar = $("ws-sidebar-nav"); sidebar.replaceChildren();
-      sidebar.appendChild(node("div","UMKM MENU","sidebar-section-title"));
-      const links = [
-        ["Dashboard","../umkm/dashboard.html"],
-        ["Talent Search","../umkm/talent-search.html"],
-        ["Projects","../umkm/my-projects.html"],
-        ["Messages","#"],
-        ["Profile","../umkm/profile.html"]
-      ];
-      for (const [label,href] of links) {
-        const a = node("a",label,"sidebar-item" + (label === "Projects" ? " active" : ""));
-        a.href = href;
-        if (label === "Messages") a.addEventListener("click",e => { e.preventDefault(); toggleChat(true); });
-        sidebar.appendChild(a);
-      }
-    }
+    /* =====================================
+       RENDER
+    ===================================== */
 
     function render() {
-      const s = state(), completed = workspace.status === "completed" || s === "approved";
-      text("ws-meta-status","📋 " + (completed ? "Completed" : s === "submitted" ? "Waiting for Review" : s === "revision_requested" ? "Revision Requested" : "In Progress"));
-      $("ws-add-link").disabled = !student() || !editable() || busy;
-      $("ws-chat-input").disabled = workspace.status === "cancelled";
-      $("ws-send").disabled = workspace.status === "cancelled";
+      if (!workspace) return;
+
+      const state = reviewState();
+
+      const completed =
+        workspace.status === "completed" ||
+        state === "approved";
+
+      const statusText = completed
+        ? "Completed"
+        : state === "submitted"
+          ? "Waiting for Review"
+          : state === "revision_requested"
+            ? "Revision Requested"
+            : "In Progress";
+
+      text("ws-meta-status", "📋 " + statusText);
+
+      $("ws-add-link").disabled =
+        !isStudent() || !editable() || busy;
+
       renderDeliverables();
       renderReview();
     }
 
     function renderDeliverables() {
-      const root = $("ws-deliverables"); root.replaceChildren();
-      if (!deliverables.length) { root.appendChild(node("p","Belum ada deliverable. Tambahkan hasil pekerjaan untuk dikirim ke UMKM.","ws-empty")); return; }
+      const root = $("ws-deliverables");
+
+      root.replaceChildren();
+
+      if (!deliverables.length) {
+        root.appendChild(
+          makeNode(
+            "p",
+            "Belum ada deliverable. Tambahkan hasil pekerjaan untuk dikirim ke UMKM.",
+            "ws-empty"
+          )
+        );
+        return;
+      }
+
       for (const item of deliverables) {
-        const card = document.createElement("div"); card.className = "ws-asset";
-        card.appendChild(node("div",item.title || "Deliverable","ws-asset-title"));
-        card.appendChild(node("small",item.type || "link"));
-        const url = validUrl(item.url);
+        const card = document.createElement("div");
+        card.className = "ws-asset";
+
+        card.appendChild(
+          makeNode(
+            "div",
+            item.title || "Deliverable",
+            "ws-asset-title"
+          )
+        );
+
+        card.appendChild(
+          makeNode(
+            "small",
+            item.type || "link"
+          )
+        );
+
+        const url = validURL(item.url);
+
         if (url) {
-          const a = node("a","Buka hasil pekerjaan ↗"); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.style.display = "block"; card.appendChild(a);
+          const link = makeNode(
+            "a",
+            "Buka hasil pekerjaan ↗"
+          );
+
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.style.display = "block";
+
+          card.appendChild(link);
         }
-        if (item.notes) card.appendChild(node("p",item.notes));
-        if (student() && editable() && item.submitted_by === user.id) {
-          const remove = button("Hapus",() => deleteDeliverable(item.id),"danger"); remove.style.marginTop = "10px"; card.appendChild(remove);
+
+        if (item.notes) {
+          card.appendChild(
+            makeNode("p", item.notes)
+          );
         }
+
+        if (
+          isStudent() &&
+          editable() &&
+          item.submitted_by === user.id
+        ) {
+          const remove = makeButton(
+            "Hapus",
+            () => deleteDeliverable(item.id),
+            "danger"
+          );
+
+          remove.style.marginTop = "10px";
+
+          card.appendChild(remove);
+        }
+
         root.appendChild(card);
       }
     }
 
     function renderReview() {
-      const root = $("ws-review"); root.replaceChildren();
-      text("ws-review-heading",student() ? "Project Completion" : "Project Verification");
-      const s = state(), completed = workspace.status === "completed" || s === "approved";
-      const badge = node("span","","ws-status" + (completed ? " approved" : s === "submitted" ? " submitted" : s === "revision_requested" ? " revision_requested" : ""));
-      badge.textContent = completed ? "✓ Completed" : s === "submitted" ? "⏳ Waiting for UMKM Review" : s === "revision_requested" ? "↩ Revision Requested" : "● In Progress";
+      const root = $("ws-review");
+      root.replaceChildren();
+
+      text(
+        "ws-review-heading",
+        isStudent()
+          ? "Project Completion"
+          : "Project Verification"
+      );
+
+      const state = reviewState();
+
+      const completed =
+        workspace.status === "completed" ||
+        state === "approved";
+
+      const badge = makeNode(
+        "span",
+        "",
+        "ws-status" +
+        (completed
+          ? " approved"
+          : state === "submitted"
+            ? " submitted"
+            : state === "revision_requested"
+              ? " revision_requested"
+              : "")
+      );
+
+      badge.textContent = completed
+        ? "✓ Completed"
+        : state === "submitted"
+          ? "⏳ Waiting for UMKM Review"
+          : state === "revision_requested"
+            ? "↩ Revision Requested"
+            : "● In Progress";
+
       root.appendChild(badge);
 
       if (completed) {
-        root.appendChild(node("p","Proyek telah disetujui oleh UMKM dan resmi dinyatakan selesai.","ws-muted"));
+        root.appendChild(
+          makeNode(
+            "p",
+            "Proyek telah disetujui oleh UMKM dan resmi dinyatakan selesai.",
+            "ws-muted"
+          )
+        );
         return;
       }
-      if (s === "submitted") {
-        root.appendChild(node("p",student() ? "Hasil pekerjaan sudah dikirim. Menunggu verifikasi UMKM." : "Periksa deliverable mahasiswa. Setujui jika sudah sesuai, atau minta revisi.","ws-muted"));
-        if (umkm()) {
-          const actions = document.createElement("div"); actions.className = "ws-action-row";
-          actions.appendChild(button("✓ Approve Project",approveProject));
-          actions.appendChild(button("Request Revision",showRevisionForm,"danger"));
+
+      if (state === "submitted") {
+        root.appendChild(
+          makeNode(
+            "p",
+            isStudent()
+              ? "Hasil pekerjaan sudah dikirim. Menunggu verifikasi UMKM."
+              : "Periksa deliverable mahasiswa. Setujui jika sudah sesuai, atau minta revisi.",
+            "ws-muted"
+          )
+        );
+
+        if (isUMKM()) {
+          const actions = document.createElement("div");
+          actions.className = "ws-action-row";
+
+          actions.appendChild(
+            makeButton(
+              "✓ Approve Project",
+              approveProject
+            )
+          );
+
+          actions.appendChild(
+            makeButton(
+              "Request Revision",
+              showRevisionForm,
+              "danger"
+            )
+          );
+
           root.appendChild(actions);
-          const form = document.createElement("div"); form.id = "ws-revision-form"; root.appendChild(form);
+
+          const form = document.createElement("div");
+          form.id = "ws-revision-form";
+
+          root.appendChild(form);
         }
+
         return;
       }
 
-      if (s === "revision_requested") root.appendChild(node("div",workspace.revision_note || "UMKM meminta revisi.","ws-note"));
-      root.appendChild(node("p",student() ? "Tambahkan atau perbaiki deliverable, lalu kirim untuk diverifikasi UMKM." : "Mahasiswa sedang menyiapkan hasil pekerjaan.","ws-muted"));
+      if (state === "revision_requested") {
+        root.appendChild(
+          makeNode(
+            "div",
+            workspace.revision_note ||
+              "UMKM meminta revisi.",
+            "ws-note"
+          )
+        );
+      }
 
-      if (student()) {
-        const actions = document.createElement("div"); actions.className = "ws-action-row";
-        const submit = button(s === "revision_requested" ? "Resubmit Final Project" : "Submit Final Project",submitProject);
-        submit.disabled = busy || !editable() || !deliverables.some(d => d.submitted_by === user.id);
-        actions.appendChild(submit); root.appendChild(actions);
-        if (submit.disabled && !busy && editable()) root.appendChild(node("p","Tambahkan minimal satu deliverable agar tombol Submit aktif.","ws-muted"));
+      root.appendChild(
+        makeNode(
+          "p",
+          isStudent()
+            ? "Tambahkan atau perbaiki deliverable, lalu kirim untuk diverifikasi UMKM."
+            : "Mahasiswa sedang menyiapkan hasil pekerjaan.",
+          "ws-muted"
+        )
+      );
+
+      if (isStudent()) {
+        const actions = document.createElement("div");
+        actions.className = "ws-action-row";
+
+        const submit = makeButton(
+          state === "revision_requested"
+            ? "Resubmit Final Project"
+            : "Submit Final Project",
+          submitProject
+        );
+
+        submit.disabled =
+          busy ||
+          !editable() ||
+          !deliverables.some(
+            item => item.submitted_by === user.id
+          );
+
+        actions.appendChild(submit);
+        root.appendChild(actions);
+
+        if (
+          submit.disabled &&
+          !busy &&
+          editable()
+        ) {
+          root.appendChild(
+            makeNode(
+              "p",
+              "Tambahkan minimal satu deliverable agar tombol Submit aktif.",
+              "ws-muted"
+            )
+          );
+        }
       }
     }
 
+    /* =====================================
+       PROJECT COMPLETION
+    ===================================== */
+
     async function submitProject() {
-      if (busy || !student() || !editable()) return;
-      if (!deliverables.some(d => d.submitted_by === user.id)) return alertMessage("Tambahkan minimal satu deliverable.");
-      if (!confirm("Kirim hasil pekerjaan ke UMKM untuk diverifikasi?")) return;
-      busy = true; render();
+      if (
+        busy ||
+        !isStudent() ||
+        !editable()
+      ) return;
+
+      if (
+        !deliverables.some(
+          item => item.submitted_by === user.id
+        )
+      ) {
+        showAlert(
+          "Tambahkan minimal satu deliverable."
+        );
+        return;
+      }
+
+      if (
+        !confirm(
+          "Kirim hasil pekerjaan ke UMKM untuk diverifikasi?"
+        )
+      ) return;
+
+      busy = true;
+      render();
+
       try {
-        check(await db.rpc("workspace_submit_final",{p_workspace_id:workspace.id}));
-        await refresh();
-        alertMessage("Hasil pekerjaan berhasil dikirim. Menunggu verifikasi UMKM.",true);
-      } catch (e) { alertMessage("Gagal submit: " + e.message); }
-      finally { busy = false; render(); }
+        check(
+          await db.rpc(
+            "workspace_submit_final",
+            {
+              p_workspace_id: workspace.id
+            }
+          )
+        );
+
+        await refreshWorkspace();
+
+        showAlert(
+          "Hasil pekerjaan berhasil dikirim. Menunggu verifikasi UMKM.",
+          true
+        );
+      } catch (error) {
+        showAlert(
+          "Gagal submit: " + error.message
+        );
+      } finally {
+        busy = false;
+        render();
+      }
     }
 
     async function approveProject() {
-      if (busy || !umkm() || state() !== "submitted") return;
-      if (!confirm("Setujui hasil pekerjaan dan nyatakan proyek selesai?")) return;
-      busy = true; render();
+      if (
+        busy ||
+        !isUMKM() ||
+        reviewState() !== "submitted"
+      ) return;
+
+      if (
+        !confirm(
+          "Setujui hasil pekerjaan dan nyatakan proyek selesai?"
+        )
+      ) return;
+
+      busy = true;
+      render();
+
       try {
-        check(await db.rpc("workspace_review_final",{p_workspace_id:workspace.id,p_decision:"approve",p_revision_note:null}));
-        await refresh(); alertMessage("Proyek berhasil disetujui dan resmi Completed.",true);
-      } catch (e) { alertMessage("Gagal approve: " + e.message); }
-      finally { busy = false; render(); }
+        check(
+          await db.rpc(
+            "workspace_review_final",
+            {
+              p_workspace_id: workspace.id,
+              p_decision: "approve",
+              p_revision_note: null
+            }
+          )
+        );
+
+        await refreshWorkspace();
+
+        showAlert(
+          "Proyek berhasil disetujui dan resmi Completed.",
+          true
+        );
+      } catch (error) {
+        showAlert(
+          "Gagal approve: " + error.message
+        );
+      } finally {
+        busy = false;
+        render();
+      }
     }
 
     function showRevisionForm() {
-      const root = $("ws-revision-form"); if (!root) return; root.replaceChildren();
-      const wrap = document.createElement("div"); wrap.className = "ws-revision-form";
-      const input = document.createElement("textarea"); input.placeholder = "Tuliskan revisi yang diperlukan...";
-      const send = button("Kirim Permintaan Revisi",() => requestRevision(input.value),"danger");
-      wrap.append(input,send); root.appendChild(wrap);
+      const root = $("ws-revision-form");
+      if (!root) return;
+
+      root.replaceChildren();
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "ws-revision-form";
+
+      const input = document.createElement("textarea");
+      input.placeholder =
+        "Tuliskan revisi yang diperlukan...";
+
+      const send = makeButton(
+        "Kirim Permintaan Revisi",
+        () => requestRevision(input.value),
+        "danger"
+      );
+
+      wrapper.append(input, send);
+      root.appendChild(wrapper);
     }
 
     async function requestRevision(value) {
       const note = String(value || "").trim();
-      if (!note) return alertMessage("Catatan revisi wajib diisi.");
-      if (busy || !umkm() || state() !== "submitted") return;
-      if (!confirm("Kirim permintaan revisi ke mahasiswa?")) return;
-      busy = true; render();
+
+      if (!note) {
+        showAlert("Catatan revisi wajib diisi.");
+        return;
+      }
+
+      if (
+        busy ||
+        !isUMKM() ||
+        reviewState() !== "submitted"
+      ) return;
+
+      if (
+        !confirm(
+          "Kirim permintaan revisi ke mahasiswa?"
+        )
+      ) return;
+
+      busy = true;
+      render();
+
       try {
-        check(await db.rpc("workspace_review_final",{p_workspace_id:workspace.id,p_decision:"revision",p_revision_note:note}));
-        await refresh(); alertMessage("Permintaan revisi berhasil dikirim.",true);
-      } catch (e) { alertMessage("Gagal meminta revisi: " + e.message); }
-      finally { busy = false; render(); }
+        check(
+          await db.rpc(
+            "workspace_review_final",
+            {
+              p_workspace_id: workspace.id,
+              p_decision: "revision",
+              p_revision_note: note
+            }
+          )
+        );
+
+        await refreshWorkspace();
+
+        showAlert(
+          "Permintaan revisi berhasil dikirim.",
+          true
+        );
+      } catch (error) {
+        showAlert(
+          "Gagal meminta revisi: " + error.message
+        );
+      } finally {
+        busy = false;
+        render();
+      }
     }
 
+    /* =====================================
+       DELIVERABLE MODAL
+    ===================================== */
+
     function toggleModal(open) {
-      $("ws-deliverable-modal").classList.toggle("open",open);
-      if (!open) $("ws-deliverable-form").reset();
+      $("ws-deliverable-modal")
+        .classList.toggle("open", open);
+
+      if (!open) {
+        $("ws-deliverable-form").reset();
+      }
     }
 
     async function saveDeliverable(event) {
-      event.preventDefault(); if (busy || !student() || !editable()) return;
-      const title = $("ws-deliverable-title").value.trim(), url = validUrl($("ws-deliverable-url").value.trim());
-      if (!title || !url) return alertMessage("Judul dan URL deliverable wajib valid.");
-      busy = true; $("ws-save-link").disabled = true;
+      event.preventDefault();
+
+      if (
+        busy ||
+        !isStudent() ||
+        !editable()
+      ) return;
+
+      const title =
+        $("ws-deliverable-title").value.trim();
+
+      const url = validURL(
+        $("ws-deliverable-url").value.trim()
+      );
+
+      if (!title || !url) {
+        showAlert(
+          "Judul dan URL deliverable wajib valid."
+        );
+        return;
+      }
+
+      busy = true;
+      $("ws-save-link").disabled = true;
+
       try {
-        check(await db.from("workspace_deliverables").insert({
-          workspace_id:workspace.id,submitted_by:user.id,title,url,
-          type:$("ws-deliverable-type").value,notes:$("ws-deliverable-notes").value.trim() || null
-        }).select().single());
-        toggleModal(false); await refresh(); alertMessage("Deliverable berhasil ditambahkan.",true);
-      } catch (e) { alertMessage("Gagal menyimpan deliverable: " + e.message); }
-      finally { busy = false; $("ws-save-link").disabled = false; render(); }
+        check(
+          await db
+            .from("workspace_deliverables")
+            .insert({
+              workspace_id: workspace.id,
+              submitted_by: user.id,
+              title,
+              url,
+              type: $("ws-deliverable-type").value,
+              notes:
+                $("ws-deliverable-notes").value.trim() ||
+                null
+            })
+            .select()
+            .single()
+        );
+
+        toggleModal(false);
+
+        await refreshWorkspace();
+
+        showAlert(
+          "Deliverable berhasil ditambahkan.",
+          true
+        );
+      } catch (error) {
+        showAlert(
+          "Gagal menyimpan deliverable: " +
+            error.message
+        );
+      } finally {
+        busy = false;
+        $("ws-save-link").disabled = false;
+        render();
+      }
     }
 
     async function deleteDeliverable(id) {
-      if (busy || !student() || !editable() || !confirm("Hapus deliverable ini?")) return;
+      if (
+        busy ||
+        !isStudent() ||
+        !editable()
+      ) return;
+
+      if (
+        !confirm("Hapus deliverable ini?")
+      ) return;
+
       busy = true;
+      render();
+
       try {
-        check(await db.from("workspace_deliverables").delete().eq("id",id).eq("workspace_id",workspace.id).eq("submitted_by",user.id));
-        await refresh(); alertMessage("Deliverable dihapus.",true);
-      } catch (e) { alertMessage("Gagal menghapus deliverable: " + e.message); }
-      finally { busy = false; render(); }
-    }
+        check(
+          await db
+            .from("workspace_deliverables")
+            .delete()
+            .eq("id", id)
+            .eq("workspace_id", workspace.id)
+            .eq("submitted_by", user.id)
+        );
 
-    function toggleChat(forceOpen) {
-      if (!workspace) return;
-      const open = typeof forceOpen === "boolean" ? forceOpen : !$("ws-chat").classList.contains("open");
-      $("ws-chat").classList.toggle("open",open); $("ws-chat-overlay").classList.toggle("open",open);
-      if (open) loadChat().catch(e => alertMessage("Gagal memuat chat: " + e.message));
-    }
+        await refreshWorkspace();
 
-    async function loadChat() {
-      const messages = check(await db.from("messages_with_sender").select("*").eq("workspace_id",workspace.id).order("created_at",{ascending:true})) || [];
-      const root = $("ws-chat-messages"); root.replaceChildren();
-      if (!messages.length) root.appendChild(node("p","Belum ada pesan.","ws-muted"));
-      for (const item of messages) {
-        const mine = item.sender_id === user.id;
-        const bubble = document.createElement("div"); bubble.className = "ws-bubble " + (mine ? "mine" : "other");
-        const sender = node("div",item.sender_name || "Pengguna"); sender.style.cssText = "font-size:11px;opacity:.75;margin-bottom:5px";
-        const content = node("div",item.content || ""); content.style.cssText = "white-space:pre-wrap;font-size:13px";
-        bubble.append(sender,content); root.appendChild(bubble);
+        showAlert(
+          "Deliverable berhasil dihapus.",
+          true
+        );
+      } catch (error) {
+        showAlert(
+          "Gagal menghapus deliverable: " +
+            error.message
+        );
+      } finally {
+        busy = false;
+        render();
       }
-      root.scrollTop = root.scrollHeight;
     }
 
-    async function sendChat(event) {
-      event.preventDefault(); if (sending || !workspace || workspace.status === "cancelled") return;
-      const input = $("ws-chat-input"), content = input.value.trim(); if (!content) return;
-      sending = true; $("ws-send").disabled = true;
-      try {
-        if (!skillDB?.sendMessage) throw new Error("Fungsi chat tidak tersedia.");
-        await skillDB.sendMessage({workspace_id:workspace.id,content});
-        input.value = ""; await loadChat();
-      } catch (e) { alertMessage("Gagal mengirim pesan: " + e.message); }
-      finally { sending = false; $("ws-send").disabled = workspace.status === "cancelled"; }
-    }
+    /* =====================================
+       OPEN MESSAGES
+    ===================================== */
 
-    $("ws-open-chat").addEventListener("click",() => toggleChat());
-    $("ws-close-chat").addEventListener("click",() => toggleChat(false));
-    $("ws-chat-overlay").addEventListener("click",() => toggleChat(false));
-    $("ws-sidebar-chat").addEventListener("click",e => { e.preventDefault(); toggleChat(true); });
-    $("ws-chat-form").addEventListener("submit",sendChat);
-    $("ws-add-link").addEventListener("click",() => { if (editable() && student()) toggleModal(true); });
-    $("ws-close-modal").addEventListener("click",() => toggleModal(false));
-    $("ws-cancel-modal").addEventListener("click",() => toggleModal(false));
-    $("ws-deliverable-form").addEventListener("submit",saveDeliverable);
-    $("ws-settings").addEventListener("click",() => window.SkillBridgeSettings?.openModal?.());
-    document.addEventListener("keydown",e => { if (e.key === "Escape") { toggleModal(false); toggleChat(false); } });
+function openMessages() {
+  if (!workspace?.id) {
+    showAlert("Workspace belum selesai dimuat.");
+    return;
+  }
 
-    document.addEventListener("DOMContentLoaded",async () => {
-      try { await initialize(); }
-      catch (e) {
-        console.error("[SkillBridge Workspace]",e);
-        alertMessage("Gagal memuat workspace: " + e.message);
-        $("ws-add-link").disabled = true;
-        $("ws-review").textContent = "Workspace belum dapat dimuat.";
+  const destination = isUMKM()
+    ? "../umkm/messages.html"
+    : "messages.html";
+
+  window.location.href =
+    destination +
+    "?workspace_id=" +
+    encodeURIComponent(workspace.id);
+}
+
+    /* =====================================
+       EVENT LISTENERS
+    ===================================== */
+
+    $("ws-open-chat")
+      .addEventListener("click", openMessages);
+
+    $("ws-add-link")
+      .addEventListener("click", () => {
+        if (editable() && isStudent()) {
+          toggleModal(true);
+        }
+      });
+
+    $("ws-close-modal")
+      .addEventListener("click", () => {
+        toggleModal(false);
+      });
+
+    $("ws-cancel-modal")
+      .addEventListener("click", () => {
+        toggleModal(false);
+      });
+
+    $("ws-deliverable-form")
+      .addEventListener("submit", saveDeliverable);
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        toggleModal(false);
       }
     });
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+        try {
+          await initialize();
+        } catch (error) {
+          console.error(
+            "[SkillBridge Workspace]",
+            error
+          );
+
+          showAlert(
+            "Gagal memuat workspace: " +
+              error.message
+          );
+
+          $("ws-add-link").disabled = true;
+
+          $("ws-review").textContent =
+            "Workspace belum dapat dimuat.";
+        }
+      }
+    );
+
   </script>
 </body>
 </html>
