@@ -4,9 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>My Projects — SkillBridge</title>
-
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
 
@@ -15,8 +13,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
       flex-wrap: wrap;
+      gap: 20px;
       margin-bottom: 30px;
     }
 
@@ -28,8 +26,8 @@
     }
 
     .sb-project-header p {
-      color: #64748b;
       font-size: 14px;
+      color: #64748b;
       margin: 0;
       line-height: 1.6;
     }
@@ -38,20 +36,20 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      padding-bottom: 14px;
       margin-bottom: 24px;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 14px;
     }
 
     .sb-tab {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
-      background: transparent;
-      color: #64748b;
+      gap: 8px;
+      padding: 10px 13px;
       border: 0;
       border-radius: 10px;
-      padding: 10px 13px;
+      background: transparent;
+      color: #64748b;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
@@ -62,15 +60,18 @@
     }
 
     .sb-tab.active {
-      color: #2563eb;
       background: #eff6ff;
+      color: #2563eb;
     }
 
     .sb-tab-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 3px 8px;
+      border-radius: 999px;
       background: #e2e8f0;
       color: #475569;
-      border-radius: 999px;
       font-size: 11px;
       font-weight: 800;
     }
@@ -81,182 +82,223 @@
     }
 
     .sb-project-card {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 20px;
       padding: 25px;
       margin-bottom: 17px;
-      box-shadow: 0 2px 8px rgba(15,23,42,0.025);
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(15,23,42,.025);
     }
 
-    .sb-project-card-top,
-    .sb-project-card-bottom {
+    .sb-project-badges {
       display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-bottom: 18px;
+    }
+
+    .sb-project-badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .sb-project-card-top {
-      margin-bottom: 14px;
-    }
-
-    .sb-badges {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .sb-badge {
-      display: inline-block;
-      padding: 6px 11px;
+      justify-content: center;
+      padding: 7px 12px;
       border-radius: 999px;
+      background: #f1f5f9;
+      color: #475569;
       font-size: 11px;
       font-weight: 800;
     }
 
-    .sb-badge.recruiting {
-      color: #2563eb;
+    .sb-project-badge.recruiting {
       background: #dbeafe;
+      color: #2563eb;
     }
 
-    .sb-badge.draft {
-      color: #475569;
-      background: #f1f5f9;
-    }
-
-    .sb-badge.active {
-      color: #7c3aed;
+    .sb-project-badge.active {
       background: #f3e8ff;
+      color: #7c3aed;
     }
 
-    .sb-badge.completed {
-      color: #15803d;
+    .sb-project-badge.completed {
       background: #dcfce7;
+      color: #15803d;
     }
 
-    .sb-badge.archived {
-      color: #64748b;
-      background: #f1f5f9;
-    }
-
-    .sb-badge.category {
-      color: #475569;
+    .sb-project-badge.category {
       background: #f8fafc;
+      color: #475569;
       border: 1px solid #e2e8f0;
     }
 
     .sb-project-card h2 {
-      font-size: 20px;
+      margin: 0 0 12px;
       color: #0f172a;
-      margin: 0 0 11px;
+      font-size: 21px;
       font-weight: 800;
       overflow-wrap: anywhere;
     }
 
-    .sb-project-desc {
-      font-size: 13px;
-      color: #64748b;
-      line-height: 1.7;
+    .sb-project-description {
       margin: 0 0 16px;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.7;
       white-space: pre-line;
+    }
+
+    .sb-workspace-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 24px;
+    }
+
+    .sb-project-card a.sb-review-button,
+    .sb-project-card a.sb-review-button:visited {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: auto !important;
+      min-width: 0 !important;
+      min-height: 43px !important;
+      margin: 0 !important;
+      padding: 12px 17px !important;
+      border: 1px solid #bfdbfe !important;
+      border-radius: 11px !important;
+      background: #eff6ff !important;
+      color: #2563eb !important;
+      font-family: inherit !important;
+      font-size: 13px !important;
+      font-weight: 800 !important;
+      line-height: 1.4 !important;
+      text-decoration: none !important;
+      white-space: nowrap !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      cursor: pointer !important;
+    }
+
+    .sb-project-card a.sb-review-button:hover {
+      background: #dbeafe !important;
+      border-color: #93c5fd !important;
+      color: #1d4ed8 !important;
+    }
+
+    .sb-project-card a.sb-review-button.approved {
+      background: #f0fdf4 !important;
+      border-color: #bbf7d0 !important;
+      color: #15803d !important;
+    }
+
+    .sb-review-text {
+      display: inline !important;
+      color: inherit !important;
+      font-size: inherit !important;
+      font-weight: inherit !important;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
 
     .sb-project-meta {
       display: flex;
-      gap: 18px;
       flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 20px;
+      margin-bottom: 19px;
       color: #64748b;
       font-size: 12px;
-      margin-bottom: 20px;
     }
 
     .sb-project-meta strong {
       color: #334155;
     }
 
-    .sb-skills {
+    .sb-project-skills {
       display: flex;
       flex-wrap: wrap;
       gap: 7px;
       margin-bottom: 20px;
     }
 
-    .sb-skill {
-      padding: 5px 10px;
-      border-radius: 7px;
-      color: #475569;
+    .sb-project-skill {
+      padding: 6px 11px;
+      border-radius: 8px;
       background: #f1f5f9;
+      color: #475569;
       font-size: 11px;
       font-weight: 600;
     }
 
-    .sb-project-card-bottom {
+    .sb-project-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding-top: 19px;
       border-top: 1px solid #edf2f7;
-      padding-top: 17px;
     }
 
     .sb-project-date {
-      font-size: 12px;
       color: #94a3b8;
+      font-size: 12px;
     }
 
     .sb-project-actions {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 18px;
     }
 
-    .sb-action-link {
-      font-size: 12px;
+    .sb-project-link,
+    .sb-project-link:visited {
       color: #2563eb;
+      font-size: 12px;
       font-weight: 800;
       text-decoration: none;
     }
 
-    .sb-action-link:hover {
+    .sb-project-link:hover {
       text-decoration: underline;
     }
 
-    .sb-delete-btn {
+    .sb-project-delete {
       border: 0;
       background: transparent;
       color: #dc2626;
-      cursor: pointer;
       font-size: 12px;
       font-weight: 700;
-      padding: 5px;
+      cursor: pointer;
     }
 
-    .sb-state {
-      background: white;
+    .sb-project-state {
+      padding: 55px 20px;
       border: 1px solid #e2e8f0;
       border-radius: 20px;
-      padding: 55px 20px;
+      background: white;
       text-align: center;
     }
 
-    .sb-state h3 {
-      color: #0f172a;
+    .sb-project-state h3 {
       margin: 10px 0;
+      color: #0f172a;
     }
 
-    .sb-state p {
+    .sb-project-state p {
       color: #64748b;
       font-size: 13px;
       line-height: 1.7;
-      margin-bottom: 20px;
     }
 
-    .sb-error {
-      background: #fef2f2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-      border-radius: 12px;
+    .sb-project-error {
       padding: 15px;
       margin-bottom: 20px;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      background: #fef2f2;
+      color: #b91c1c;
       font-size: 13px;
       white-space: pre-wrap;
     }
@@ -283,19 +325,13 @@
 </head>
 
 <body class="dashboard-body">
-
   <div class="dashboard-layout">
-
-    <!-- SIDEBAR -->
     <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
 
-    <!-- MAIN -->
     <main class="dashboard-main">
-
       <header class="dashboard-topbar" id="shared-topbar"></header>
 
       <div class="dashboard-canvas">
-
         <div class="sb-project-header">
           <div>
             <h1>My Projects</h1>
@@ -305,69 +341,52 @@
             </p>
           </div>
 
-          <a
-            href="create-project.html"
-            class="btn btn-primary"
-            style="border-radius:999px;padding:12px 22px;"
-          >
+          <a href="create-project.html"
+             class="btn btn-primary"
+             style="border-radius:999px;padding:12px 22px">
             + New Project
           </a>
         </div>
 
-        <!-- FILTER TABS -->
-        <div class="sb-project-tabs">
-
-          <button class="sb-tab active"
-            type="button"
-            data-filter="all">
+        <div class="sb-project-tabs" id="project-tabs">
+          <button type="button" class="sb-tab active" data-filter="all">
             All Projects
             <span class="sb-tab-count" id="count-all">0</span>
           </button>
 
-          <button class="sb-tab"
-            type="button"
-            data-filter="draft">
+          <button type="button" class="sb-tab" data-filter="draft">
             Drafts
             <span class="sb-tab-count" id="count-draft">0</span>
           </button>
 
-          <button class="sb-tab"
-            type="button"
-            data-filter="recruiting">
+          <button type="button" class="sb-tab" data-filter="recruiting">
             Recruiting
             <span class="sb-tab-count" id="count-recruiting">0</span>
           </button>
 
-          <button class="sb-tab"
-            type="button"
-            data-filter="active">
+          <button type="button" class="sb-tab" data-filter="active">
             Active
             <span class="sb-tab-count" id="count-active">0</span>
           </button>
 
-          <button class="sb-tab"
-            type="button"
-            data-filter="completed">
+          <button type="button" class="sb-tab" data-filter="completed">
             Completed
             <span class="sb-tab-count" id="count-completed">0</span>
           </button>
-
         </div>
 
         <div id="projects-error" hidden></div>
 
         <div id="umkm-projects-list">
-          <div class="sb-state">
+          <div class="sb-project-state">
             <h3>Loading projects...</h3>
-            <p>Mengambil proyek dari Supabase.</p>
+            <p>Mengambil data proyek dari Supabase.</p>
           </div>
         </div>
-
       </div>
     </main>
   </div>
 
-  <!-- DEPENDENCIES -->
   <script src="../../assets/vendor/supabase.js"></script>
   <script src="../../assets/js/config.js"></script>
   <script src="../../assets/js/supabase.js"></script>
@@ -375,533 +394,459 @@
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/database.js"></script>
   <script src="../../assets/js/settings.js"></script>
+  <script src="../../assets/js/layout.js"></script>
 
-    <script src="../../assets/js/layout.js"></script>
-<script>
-    "use strict";
+  <script>
+    (() => {
+      "use strict";
 
-    const db = window.supabaseClient;
+      const db = window.supabaseClient;
+      const auth = window.SkillBridgeAuth;
+      const projectList = document.getElementById("umkm-projects-list");
+      const errorBox = document.getElementById("projects-error");
 
-    const projectList = document.getElementById(
-      "umkm-projects-list"
-    );
+      let myProjects = [];
+      let applicantCounts = {};
+      let workspacesByProject = {};
+      let currentFilter = "all";
+      let searchTerm = "";
 
-    const errorBox = document.getElementById(
-      "projects-error"
-    );
+      function esc(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
 
-    const searchInput = document.getElementById(
-      "project-search-topbar"
-    );
+      function formatMoney(value) {
+        return "Rp " + Number(value || 0).toLocaleString("id-ID");
+      }
 
-    let myProjects = [];
-    let applicantCounts = {};
-    let currentFilter = "all";
+      function formatDate(value) {
+        if (!value) return "-";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "-";
 
-    // ==================================
-    // HTML ESCAPING
-    // ==================================
+        return date.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        });
+      }
 
-    function esc(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
+      function showError(message) {
+        errorBox.hidden = false;
+        errorBox.className = "sb-project-error";
+        errorBox.textContent = message;
+      }
 
-    function showError(message) {
-      errorBox.hidden = false;
-      errorBox.className = "sb-error";
-      errorBox.textContent = message;
-    }
+      function clearError() {
+        errorBox.hidden = true;
+        errorBox.textContent = "";
+      }
 
-    function clearError() {
-      errorBox.hidden = true;
-      errorBox.textContent = "";
-    }
+      function showLoading() {
+        projectList.innerHTML = `
+          <div class="sb-project-state">
+            <h3>Loading projects...</h3>
+            <p>Mengambil data terbaru dari Supabase.</p>
+          </div>`;
+      }
 
-    function formatMoney(value) {
-      return "Rp " + Number(value || 0)
-        .toLocaleString("id-ID");
-    }
+      function workspaceButton(workspace, index, total) {
+        const state = String(
+          workspace.review_state || "working"
+        ).toLowerCase();
 
-    function formatDate(value) {
-      if (!value) return "-";
+        let label = "Buka Workspace";
+        let extraClass = "";
 
-      const date = new Date(value);
-
-      return Number.isNaN(date.getTime())
-        ? "-"
-        : date.toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-            year: "numeric"
-          });
-    }
-
-    // ==================================
-    // LOAD REAL PROJECTS
-    // ==================================
-
-    async function loadMyProjects() {
-      clearError();
-
-      projectList.innerHTML = `
-        <div class="sb-state">
-          <h3>Loading projects...</h3>
-          <p>Mengambil data terbaru dari Supabase.</p>
-        </div>
-      `;
-
-      try {
-        if (!db) {
-          throw new Error(
-            "Supabase client belum terhubung."
-          );
+        if (state === "submitted") {
+          label = "Review Final Project";
+        } else if (state === "revision_requested") {
+          label = "Lihat Permintaan Revisi";
+        } else if (state === "approved") {
+          label = "Lihat Hasil Disetujui";
+          extraClass = "approved";
+        } else if (total > 1) {
+          label = "Buka Workspace " + (index + 1);
         }
 
-        await window.SkillBridgeAuth.ready();
+        return `
+          <a href="review-workspace.html?id=${encodeURIComponent(workspace.id)}"
+             class="sb-review-button ${extraClass}">
+            <span class="sb-review-text">${esc(label)} &rarr;</span>
+          </a>`;
+      }
 
-        const user =
-          await window.SkillBridgeAuth.requireAuth("umkm");
+      function renderWorkspaceButtons(projectId) {
+        const workspaces = workspacesByProject[projectId] || [];
+        if (!workspaces.length) return "";
 
-        if (!user?.id) return;
+        return `
+          <div class="sb-workspace-actions">
+            ${workspaces.map((workspace, index) =>
+              workspaceButton(workspace, index, workspaces.length)
+            ).join("")}
+          </div>`;
+      }
 
-        const avatar = document.getElementById(
-          "umkm-avatar-circle"
-        );
+      function updateTabCounts() {
+        const counts = {
+          all: myProjects.length,
+          draft: 0,
+          recruiting: 0,
+          active: 0,
+          completed: 0
+        };
 
-        if (avatar) {
-          const name =
-            user.company_name ||
-            user.name ||
-            "UMKM";
+        myProjects.forEach(project => {
+          const status = String(project.status || "draft").toLowerCase();
 
-          avatar.textContent =
-            name.charAt(0).toUpperCase();
+          if (Object.prototype.hasOwnProperty.call(counts, status)) {
+            counts[status]++;
+          }
+        });
+
+        Object.entries(counts).forEach(([key, value]) => {
+          const element = document.getElementById("count-" + key);
+          if (element) element.textContent = value;
+        });
+      }
+
+      function renderProjects() {
+        updateTabCounts();
+
+        const filtered = myProjects.filter(project => {
+          const status = String(project.status || "draft").toLowerCase();
+          const matchesStatus =
+            currentFilter === "all" || status === currentFilter;
+
+          const searchContent = (
+            String(project.title || "") + " " +
+            String(project.description || "")
+          ).toLowerCase();
+
+          return matchesStatus && searchContent.includes(searchTerm);
+        });
+
+        if (!filtered.length) {
+          const noProjects = myProjects.length === 0;
+
+          projectList.innerHTML = `
+            <div class="sb-project-state">
+              <div style="font-size:35px">📂</div>
+              <h3>${noProjects
+                ? "Belum ada proyek"
+                : "Tidak ada proyek yang cocok"}</h3>
+              <p>${noProjects
+                ? "Buat proyek pertamamu untuk mulai mencari mahasiswa."
+                : "Coba ubah filter atau pencarian."}</p>
+              ${noProjects ? `
+                <a href="create-project.html" class="btn btn-primary">
+                  + Buat Proyek Baru
+                </a>` : ""}
+            </div>`;
+          return;
         }
 
-        // Ambil proyek milik akun login SAJA.
-        // Tidak ada fallback ke semua proyek.
-        const { data: projects, error: projectError } =
-          await db
+        projectList.innerHTML = filtered.map(project => {
+          const projectId = encodeURIComponent(project.id);
+
+          const rawStatus = String(
+            project.status || "draft"
+          ).toLowerCase();
+
+          const validStatuses = [
+            "draft", "recruiting", "active", "completed", "archived"
+          ];
+
+          const status = validStatuses.includes(rawStatus)
+            ? rawStatus : "draft";
+
+          const statusLabels = {
+            draft: "DRAFT",
+            recruiting: "OPEN FOR TALENTS",
+            active: "ACTIVE",
+            completed: "COMPLETED",
+            archived: "ARCHIVED"
+          };
+
+          const applicantCount = applicantCounts[project.id] || 0;
+          const workspaces = workspacesByProject[project.id] || [];
+          const skills = Array.isArray(project.required_skills)
+            ? project.required_skills : [];
+
+          const description = String(project.description || "");
+          const shortDescription = description.slice(0, 220);
+          const workspaceButtons = renderWorkspaceButtons(project.id);
+
+          return `
+            <article class="sb-project-card">
+              <div class="sb-project-badges">
+                <span class="sb-project-badge ${status}">
+                  ${statusLabels[status]}
+                </span>
+                <span class="sb-project-badge category">
+                  ${esc(project.category_name || "Uncategorized")}
+                </span>
+              </div>
+
+              <h2>${esc(project.title)}</h2>
+
+              <p class="sb-project-description">${esc(shortDescription)}${description.length > 220 ? "..." : ""}</p>
+
+              <!-- WORKSPACE / REVIEW TEPAT DI BAWAH DESKRIPSI -->
+              ${workspaceButtons}
+
+              <div class="sb-project-meta">
+                <span><strong>Budget:</strong> ${formatMoney(project.budget)}</span>
+                <span><strong>Location:</strong> ${esc(project.location || "-")}</span>
+                <span><strong>Applicants:</strong> ${applicantCount}</span>
+                <span><strong>Deadline:</strong> ${formatDate(project.deadline)}</span>
+              </div>
+
+              ${skills.length ? `
+                <div class="sb-project-skills">
+                  ${skills.map(skill => `
+                    <span class="sb-project-skill">${esc(skill)}</span>
+                  `).join("")}
+                </div>` : ""}
+
+              <div class="sb-project-bottom">
+                <span class="sb-project-date">
+                  Created: ${formatDate(project.created_at)}
+                </span>
+
+                <div class="sb-project-actions">
+                  <!-- VIEW PROJECT SUDAH DIHAPUS -->
+                  <a href="applicants.html?project_id=${projectId}"
+                     class="sb-project-link">
+                    Kelola Pelamar (${applicantCount})
+                  </a>
+
+                  ${workspaces.length === 0 ? `
+                    <button type="button"
+                            class="sb-project-delete"
+                            data-delete-id="${esc(project.id)}">
+                      Hapus
+                    </button>` : ""}
+                </div>
+              </div>
+            </article>`;
+        }).join("");
+      }
+
+      async function loadMyProjects() {
+        clearError();
+        showLoading();
+
+        try {
+          if (!db || !auth) {
+            throw new Error("Supabase atau autentikasi belum tersedia.");
+          }
+
+          await auth.ready();
+          const user = await auth.requireAuth("umkm");
+          if (!user?.id) return;
+
+          const {
+            data: projectData,
+            error: projectError
+          } = await db
             .from("projects")
             .select("*")
             .eq("owner_id", user.id)
-            .order("created_at", {
-              ascending: false
-            });
+            .order("created_at", { ascending: false });
 
-        if (projectError) throw projectError;
+          if (projectError) throw projectError;
 
-        myProjects = projects || [];
+          myProjects = projectData || [];
+          applicantCounts = {};
+          workspacesByProject = {};
 
-        // Ambil nama kategori dari tabel asli.
-        const categoryIds = [
-          ...new Set(
-            myProjects
-              .map(p => p.category_id)
-              .filter(Boolean)
-          )
-        ];
+          const categoryIds = [
+            ...new Set(myProjects.map(p => p.category_id).filter(Boolean))
+          ];
 
-        const categoriesById = {};
+          const categoryMap = {};
 
-        if (categoryIds.length > 0) {
-          const { data: categories, error: categoryError } =
-            await db
+          if (categoryIds.length) {
+            const { data: categories, error: categoryError } = await db
               .from("categories")
               .select("id,name")
               .in("id", categoryIds);
 
-          if (categoryError) {
-            console.warn(
-              "Gagal membaca kategori:",
-              categoryError
+            if (categoryError) {
+              console.warn("[My Projects Categories]", categoryError);
+            } else {
+              (categories || []).forEach(category => {
+                categoryMap[category.id] = category.name;
+              });
+            }
+          }
+
+          myProjects = myProjects.map(project => ({
+            ...project,
+            category_name:
+              categoryMap[project.category_id] || "Uncategorized"
+          }));
+
+          const projectIds = myProjects.map(p => p.id);
+
+          if (projectIds.length) {
+            const [applicationResult, workspaceResult] = await Promise.all([
+              db.from("project_applications")
+                .select("id,project_id")
+                .in("project_id", projectIds),
+
+              db.from("workspaces")
+                .select("id,project_id,umkm_id,status,review_state,created_at")
+                .eq("umkm_id", user.id)
+                .in("project_id", projectIds)
+                .order("created_at", { ascending: false })
+            ]);
+
+            if (applicationResult.error) {
+              console.warn(
+                "[My Projects Applicants]",
+                applicationResult.error
+              );
+            } else {
+              (applicationResult.data || []).forEach(app => {
+                applicantCounts[app.project_id] =
+                  (applicantCounts[app.project_id] || 0) + 1;
+              });
+            }
+
+            if (workspaceResult.error) {
+              console.warn(
+                "[My Projects Workspaces]",
+                workspaceResult.error
+              );
+
+              showError(
+                "Proyek berhasil dimuat, tetapi workspace belum dapat dibaca: " +
+                workspaceResult.error.message
+              );
+            } else {
+              (workspaceResult.data || []).forEach(workspace => {
+                const id = workspace.project_id;
+                if (!workspacesByProject[id]) {
+                  workspacesByProject[id] = [];
+                }
+                workspacesByProject[id].push(workspace);
+              });
+            }
+          }
+
+          renderProjects();
+        } catch (error) {
+          console.error("[SkillBridge My Projects]", error);
+          showError(
+            "Gagal memuat proyek: " +
+            (error.message || "Unknown error")
+          );
+          projectList.innerHTML = "";
+        }
+      }
+
+      async function deleteProject(projectId) {
+        const project = myProjects.find(
+          item => String(item.id) === String(projectId)
+        );
+
+        if (!project) return;
+
+        if ((workspacesByProject[projectId] || []).length) {
+          alert(
+            "Proyek ini sudah memiliki workspace mahasiswa dan tidak dapat dihapus dari halaman ini."
+          );
+          return;
+        }
+
+        if (!confirm(
+          `Yakin ingin menghapus proyek "${project.title}"?\n\n` +
+          "Data lamaran terkait juga dapat terhapus."
+        )) return;
+
+        try {
+          const user = await auth.requireAuth("umkm");
+          if (!user?.id) return;
+
+          const { data, error } = await db
+            .from("projects")
+            .delete()
+            .eq("id", projectId)
+            .eq("owner_id", user.id)
+            .select("id");
+
+          if (error) throw error;
+          if (!data?.length) {
+            throw new Error(
+              "Proyek tidak terhapus. Periksa hak akses."
             );
+          }
+
+          window.toast?.success?.("Proyek berhasil dihapus.");
+          await loadMyProjects();
+        } catch (error) {
+          console.error("[Delete Project]", error);
+
+          if (window.toast?.error) {
+            window.toast.error(error.message);
           } else {
-            (categories || []).forEach(category => {
-              categoriesById[category.id] =
-                category.name;
-            });
+            alert("Gagal menghapus proyek: " + error.message);
           }
         }
-
-        myProjects = myProjects.map(project => ({
-          ...project,
-          category_name:
-            categoriesById[project.category_id] ||
-            "Uncategorized"
-        }));
-
-        // Hitung jumlah lamaran yang memang
-        // terlihat oleh akun UMKM sesuai RLS.
-        applicantCounts = {};
-
-        const projectIds = myProjects.map(p => p.id);
-
-        if (projectIds.length > 0) {
-          const { data: applications, error: appError } =
-            await db
-              .from("project_applications")
-              .select("id,project_id")
-              .in("project_id", projectIds);
-
-          if (appError) {
-            console.warn(
-              "Gagal membaca jumlah pelamar:",
-              appError
-            );
-          } else {
-            (applications || []).forEach(application => {
-              applicantCounts[application.project_id] =
-                (applicantCounts[application.project_id] || 0) + 1;
-            });
-          }
-        }
-
-        renderProjects();
-
-      } catch (error) {
-        console.error(
-          "[SkillBridge My Projects]",
-          error
-        );
-
-        showError(
-          "Gagal memuat proyek: " +
-          (error.message || "Unknown error")
-        );
-
-        projectList.innerHTML = "";
-      }
-    }
-
-    // ==================================
-    // UPDATE COUNTS
-    // ==================================
-
-    function updateTabCounts() {
-      const counts = {
-        all: myProjects.length,
-        draft: 0,
-        recruiting: 0,
-        active: 0,
-        completed: 0
-      };
-
-      myProjects.forEach(project => {
-        if (counts[project.status] !== undefined) {
-          counts[project.status]++;
-        }
-      });
-
-      Object.entries(counts).forEach(([key, value]) => {
-        const el = document.getElementById(
-          "count-" + key
-        );
-
-        if (el) {
-          el.textContent = value;
-        }
-      });
-    }
-
-    // ==================================
-    // RENDER PROJECTS
-    // ==================================
-
-    function renderProjects() {
-      updateTabCounts();
-
-      const search = searchInput.value
-        .trim()
-        .toLowerCase();
-
-      const filtered = myProjects.filter(project => {
-        const matchesStatus =
-          currentFilter === "all" ||
-          project.status === currentFilter;
-
-        const matchesSearch =
-          String(project.title || "")
-            .toLowerCase()
-            .includes(search) ||
-          String(project.description || "")
-            .toLowerCase()
-            .includes(search);
-
-        return matchesStatus && matchesSearch;
-      });
-
-      if (filtered.length === 0) {
-        const isEmptyAccount = myProjects.length === 0;
-
-        projectList.innerHTML = `
-          <div class="sb-state">
-            <div style="font-size:35px;">📂</div>
-            <h3>
-              ${isEmptyAccount
-                ? "Belum ada proyek"
-                : "Tidak ada proyek yang cocok"}
-            </h3>
-            <p>
-              ${isEmptyAccount
-                ? "Buat proyek pertamamu untuk mulai mencari mahasiswa."
-                : "Coba ubah filter atau kata pencarian."}
-            </p>
-
-            ${isEmptyAccount ? `
-              <a href="create-project.html"
-                 class="btn btn-primary"
-                 style="border-radius:999px;">
-                + Buat Proyek Baru
-              </a>
-            ` : ""}
-          </div>
-        `;
-
-        return;
       }
 
-      projectList.innerHTML = filtered.map(project => {
-        const id = encodeURIComponent(project.id);
+      document.getElementById("project-tabs")
+        .addEventListener("click", event => {
+          const button = event.target.closest("[data-filter]");
+          if (!button) return;
 
-        const status = String(
-          project.status || "draft"
-        ).toLowerCase();
+          currentFilter = button.dataset.filter;
 
-        const validStatuses = [
-          "draft",
-          "recruiting",
-          "active",
-          "completed",
-          "archived"
-        ];
+          document.querySelectorAll(".sb-tab").forEach(tab => {
+            tab.classList.toggle("active", tab === button);
+          });
 
-        const safeStatus =
-          validStatuses.includes(status)
-            ? status
-            : "draft";
+          renderProjects();
+        });
 
-        const statusLabels = {
-          draft: "DRAFT",
-          recruiting: "OPEN FOR TALENTS",
-          active: "ACTIVE",
-          completed: "COMPLETED",
-          archived: "ARCHIVED"
-        };
-
-        const applicantCount =
-          applicantCounts[project.id] || 0;
-
-        const skills = Array.isArray(
-          project.required_skills
-        ) ? project.required_skills : [];
-
-        const skillsHTML = skills.map(skill => `
-          <span class="sb-skill">
-            ${esc(skill)}
-          </span>
-        `).join("");
-
-        const shortDescription = String(
-          project.description || ""
-        ).slice(0, 220);
-
-        return `
-          <article class="sb-project-card">
-
-            <div class="sb-project-card-top">
-              <div class="sb-badges">
-                <span class="sb-badge ${safeStatus}">
-                  ${statusLabels[safeStatus]}
-                </span>
-
-                <span class="sb-badge category">
-                  ${esc(project.category_name)}
-                </span>
-              </div>
-            </div>
-
-            <h2>${esc(project.title)}</h2>
-
-            <p class="sb-project-desc">
-              ${esc(shortDescription)}
-              ${String(project.description || "").length > 220 ? "..." : ""}
-            </p>
-
-            <div class="sb-project-meta">
-              <span>
-                <strong>Budget:</strong>
-                ${formatMoney(project.budget)}
-              </span>
-
-              <span>
-                <strong>Location:</strong>
-                ${esc(project.location || "-")}
-              </span>
-
-              <span>
-                <strong>Applicants:</strong>
-                ${applicantCount}
-              </span>
-
-              <span>
-                <strong>Deadline:</strong>
-                ${formatDate(project.deadline)}
-              </span>
-            </div>
-
-            ${skillsHTML ? `
-              <div class="sb-skills">
-                ${skillsHTML}
-              </div>
-            ` : ""}
-
-            <div class="sb-project-card-bottom">
-
-              <span class="sb-project-date">
-                Created: ${formatDate(project.created_at)}
-              </span>
-
-              <div class="sb-project-actions">
-
-                <a
-                  href="../project-detail.html?id=${id}"
-                  class="sb-action-link"
-                >
-                  View Project
-                </a>
-
-                <a
-                  href="applicants.html?project_id=${id}"
-                  class="sb-action-link"
-                >
-                  Kelola Pelamar (${applicantCount})
-                </a>
-
-                <button
-                  type="button"
-                  class="sb-delete-btn"
-                  data-delete-id="${esc(project.id)}"
-                >
-                  Hapus
-                </button>
-
-              </div>
-            </div>
-
-          </article>
-        `;
-      }).join("");
-    }
-
-    // ==================================
-    // DELETE PROJECT
-    // ==================================
-
-    async function deleteProject(projectId) {
-      const project = myProjects.find(
-        p => p.id === projectId
-      );
-
-      if (!project) return;
-
-      const confirmed = confirm(
-        `Yakin ingin menghapus proyek "${project.title}"?\n\n` +
-        "Data lamaran terkait juga dapat terhapus."
-      );
-
-      if (!confirmed) return;
-
-      try {
-        const user =
-          await window.SkillBridgeAuth.requireAuth("umkm");
-
-        if (!user?.id) return;
-
-        const { data, error } = await db
-          .from("projects")
-          .delete()
-          .eq("id", projectId)
-          .eq("owner_id", user.id)
-          .select("id");
-
-        if (error) throw error;
-
-        if (!data || data.length === 0) {
-          throw new Error(
-            "Proyek tidak terhapus. Periksa hak akses akun."
-          );
-        }
-
-        if (window.toast?.success) {
-          window.toast.success(
-            "Proyek berhasil dihapus."
-          );
-        }
-
-        await loadMyProjects();
-
-      } catch (error) {
-        console.error(
-          "Delete project error:",
-          error
-        );
-
-        if (window.toast?.error) {
-          window.toast.error(error.message);
-        } else {
-          alert(error.message);
-        }
-      }
-    }
-
-    // ==================================
-    // EVENTS
-    // ==================================
-
-    document.querySelectorAll(".sb-tab").forEach(button => {
-      button.addEventListener("click", () => {
-        currentFilter = button.dataset.filter;
-
-        document.querySelectorAll(".sb-tab")
-          .forEach(tab => tab.classList.remove("active"));
-
-        button.classList.add("active");
-
-        renderProjects();
-      });
-    });
-
-    searchInput.addEventListener(
-      "input",
-      renderProjects
-    );
-
-    projectList.addEventListener(
-      "click",
-      async event => {
-        const button = event.target.closest(
-          "[data-delete-id]"
-        );
-
+      projectList.addEventListener("click", async event => {
+        const button = event.target.closest("[data-delete-id]");
         if (!button) return;
+        await deleteProject(button.dataset.deleteId);
+      });
 
-        await deleteProject(
-          button.dataset.deleteId
-        );
+      function init() {
+        // Pencarian menggunakan shared topbar layout.js.
+        const searchInput = document.getElementById("sb-layout-search");
+
+        if (searchInput) {
+          searchInput.addEventListener("input", event => {
+            searchTerm = event.target.value.trim().toLowerCase();
+            renderProjects();
+          });
+        }
+
+        loadMyProjects();
       }
-    );
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      loadMyProjects
-    );
-
+      if (document.readyState === "loading") {
+        document.addEventListener(
+          "DOMContentLoaded",
+          init,
+          { once: true }
+        );
+      } else {
+        init();
+      }
+    })();
   </script>
 </body>
 </html>
