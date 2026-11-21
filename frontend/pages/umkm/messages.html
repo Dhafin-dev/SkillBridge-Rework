@@ -1,0 +1,670 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messages — SkillBridge</title>
+
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+
+  <style>
+    .sb-msg-page {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .sb-msg-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .sb-msg-page-header h1 {
+      font-size: 30px;
+      font-weight: 800;
+      color: #15213b;
+      margin: 0 0 7px;
+    }
+
+    .sb-msg-page-header p {
+      color: #71809b;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .sb-msg-button {
+      border: none;
+      background: #2864f0;
+      color: white;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .sb-msg-button:hover {
+      background: #1d4ed8;
+    }
+
+    .sb-msg-button:disabled {
+      opacity: .5;
+      cursor: wait;
+    }
+
+    .sb-msg-layout {
+      display: grid;
+      grid-template-columns: 315px minmax(0, 1fr);
+      background: white;
+      border: 1px solid #e1e8f3;
+      border-radius: 20px;
+      overflow: hidden;
+      height: min(710px, calc(100vh - 210px));
+      min-height: 480px;
+      box-shadow: 0 5px 25px #11234908;
+    }
+
+    .sb-msg-left {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      border-right: 1px solid #e6ecf5;
+    }
+
+    .sb-msg-left-head {
+      padding: 21px 17px 16px;
+      border-bottom: 1px solid #edf1f7;
+    }
+
+    .sb-msg-left-head h2 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #15213b;
+      margin: 0 0 15px;
+    }
+
+    .sb-msg-search {
+      width: 100%;
+      box-sizing: border-box;
+      background: #f6f8fc;
+      border: 1px solid #e3e9f3;
+      border-radius: 11px;
+      padding: 12px 14px;
+      font: inherit;
+      font-size: 12px;
+      color: #15213b;
+      outline: none;
+    }
+
+    .sb-msg-search:focus {
+      border-color: #2864f0;
+      background: white;
+    }
+
+    .sb-msg-list {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .sb-msg-person {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 16px;
+      background: white;
+      border: none;
+      border-bottom: 1px solid #f0f3f8;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .sb-msg-person:hover {
+      background: #f7faff;
+    }
+
+    .sb-msg-person.active {
+      background: #edf4ff;
+      box-shadow: inset 3px 0 #2864f0;
+    }
+
+    .sb-msg-avatar {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 43px;
+      height: 43px;
+      border-radius: 14px;
+      background: #e4edff;
+      color: #2864f0;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .sb-msg-person-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .sb-msg-person-info strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #17223a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sb-msg-person-info small {
+      display: block;
+      color: #7b89a2;
+      font-size: 11px;
+      margin-top: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sb-msg-type {
+      font-size: 10px;
+      font-weight: 700;
+      color: #2864f0;
+      background: #eff5ff;
+      padding: 5px 7px;
+      border-radius: 7px;
+    }
+
+    .sb-msg-right {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .sb-msg-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 76px;
+      padding: 14px 20px;
+      border-bottom: 1px solid #e8edf5;
+      box-sizing: border-box;
+    }
+
+    .sb-msg-header-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .sb-msg-header h2 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #15213b;
+      margin: 0 0 5px;
+    }
+
+    .sb-msg-header p {
+      font-size: 11px;
+      color: #8090aa;
+      margin: 0;
+    }
+
+    .sb-msg-workspace-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid #bfcefb;
+      border-radius: 10px;
+      color: #2864f0;
+      font-size: 11px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .sb-msg-workspace-link[hidden] {
+      display: none;
+    }
+
+    .sb-msg-history {
+      flex: 1;
+      min-height: 0;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f8faff;
+    }
+
+    .sb-msg-row {
+      display: flex;
+    }
+
+    .sb-msg-row.mine {
+      justify-content: flex-end;
+    }
+
+    .sb-msg-row.theirs {
+      justify-content: flex-start;
+    }
+
+    .sb-msg-bubble {
+      padding: 12px 15px;
+      max-width: min(78%, 500px);
+      border: 1px solid #e4eaf3;
+      border-radius: 15px;
+      background: white;
+      color: #34415b;
+      overflow-wrap: anywhere;
+    }
+
+    .sb-msg-row.mine .sb-msg-bubble {
+      background: #2864f0;
+      color: white;
+      border-color: #2864f0;
+      border-bottom-right-radius: 4px;
+    }
+
+    .sb-msg-row.theirs .sb-msg-bubble {
+      border-bottom-left-radius: 4px;
+    }
+
+    .sb-msg-bubble-name {
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      opacity: .8;
+    }
+
+    .sb-msg-bubble-text {
+      font-size: 13px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .sb-msg-bubble-time {
+      font-size: 10px;
+      text-align: right;
+      margin-top: 8px;
+      opacity: .65;
+    }
+
+    .sb-msg-compose {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 16px 20px;
+      background: white;
+      border-top: 1px solid #e8edf5;
+    }
+
+    .sb-msg-compose[hidden] {
+      display: none;
+    }
+
+    .sb-msg-input {
+      flex: 1;
+      min-width: 0;
+      resize: none;
+      padding: 12px 14px;
+      border: 1px solid #dbe3f0;
+      border-radius: 11px;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1.5;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .sb-msg-input:focus {
+      border-color: #2864f0;
+    }
+
+    .sb-msg-empty {
+      margin: auto;
+      text-align: center;
+      padding: 25px;
+      max-width: 350px;
+      color: #8795ac;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .sb-msg-empty h3 {
+      color: #24324d;
+      font-size: 16px;
+      margin: 0 0 7px;
+    }
+
+    .sb-msg-empty p {
+      margin: 0;
+    }
+
+    .sb-msg-empty-icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .sb-msg-error {
+      padding: 13px 16px;
+      border: 1px solid #fecdd3;
+      border-radius: 12px;
+      background: #fff1f2;
+      color: #b91c1c;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    .sb-msg-error[hidden] {
+      display: none;
+    }
+
+    /* New Message modal */
+    .sb-msg-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #0f172a80;
+    }
+
+    .sb-msg-modal[hidden] {
+      display: none;
+    }
+
+    .sb-msg-modal-content {
+      background: white;
+      border-radius: 20px;
+      width: min(100%, 520px);
+      max-height: 80vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px #0002;
+    }
+
+    .sb-msg-modal-top {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e8edf5;
+    }
+
+    .sb-msg-modal-top h2 {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 800;
+      color: #17223a;
+    }
+
+    .sb-msg-close {
+      border: none;
+      background: transparent;
+      font-size: 27px;
+      color: #64748b;
+      cursor: pointer;
+    }
+
+    .sb-msg-modal-search {
+      padding: 15px;
+    }
+
+    .sb-msg-contacts {
+      overflow-y: auto;
+      max-height: 420px;
+    }
+
+    .sb-msg-contact-action {
+      font-size: 11px;
+      color: #2864f0;
+      font-weight: 800;
+    }
+
+    @media(max-width:850px) {
+      .sb-msg-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .sb-msg-left {
+        max-height: 220px;
+        border-right: 0;
+        border-bottom: 1px solid #e6ecf5;
+      }
+
+      .sb-msg-right {
+        height: 470px;
+      }
+
+      .sb-msg-bubble {
+        max-width: 90%;
+      }
+    }
+
+    @media(max-width:480px) {
+      .sb-msg-page-header h1 {
+        font-size: 25px;
+      }
+
+      .sb-msg-history {
+        padding: 15px;
+      }
+
+      .sb-msg-compose {
+        padding: 11px;
+      }
+
+      .sb-msg-header {
+        padding: 12px;
+      }
+
+      .sb-msg-workspace-link {
+        font-size: 10px;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+
+    <aside
+      class="dashboard-sidebar"
+      id="shared-sidebar">
+    </aside>
+
+    <main class="dashboard-main">
+      <header
+        class="dashboard-topbar"
+        id="shared-topbar">
+      </header>
+
+      <div class="dashboard-canvas">
+        <div class="sb-msg-page">
+
+          <div class="sb-msg-page-header">
+            <div>
+              <h1>Messages</h1>
+              <p>
+                Connect, ask questions, and collaborate
+                with people on SkillBridge.
+              </p>
+            </div>
+
+            <button
+              id="msg-new"
+              class="sb-msg-button"
+              type="button">
+              + New Message
+            </button>
+          </div>
+
+          <div
+            id="msg-error"
+            class="sb-msg-error"
+            hidden>
+          </div>
+
+          <div class="sb-msg-layout">
+
+            <!-- CONVERSATION LIST -->
+            <section class="sb-msg-left">
+              <div class="sb-msg-left-head">
+                <h2>Conversations</h2>
+                <input
+                  id="msg-search"
+                  class="sb-msg-search"
+                  type="search"
+                  placeholder="Search conversations...">
+              </div>
+
+              <div
+                id="msg-conversations"
+                class="sb-msg-list">
+                <div class="sb-msg-empty">
+                  Memuat percakapan...
+                </div>
+              </div>
+            </section>
+
+            <!-- CONVERSATION CONTENT -->
+            <section class="sb-msg-right">
+
+              <div class="sb-msg-header">
+                <div class="sb-msg-header-user">
+                  <span
+                    id="msg-partner-avatar"
+                    class="sb-msg-avatar">
+                    💬
+                  </span>
+
+                  <div>
+                    <h2 id="msg-partner">
+                      Messages
+                    </h2>
+                    <p id="msg-project">
+                      Select a conversation
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  id="msg-workspace-link"
+                  class="sb-msg-workspace-link"
+                  hidden>
+                  View Workspace
+                </a>
+              </div>
+
+              <div
+                id="msg-history"
+                class="sb-msg-history">
+                <div class="sb-msg-empty">
+                  <div class="sb-msg-empty-icon">💬</div>
+                  <h3>Welcome to Messages</h3>
+                  <p>
+                    Pilih percakapan atau mulai chat
+                    baru dengan pengguna SkillBridge.
+                  </p>
+                </div>
+              </div>
+
+              <form
+                id="msg-composer"
+                class="sb-msg-compose"
+                hidden>
+
+                <textarea
+                  id="msg-input"
+                  class="sb-msg-input"
+                  rows="2"
+                  maxlength="4000"
+                  placeholder="Type your message..."
+                  required>
+                </textarea>
+
+                <button
+                  id="msg-send"
+                  class="sb-msg-button"
+                  type="submit">
+                  Send
+                </button>
+              </form>
+
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- NEW MESSAGE MODAL -->
+  <div
+    id="msg-contacts-modal"
+    class="sb-msg-modal"
+    hidden>
+
+    <div class="sb-msg-modal-content">
+      <div class="sb-msg-modal-top">
+        <h2>New Message</h2>
+
+        <button
+          id="msg-close-contacts"
+          class="sb-msg-close"
+          type="button"
+          aria-label="Close">
+          ×
+        </button>
+      </div>
+
+      <div class="sb-msg-modal-search">
+        <input
+          id="msg-contact-search"
+          class="sb-msg-search"
+          type="search"
+          placeholder="Search users...">
+      </div>
+
+      <div
+        id="msg-contacts"
+        class="sb-msg-contacts">
+        <div class="sb-msg-empty">
+          Memuat pengguna...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPENDENCIES -->
+  <script src="../../assets/vendor/supabase.js"></script>
+  <script src="../../assets/js/config.js"></script>
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/database.js"></script>
+  <script src="../../assets/js/settings.js"></script>
+  <script src="../../assets/js/layout.js"></script>
+
+  <script src="../../assets/js/chat.js"></script>
+  <script src="../../assets/js/messages.js"></script>
+</body>
+</html>

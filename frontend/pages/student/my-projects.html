@@ -1,1019 +1,398 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Projects — SkillBridge</title>
-
-  <link rel="stylesheet" href="../../assets/css/style.css">
-  <link rel="stylesheet" href="../../assets/css/components.css">
-
-  <style>
-    .filter-tabs-row {
-      display: flex;
-      gap: .75rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .tab-pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      padding: .65rem 1.25rem;
-      border-radius: 9999px;
-      font-size: .9rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid #e2e8f0;
-      background: #fff;
-      color: #64748b;
-      transition: .2s;
-    }
-
-    .tab-pill-btn:hover {
-      border-color: #cbd5e1;
-      color: #0f172a;
-    }
-
-    .tab-pill-btn.active {
-      background: #2563eb;
-      color: #fff;
-      border-color: #2563eb;
-      box-shadow: 0 4px 12px rgba(37,99,235,.2);
-    }
-
-    .tab-pill-badge {
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: #f1f5f9;
-      color: #475569;
-      font-size: .75rem;
-      font-weight: 800;
-    }
-
-    .tab-pill-btn.active .tab-pill-badge {
-      background: #1d4ed8;
-      color: #fff;
-    }
-
-    .my-proj-card {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 1.5rem;
-      padding: 1.75rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,.05);
-    }
-
-    .my-proj-card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,.05);
-    }
-
-    .my-proj-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .my-proj-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .my-proj-tag {
-      padding: 5px 11px;
-      border-radius: 999px;
-      font-size: .75rem;
-      font-weight: 700;
-      background: #f1f5f9;
-      color: #475569;
-    }
-
-    .my-proj-tag.pending {
-      background: #fffbeb;
-      color: #d97706;
-    }
-
-    .my-proj-tag.accepted {
-      background: #eff6ff;
-      color: #2563eb;
-    }
-
-    .my-proj-tag.rejected {
-      background: #fef2f2;
-      color: #dc2626;
-    }
-
-    .my-proj-tag.completed {
-      background: #ecfdf5;
-      color: #059669;
-    }
-
-    .my-proj-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: .9rem 0 .45rem;
-    }
-
-    .my-proj-company {
-      color: #64748b;
-      font-size: .875rem;
-      margin-bottom: 1rem;
-    }
-
-    .my-proj-meta {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 1.25rem;
-      color: #64748b;
-      font-size: .8rem;
-    }
-
-    .progress-track-box {
-      background: #f8fafc;
-      border: 1px solid #f1f5f9;
-      border-radius: 1rem;
-      padding: 1.25rem;
-      margin: 1.25rem 0;
-    }
-
-    .progress-track {
-      height: 8px;
-      border-radius: 999px;
-      background: #e2e8f0;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: #2563eb;
-    }
-
-    .card-actions-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 1rem;
-    }
-
-    .card-actions-grid a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      border-radius: .875rem;
-      padding: .85rem;
-      text-decoration: none;
-    }
-
-    .my-proj-empty {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 1.5rem;
-      padding: 3.5rem 1.5rem;
-      text-align: center;
-    }
-
-    .my-proj-empty h3 {
-      color: #0f172a;
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin: 0 0 9px;
-    }
-
-    .my-proj-empty p {
-      color: #64748b;
-      font-size: .9rem;
-      line-height: 1.7;
-    }
-
-    .my-proj-alert {
-      display: none;
-      padding: 15px;
-      margin-bottom: 20px;
-      background: #fef2f2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    .my-proj-rejected-note {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 12px;
-      padding: 14px;
-      color: #991b1b;
-      font-size: .85rem;
-      margin: 16px 0;
-    }
-
-    @media(max-width:640px) {
-      .card-actions-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .my-proj-card {
-        padding: 1.25rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Projects — SkillBridge</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<style>
+.sp-header{margin-bottom:26px}
+.sp-header h1{font-size:clamp(27px,3vw,36px);font-weight:800;color:#0f172a;margin:0 0 8px}
+.sp-header p{font-size:14px;line-height:1.6;color:#64748b;margin:0}
+.sp-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:25px;padding-bottom:16px;border-bottom:1px solid #e2e8f0}
+.sp-tab{border:0;background:transparent;border-radius:11px;padding:11px 16px;font:inherit;font-size:13px;font-weight:700;color:#64748b;cursor:pointer}
+.sp-tab.active{background:#eff6ff;color:#2563eb}
+.sp-tab span{display:inline-block;padding:3px 8px;border-radius:999px;background:#e2e8f0;font-size:11px;margin-left:5px}
+.sp-tab.active span{background:#2563eb;color:white}
+.sp-card{background:#fff;border:1px solid #e2e8f0;border-radius:19px;padding:25px;margin-bottom:17px}
+.sp-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.sp-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp-badge{padding:7px 12px;border-radius:999px;font-size:11px;font-weight:800;background:#f1f5f9;color:#475569}
+.sp-badge.active{background:#dbeafe;color:#2563eb}
+.sp-badge.pending{background:#fef3c7;color:#92400e}
+.sp-badge.rejected{background:#fee2e2;color:#b91c1c}
+.sp-badge.completed{background:#dcfce7;color:#15803d}
+.sp-badge.revision{background:#ffedd5;color:#c2410c}
+.sp-card h2{font-size:20px;color:#0f172a;font-weight:800;margin:0 0 10px}
+.sp-desc{font-size:13px;line-height:1.7;color:#64748b;margin:0 0 17px;white-space:pre-line}
+.sp-meta{display:flex;flex-wrap:wrap;gap:12px 20px;margin-bottom:20px;font-size:12px;color:#64748b}
+.sp-meta strong{color:#334155}
+.sp-review{background:#eff6ff;border:1px solid #bfdbfe;border-radius:11px;color:#1d4ed8;padding:13px 15px;font-size:12px;line-height:1.6;margin-bottom:18px}
+.sp-review.revision{background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+.sp-review.completed{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.sp-progress{margin:16px 0}
+.sp-progress-head{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#475569;font-weight:700;margin-bottom:9px}
+.sp-progress-track{height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+.sp-progress-fill{height:100%;background:#2563eb;border-radius:999px}
+.sp-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-top:1px solid #edf2f7;padding-top:19px;margin-top:20px}
+.sp-button{display:inline-flex;align-items:center;justify-content:center;padding:12px 17px;border-radius:10px;background:#2563eb;color:#fff!important;font-size:12px;font-weight:800;text-decoration:none!important}
+.sp-button.secondary{background:#eff6ff;color:#2563eb!important}
+.sp-button:hover{filter:brightness(.96)}
+.sp-state{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:55px 20px;text-align:center}
+.sp-state h3{color:#0f172a;margin:0 0 9px}
+.sp-state p{font-size:13px;line-height:1.7;color:#64748b}
+.sp-error{padding:15px;border:1px solid #fecaca;border-radius:12px;background:#fef2f2;color:#b91c1c;margin-bottom:20px;font-size:13px;white-space:pre-wrap}
+@media(max-width:650px){.sp-card{padding:18px}.sp-tabs{flex-wrap:nowrap;overflow-x:auto}.sp-tab{white-space:nowrap}}
+</style>
 </head>
 
 <body class="dashboard-body">
+<div class="dashboard-layout">
+  <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
+  <main class="dashboard-main">
+    <header class="dashboard-topbar" id="shared-topbar"></header>
+    <div class="dashboard-canvas">
 
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR STUDENT -->
-    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
-
-    <!-- MAIN -->
-    <main class="dashboard-main">
-
-      <!-- TOPBAR -->
-      <header class="dashboard-topbar" id="shared-topbar"></header>
-
-      <!-- CONTENT -->
-      <div class="dashboard-canvas">
-
-        <div style="margin-bottom:2rem;">
-
-          <h1 style="font-size:2.25rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:.5rem;">
-            My Projects
-          </h1>
-
-          <p style="color:#64748b;font-size:.95rem;margin:0;">
-            Track your industry collaborations, applications,
-            milestones, and completed projects.
-          </p>
-
-        </div>
-
-        <div id="projects-alert" class="my-proj-alert"></div>
-
-        <!-- FILTER TABS -->
-        <div class="filter-tabs-row">
-
-          <button
-            type="button"
-            class="tab-pill-btn active"
-            data-tab="active"
-          >
-            Active Projects
-            <span class="tab-pill-badge" id="badge-count-active">0</span>
-          </button>
-
-          <button
-            type="button"
-            class="tab-pill-btn"
-            data-tab="pending"
-          >
-            Pending
-            <span class="tab-pill-badge" id="badge-count-pending">0</span>
-          </button>
-
-          <button
-            type="button"
-            class="tab-pill-btn"
-            data-tab="rejected"
-          >
-            Rejected
-            <span class="tab-pill-badge" id="badge-count-rejected">0</span>
-          </button>
-
-          <button
-            type="button"
-            class="tab-pill-btn"
-            data-tab="completed"
-          >
-            Completed
-            <span class="tab-pill-badge" id="badge-count-completed">0</span>
-          </button>
-
-        </div>
-
-        <!-- PROJECT LIST -->
-        <div id="projects-container">
-
-          <div class="my-proj-empty">
-            <h3>Memuat proyek...</h3>
-            <p>Sedang mengambil data dari Supabase.</p>
-          </div>
-
-        </div>
-
+      <div class="sp-header">
+        <h1>My Projects</h1>
+        <p>Track your industry collaborations, applications, and completed projects.</p>
       </div>
-    </main>
-  </div>
 
-  <!-- DEPENDENCIES -->
-  <script src="../../assets/vendor/supabase.js"></script>
-  <script src="../../assets/js/config.js"></script>
-  <script src="../../assets/js/supabase.js"></script>
-  <script src="../../assets/js/toast.js"></script>
-  <script src="../../assets/js/auth.js"></script>
-  <script src="../../assets/js/database.js"></script>
-  <script src="../../assets/js/settings.js"></script>
-  <script src="../../assets/js/notifications.js"></script>
+      <div class="sp-tabs" id="sp-tabs">
+        <button type="button" class="sp-tab active" data-filter="active">
+          Active Projects <span id="sp-count-active">0</span>
+        </button>
+        <button type="button" class="sp-tab" data-filter="pending">
+          Pending <span id="sp-count-pending">0</span>
+        </button>
+        <button type="button" class="sp-tab" data-filter="rejected">
+          Rejected <span id="sp-count-rejected">0</span>
+        </button>
+        <button type="button" class="sp-tab" data-filter="completed">
+          Completed <span id="sp-count-completed">0</span>
+        </button>
+      </div>
 
-    <script src="../../assets/js/layout.js"></script>
+      <div id="sp-error" hidden></div>
+
+      <div id="sp-project-list">
+        <div class="sp-state">
+          <h3>Memuat proyek...</h3>
+          <p>Sedang mengambil data dari Supabase.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="../../assets/vendor/supabase.js"></script>
+<script src="../../assets/js/config.js"></script>
+<script src="../../assets/js/supabase.js"></script>
+<script src="../../assets/js/toast.js"></script>
+<script src="../../assets/js/auth.js"></script>
+<script src="../../assets/js/database.js"></script>
+<script src="../../assets/js/settings.js"></script>
+<script src="../../assets/js/layout.js"></script>
+
 <script>
-    "use strict";
+(() => {
+  "use strict";
 
-    const auth = window.SkillBridgeAuth;
-    const db = window.supabaseClient;
+  const db = window.supabaseClient;
+  const auth = window.SkillBridgeAuth;
+  const list = document.getElementById("sp-project-list");
+  const errorBox = document.getElementById("sp-error");
 
-    let currentUser = null;
-    let currentFilter = "active";
-    let currentSearch = "";
-    let allStudentProjects = [];
+  let applications = [];
+  let projectsById = {};
+  let workspacesByProject = {};
+  let filter = "active";
 
-    function el(id) {
-      return document.getElementById(id);
+  const esc = value => String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+  const money = value =>
+    "Rp " + Number(value || 0).toLocaleString("id-ID");
+
+  function showError(message) {
+    errorBox.hidden = false;
+    errorBox.className = "sp-error";
+    errorBox.textContent = message;
+  }
+
+  function showState(title, description) {
+    list.innerHTML = `
+      <div class="sp-state">
+        <h3>${esc(title)}</h3>
+        <p>${esc(description)}</p>
+      </div>`;
+  }
+
+  function statusFor(app, workspace) {
+    if (workspace?.review_state === "approved" ||
+        workspace?.status === "completed") {
+      return "completed";
     }
 
-    function setText(id, value) {
-      const target = el(id);
+    const status = String(app.status || "pending").toLowerCase();
 
-      if (target) {
-        target.textContent = String(value ?? "");
-      }
-    }
+    if (status === "rejected") return "rejected";
+    if (status === "accepted") return "active";
+    if (status === "completed") return "completed";
+    return "pending";
+  }
 
-    function escapeHTML(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
+  function reviewInformation(workspace) {
+    if (!workspace) return "";
 
-    function showError(message) {
-      const box = el("projects-alert");
+    const state = workspace.review_state || "working";
 
-      box.style.display = "block";
-      box.textContent = message;
-    }
-
-    function clearError() {
-      const box = el("projects-alert");
-
-      box.style.display = "none";
-      box.textContent = "";
-    }
-
-    function formatMoney(value) {
-      const amount = Number(value);
-
-      if (!Number.isFinite(amount) || amount <= 0) {
-        return "Budget tidak dicantumkan";
-      }
-
-      return "Rp " + amount.toLocaleString("id-ID");
-    }
-
-    function formatDate(value) {
-      if (!value) return "Tidak tersedia";
-
-      const date = new Date(
-        String(value).length === 10
-          ? value + "T00:00:00"
-          : value
-      );
-
-      if (Number.isNaN(date.getTime())) {
-        return "-";
-      }
-
-      return date.toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
-    }
-
-    function emptyState(title, description) {
+    if (state === "submitted") {
       return `
-        <div class="my-proj-empty">
+        <div class="sp-review">
+          <strong>Menunggu Persetujuan UMKM</strong>
+          <div>Hasil akhir sudah dikirim. UMKM sedang memeriksa pekerjaanmu.</div>
+        </div>`;
+    }
 
-          <div style="font-size:2.5rem;margin-bottom:12px;">
-            📋
+    if (state === "revision_requested") {
+      return `
+        <div class="sp-review revision">
+          <strong>Revisi Diperlukan</strong>
+          <div>${esc(
+            workspace.revision_note ||
+            "UMKM meminta perbaikan sebelum proyek dapat diselesaikan."
+          )}</div>
+        </div>`;
+    }
+
+    if (state === "approved") {
+      return `
+        <div class="sp-review completed">
+          <strong>Project Approved</strong>
+          <div>UMKM telah menyetujui hasil akhir pekerjaanmu.</div>
+        </div>`;
+    }
+
+    return "";
+  }
+
+  function renderProjects() {
+    const items = applications.map(app => {
+      const project = projectsById[app.project_id] || {};
+      const workspace = workspacesByProject[app.project_id] || null;
+
+      return {
+        app,
+        project,
+        workspace,
+        status: statusFor(app, workspace)
+      };
+    });
+
+    for (const status of ["active", "pending", "rejected", "completed"]) {
+      const count = items.filter(item => item.status === status).length;
+      const el = document.getElementById("sp-count-" + status);
+      if (el) el.textContent = count;
+    }
+
+    const filtered = items.filter(item => item.status === filter);
+
+    if (!filtered.length) {
+      showState(
+        "Belum Ada Proyek",
+        filter === "active"
+          ? "Belum ada proyek aktif. Periksa tab Pending atau jelajahi Market."
+          : "Belum ada proyek dengan status ini."
+      );
+      return;
+    }
+
+    list.innerHTML = filtered.map(({ app, project, workspace, status }) => {
+      const title = project.title || "Proyek Kolaborasi";
+      const description = project.description || "";
+      const progress = workspace
+        ? Math.max(0, Math.min(100, Number(workspace.progress_percent || 0)))
+        : 0;
+
+      const labels = {
+        active: "ACTIVE",
+        pending: "PENDING",
+        rejected: "REJECTED",
+        completed: "COMPLETED"
+      };
+
+      const workspaceURL = workspace?.id
+        ? "workspace.html?id=" + encodeURIComponent(workspace.id)
+        : null;
+
+      const review = reviewInformation(workspace);
+
+      const actions = workspaceURL
+        ? `
+          <a href="${workspaceURL}" class="sp-button">
+            ${status === "completed" ? "Lihat Workspace" :
+              workspace.review_state === "revision_requested" ?
+              "Kerjakan Revisi" : "Buka Workspace"}
+          </a>
+          ${status !== "completed" ? `
+            <a href="${workspaceURL}&chat=1" class="sp-button secondary">
+              Buka Chat
+            </a>` : ""}
+        `
+        : status === "pending"
+          ? `<a href="../projects.html" class="sp-button secondary">Jelajahi Market</a>`
+          : status === "rejected"
+            ? `<a href="../projects.html" class="sp-button secondary">Cari Proyek Lain</a>`
+            : `<span style="font-size:12px;color:#64748b">
+                 Lamaran sudah diterima. Workspace belum tersedia.
+               </span>`;
+
+      return `
+        <article class="sp-card">
+          <div class="sp-card-head">
+            <div class="sp-badges">
+              <span class="sp-badge ${status}">${labels[status]}</span>
+              ${workspace?.review_state === "revision_requested"
+                ? `<span class="sp-badge revision">REVISION</span>` : ""}
+              ${workspace?.review_state === "submitted"
+                ? `<span class="sp-badge pending">AWAITING REVIEW</span>` : ""}
+            </div>
+            <strong style="font-size:14px;color:#0f172a">
+              ${money(project.budget)}
+            </strong>
           </div>
 
-          <h3>${escapeHTML(title)}</h3>
+          <h2>${esc(title)}</h2>
+          <p class="sp-desc">${esc(description)}</p>
 
-          <p>${escapeHTML(description)}</p>
+          ${review}
 
-          <a
-            href="../projects.html"
-            class="btn btn-primary"
-            style="display:inline-flex;text-decoration:none;border-radius:12px;margin-top:14px;"
-          >
-            Explore Marketplace
-          </a>
+          <div class="sp-meta">
+            <span><strong>Lokasi:</strong> ${esc(project.location || "-")}</span>
+            <span><strong>Status Lamaran:</strong> ${esc(app.status || "pending")}</span>
+            <span><strong>Status Workspace:</strong> ${esc(workspace?.status || "-")}</span>
+          </div>
 
-        </div>
-      `;
-    }
+          ${workspace && status === "active" ? `
+            <div class="sp-progress">
+              <div class="sp-progress-head">
+                <span>Progress Proyek</span>
+                <span>${progress}%</span>
+              </div>
+              <div class="sp-progress-track">
+                <div class="sp-progress-fill" style="width:${progress}%"></div>
+              </div>
+            </div>` : ""}
 
-    // =====================================
-    // LOAD DATA FROM SUPABASE
-    // =====================================
+          <div class="sp-actions">${actions}</div>
+        </article>`;
+    }).join("");
+  }
 
-    async function loadStudentProjects() {
-      clearError();
+  async function loadProjects() {
+    showState("Memuat proyek...", "Sedang mengambil data dari Supabase.");
+    errorBox.hidden = true;
 
+    try {
       if (!db || !auth) {
-        throw new Error(
-          "Supabase atau Auth belum terhubung."
-        );
+        throw new Error("Supabase atau Auth belum siap.");
       }
 
       await auth.ready();
-
-      const allowed = await auth.requireAuth("student");
-
-      if (!allowed) return;
-
-      currentUser = auth.getUser();
-
-      if (!currentUser?.id) {
-        throw new Error(
-          "Akun mahasiswa belum berhasil dimuat."
-        );
+      const user = await auth.requireAuth("student");
+      if (!user?.id) {
+        throw new Error("Sesi Student tidak ditemukan. Silakan login kembali.");
       }
 
-      const displayName =
-        currentUser.name || "Student";
+      // Ambil lamaran milik student yang sedang login.
+      const appResult = await db
+        .from("project_applications")
+        .select("*")
+        .eq("student_id", user.id)
+        .order("created_at", { ascending: false });
 
-      setText(
-        "student-avatar-circle",
-        displayName.charAt(0).toUpperCase()
-      );
+      if (appResult.error) throw appResult.error;
 
-      /*
-        Ambil lamaran milik mahasiswa login.
+      applications = appResult.data || [];
+      projectsById = {};
+      workspacesByProject = {};
 
-        Tidak menggunakan pencocokan nama,
-        ID dummy, atau localStorage.
-      */
+      const projectIds = [...new Set(
+        applications.map(app => app.project_id).filter(Boolean)
+      )];
 
-      const { data: applications, error: appsError } =
-        await db
-          .from("project_applications")
-          .select("*")
-          .eq("student_id", currentUser.id)
-          .order("created_at", {
-            ascending: false
-          });
+      if (projectIds.length) {
+        const [projectsResult, workspacesResult] = await Promise.all([
+          db.from("projects")
+            .select("id,title,description,budget,location,status")
+            .in("id", projectIds),
 
-      if (appsError) throw appsError;
+          db.from("workspaces")
+            .select("id,project_id,student_id,status,review_state,revision_note,progress_percent")
+            .eq("student_id", user.id)
+            .in("project_id", projectIds)
+        ]);
 
-      const myApplications = applications || [];
-
-      if (!myApplications.length) {
-        allStudentProjects = [];
-        updateCounts();
-        renderProjects();
-        return;
-      }
-
-      const projectIds = [
-        ...new Set(
-          myApplications.map(app => app.project_id)
-        )
-      ];
-
-      /*
-        Project details termasuk:
-        - category_name
-        - umkm_name
-        - budget
-        - status
-      */
-
-      const { data: projects, error: projectsError } =
-        await db
-          .from("projects_with_details")
-          .select("*")
-          .in("id", projectIds);
-
-      if (projectsError) throw projectsError;
-
-      /*
-        Ambil workspace yang benar-benar terhubung
-        dengan mahasiswa tersebut.
-
-        Workspace dibuat oleh trigger database
-        ketika aplikasi diterima.
-      */
-
-      const { data: workspaces, error: workspaceError } =
-        await db
-          .from("workspaces")
-          .select(
-            "id,project_id,application_id,student_id,status,progress_percent,current_stage,created_at"
-          )
-          .eq("student_id", currentUser.id);
-
-      if (workspaceError) throw workspaceError;
-
-      const projectMap = new Map(
-        (projects || []).map(project => [
-          project.id,
-          project
-        ])
-      );
-
-      const workspaceMap = new Map(
-        (workspaces || [])
-          .filter(workspace => workspace.application_id)
-          .map(workspace => [
-            workspace.application_id,
-            workspace
-          ])
-      );
-
-      /*
-        Sesuai skema:
-        workspaces.application_id mengacu ke
-        project_applications.id.
-
-        Jadi tidak asal mengambil workspace lain
-        yang memiliki judul proyek sama.
-      */
-
-      allStudentProjects = myApplications.map(app => {
-        const project = projectMap.get(
-          app.project_id
-        ) || null;
-
-        const workspace = workspaceMap.get(
-          app.id
-        ) || null;
-
-        let displayStatus = app.status;
-
-        if (
-          app.status === "accepted" &&
-          workspace?.status === "completed"
-        ) {
-          displayStatus = "completed";
-        }
-
-        if (app.status === "accepted") {
-          if (displayStatus !== "completed") {
-            displayStatus = "active";
+        if (projectsResult.error) {
+          console.warn("[Student Projects]", projectsResult.error);
+          showError("Sebagian detail proyek tidak dapat dibaca: " +
+            projectsResult.error.message);
+        } else {
+          for (const project of projectsResult.data || []) {
+            projectsById[project.id] = project;
           }
         }
 
-        return {
-          applicationId: app.id,
-          projectId: app.project_id,
-          workspaceId: workspace?.id || null,
-
-          title:
-            project?.title ||
-            "Project tidak tersedia",
-
-          company:
-            project?.umkm_name ||
-            "Nama UMKM belum tersedia",
-
-          category:
-            project?.category_name ||
-            "Kategori belum tersedia",
-
-          budget:
-            project?.budget ?? null,
-
-          location:
-            project?.location || null,
-
-          deadline:
-            project?.deadline || null,
-
-          appliedDate:
-            app.created_at,
-
-          applicationStatus:
-            app.status,
-
-          displayStatus,
-
-          workspaceStatus:
-            workspace?.status || null,
-
-          progress:
-            workspace?.progress_percent ?? null,
-
-          currentStage:
-            workspace?.current_stage ?? null
-        };
-      });
-
-      updateCounts();
-      renderProjects();
-    }
-
-    // =====================================
-    // COUNTERS
-    // =====================================
-
-    function updateCounts() {
-      const count = status =>
-        allStudentProjects.filter(
-          project => project.displayStatus === status
-        ).length;
-
-      setText("badge-count-active", count("active"));
-      setText("badge-count-pending", count("pending"));
-      setText("badge-count-rejected", count("rejected"));
-      setText("badge-count-completed", count("completed"));
-    }
-
-    // =====================================
-    // PROJECT RENDERING
-    // =====================================
-
-    function renderProjects() {
-      document.querySelectorAll(
-        ".tab-pill-btn"
-      ).forEach(button => {
-        button.classList.toggle(
-          "active",
-          button.dataset.tab === currentFilter
-        );
-      });
-
-      const container = el("projects-container");
-
-      const filtered = allStudentProjects.filter(
-        project => {
-          const statusMatches =
-            project.displayStatus === currentFilter;
-
-          const searchableText = [
-            project.title,
-            project.company,
-            project.category
-          ].join(" ").toLowerCase();
-
-          const searchMatches =
-            searchableText.includes(
-              currentSearch.toLowerCase()
-            );
-
-          return statusMatches && searchMatches;
-        }
-      );
-
-      if (!filtered.length) {
-        const descriptions = {
-          active:
-            "Belum ada proyek aktif. Proyek akan muncul setelah UMKM menerima lamaranmu.",
-          pending:
-            "Tidak ada lamaran yang sedang menunggu keputusan UMKM.",
-          rejected:
-            "Tidak ada lamaran yang ditolak.",
-          completed:
-            "Belum ada proyek yang diselesaikan."
-        };
-
-        container.innerHTML = emptyState(
-          "Belum ada proyek di kategori ini",
-          currentSearch
-            ? "Tidak ditemukan proyek yang sesuai pencarian."
-            : descriptions[currentFilter]
-        );
-
-        return;
-      }
-
-      container.innerHTML = filtered.map(
-        project => renderProjectCard(project)
-      ).join("");
-    }
-
-    // =====================================
-    // INDIVIDUAL PROJECT CARD
-    // =====================================
-
-    function renderProjectCard(project) {
-      const statusClasses = {
-        pending: "pending",
-        active: "accepted",
-        rejected: "rejected",
-        completed: "completed"
-      };
-
-      const statusLabels = {
-        pending: "Menunggu Review UMKM",
-        active: "Aktif Berjalan",
-        rejected: "Lamaran Ditolak",
-        completed: "Proyek Selesai"
-      };
-
-      const statusClass =
-        statusClasses[project.displayStatus] ||
-        "pending";
-
-      const statusLabel =
-        statusLabels[project.displayStatus] ||
-        project.displayStatus;
-
-      /*
-        Progress berasal dari database,
-        bukan hardcoded 65%.
-      */
-
-      const progress = project.progress == null
-        ? null
-        : Math.max(
-            0,
-            Math.min(100, Number(project.progress))
-          );
-
-      let progressHTML = "";
-
-      if (
-        project.displayStatus === "active" ||
-        project.displayStatus === "completed"
-      ) {
-        if (progress !== null) {
-          progressHTML = `
-            <div class="progress-track-box">
-
-              <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:11px;font-size:.85rem;font-weight:700;">
-
-                <span>Progress Kolaborasi</span>
-
-                <span style="color:#2563eb;">
-                  ${progress}%
-                </span>
-
-              </div>
-
-              <div class="progress-track">
-                <div
-                  class="progress-fill"
-                  style="width:${progress}%;"
-                ></div>
-              </div>
-
-              ${
-                project.currentStage != null
-                  ? `
-                    <div style="color:#64748b;font-size:.8rem;margin-top:10px;">
-                      Tahap ${escapeHTML(project.currentStage)}
-                    </div>
-                  `
-                  : ""
-              }
-
-            </div>
-          `;
+        if (workspacesResult.error) {
+          console.warn("[Student Workspaces]", workspacesResult.error);
+          showError("Workspace gagal dimuat: " + workspacesResult.error.message);
         } else {
-          progressHTML = `
-            <div class="progress-track-box">
-              <span style="color:#64748b;font-size:.85rem;">
-                Data progress workspace belum tersedia.
-              </span>
-            </div>
-          `;
+          for (const workspace of workspacesResult.data || []) {
+            workspacesByProject[workspace.project_id] = workspace;
+          }
         }
       }
 
-      let actionsHTML = "";
-
-      const detailURL =
-        "../project-detail.html?id=" +
-        encodeURIComponent(project.projectId);
-
-      /*
-        Workspace URL menggunakan workspace.id,
-        sesuai parameter 'id' yang saat ini dibaca
-        oleh halaman student/workspace.html.
-      */
-
-      if (project.workspaceId) {
-        const workspaceURL =
-          "workspace.html?id=" +
-          encodeURIComponent(project.workspaceId);
-
-        if (project.displayStatus === "completed") {
-          actionsHTML = `
-            <a href="${workspaceURL}" class="btn btn-outline">
-              Lihat Workspace Selesai
-            </a>
-
-            <a href="profile.html" class="btn btn-outline">
-              Lihat Profil
-            </a>
-          `;
-        } else {
-          actionsHTML = `
-            <a href="${workspaceURL}" class="btn btn-primary">
-              Buka Workspace
-            </a>
-
-            <a href="${workspaceURL}&chat=1" class="btn btn-outline">
-              Buka Chat
-            </a>
-          `;
-        }
-
-      } else if (project.displayStatus === "active") {
-        /*
-          Accepted tanpa workspace:
-          jangan berikan tautan workspace palsu.
-        */
-
-        actionsHTML = `
-          <div style="
-            grid-column:1/-1;
-            padding:13px;
-            border-radius:12px;
-            background:#fffbeb;
-            border:1px solid #fde68a;
-            color:#92400e;
-            font-size:.85rem;
-          ">
-            Lamaran diterima, tetapi workspace belum
-            ditemukan di Supabase. Periksa trigger
-            penerimaan aplikasi.
-          </div>
-        `;
-
-      } else {
-        actionsHTML = `
-          <a href="${detailURL}" class="btn btn-outline">
-            Lihat Detail Proyek
-          </a>
-
-          <a href="../projects.html" class="btn btn-outline">
-            Jelajahi Marketplace
-          </a>
-        `;
-      }
-
-      const rejectedNote =
-        project.displayStatus === "rejected"
-          ? `
-            <div class="my-proj-rejected-note">
-              UMKM telah menolak lamaran ini.
-              Kamu dapat mencari proyek lain yang
-              sesuai dengan keahlianmu.
-            </div>
-          `
-          : "";
-
-      return `
-        <article class="my-proj-card">
-
-          <div class="my-proj-header">
-
-            <div class="my-proj-tags">
-
-              <span class="my-proj-tag ${statusClass}">
-                ${escapeHTML(statusLabel)}
-              </span>
-
-              <span class="my-proj-tag">
-                ${escapeHTML(project.category)}
-              </span>
-
-            </div>
-
-            <strong style="
-              font-size:1.1rem;
-              color:#0f172a;
-              font-weight:800;
-            ">
-              ${escapeHTML(formatMoney(project.budget))}
-            </strong>
-
-          </div>
-
-          <h2 class="my-proj-title">
-            ${escapeHTML(project.title)}
-          </h2>
-
-          <div class="my-proj-company">
-            🏢 ${escapeHTML(project.company)}
-          </div>
-
-          <div class="my-proj-meta">
-
-            <span>
-              📅 Melamar:
-              ${escapeHTML(formatDate(project.appliedDate))}
-            </span>
-
-            ${
-              project.location
-                ? `
-                  <span>
-                    📍 ${escapeHTML(project.location)}
-                  </span>
-                `
-                : ""
-            }
-
-            ${
-              project.deadline
-                ? `
-                  <span>
-                    ⏰ Deadline:
-                    ${escapeHTML(formatDate(project.deadline))}
-                  </span>
-                `
-                : ""
-            }
-
-          </div>
-
-          ${progressHTML}
-
-          ${rejectedNote}
-
-          <div class="card-actions-grid">
-            ${actionsHTML}
-          </div>
-
-        </article>
-      `;
-    }
-
-    // =====================================
-    // FILTERS
-    // =====================================
-
-    function filterProjects(status) {
-      currentFilter = status;
       renderProjects();
-    }
 
-    document.querySelectorAll(
-      ".tab-pill-btn"
-    ).forEach(button => {
-      button.addEventListener("click", () => {
-        filterProjects(button.dataset.tab);
-      });
+    } catch (error) {
+      console.error("[Student My Projects]", error);
+      showError("Gagal memuat proyek: " + error.message);
+      list.innerHTML = "";
+    }
+  }
+
+  document.getElementById("sp-tabs").addEventListener("click", event => {
+    const button = event.target.closest("[data-filter]");
+    if (!button) return;
+
+    filter = button.dataset.filter;
+
+    document.querySelectorAll(".sp-tab").forEach(tab => {
+      tab.classList.toggle("active", tab === button);
     });
 
-    el("project-search-input").addEventListener(
-      "input",
-      event => {
-        currentSearch = event.target.value.trim();
-        renderProjects();
-      }
-    );
+    renderProjects();
+  });
 
-    el("settings-button").addEventListener(
-      "click",
-      () => {
-        window.SkillBridgeSettings?.openModal?.();
-      }
-    );
+  function init() {
+    loadProjects();
+  }
 
-    // =====================================
-    // PAGE INITIALIZATION
-    // =====================================
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      async () => {
-        try {
-          await loadStudentProjects();
-
-        } catch (error) {
-          console.error(
-            "[SkillBridge Student My Projects]",
-            error
-          );
-
-          showError(
-            "Gagal memuat proyek: " +
-            (error.message || "Unknown error")
-          );
-
-          el("projects-container").innerHTML =
-            emptyState(
-              "Proyek Tidak Dapat Dimuat",
-              "Periksa koneksi Supabase dan sesi login mahasiswa."
-            );
-        }
-      }
-    );
-  </script>
-
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
