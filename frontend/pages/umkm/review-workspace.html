@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Review Final Project — SkillBridge</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    .rv-container{max-width:1050px;margin:0 auto}
+    .rv-back{display:inline-block;margin-bottom:24px;color:#2563eb;text-decoration:none;font-weight:700;font-size:13px}
+    .rv-header{margin-bottom:28px}
+    .rv-header h1{font-size:32px;color:#0f172a;margin:0 0 8px;font-weight:800}
+    .rv-header p{color:#64748b;font-size:14px;margin:0;line-height:1.6}
+    .rv-card{background:white;border:1px solid #e2e8f0;border-radius:20px;padding:28px;margin-bottom:20px}
+    .rv-card h2{font-size:19px;color:#0f172a;margin:0 0 15px}
+    .rv-subtitle{color:#64748b;font-size:13px}
+    .rv-tag{display:inline-block;padding:7px 13px;border-radius:999px;background:#eff6ff;color:#2563eb;font-weight:800;font-size:12px}
+    .rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    .rv-field{background:#f8fafc;border-radius:12px;padding:15px}
+    .rv-field small{display:block;color:#64748b;margin-bottom:6px;font-size:12px}
+    .rv-field strong{display:block;color:#0f172a;font-size:14px}
+    .rv-deliverable{padding:19px;border:1px solid #e2e8f0;border-radius:14px;margin-top:12px}
+    .rv-deliverable h3{margin:0 0 10px;color:#0f172a;font-size:16px}
+    .rv-deliverable p{font-size:13px;color:#64748b;line-height:1.6;overflow-wrap:anywhere}
+    .rv-link{color:#2563eb;font-weight:700;font-size:13px;overflow-wrap:anywhere}
+    .rv-input{width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:12px;min-height:105px;font:inherit;font-size:13px;resize:vertical;box-sizing:border-box}
+    .rv-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+    .rv-btn{padding:13px 20px;border:0;border-radius:11px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+    .rv-approve{background:#16a34a;color:white}
+    .rv-revision{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+    .rv-btn:disabled{opacity:.55;cursor:wait}
+    .rv-error{background:#fef2f2;color:#b91c1c;padding:16px;border:1px solid #fecaca;border-radius:12px;margin-bottom:18px;white-space:pre-wrap}
+    .rv-success{background:#f0fdf4;color:#15803d;padding:16px;border:1px solid #bbf7d0;border-radius:12px;margin-bottom:18px}
+    @media(max-width:650px){.rv-grid{grid-template-columns:1fr}.rv-card{padding:20px}}
+  </style>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-layout">
+    <aside class="dashboard-sidebar"></aside>
+    <main class="dashboard-main">
+      <header class="dashboard-topbar"></header>
+      <div class="dashboard-canvas">
+        <div class="rv-container">
+          <a href="my-projects.html" class="rv-back">← Back to My Projects</a>
+
+          <div class="rv-header">
+            <h1>Review Final Project</h1>
+            <p>Periksa hasil pekerjaan mahasiswa sebelum menyetujui penyelesaian proyek.</p>
+          </div>
+
+          <div id="rv-message"></div>
+          <div id="rv-content">
+            <div class="rv-card">
+              <h2>Memuat Workspace...</h2>
+              <p class="rv-subtitle">Mengambil data proyek dan deliverable dari Supabase.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../assets/vendor/supabase.js"></script>
+  <script src="../../assets/js/config.js"></script>
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/database.js"></script>
+  <script src="../../assets/js/settings.js"></script>
+  <script src="../../assets/js/layout.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const sb = window.supabaseClient;
+      const auth = window.SkillBridgeAuth;
+      const workspaceId = new URLSearchParams(location.search).get("id");
+
+      let workspace = null;
+      let project = null;
+      let deliverables = [];
+      let busy = false;
+
+      const $ = id => document.getElementById(id);
+      const esc = value => String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+      const statuses = {
+        working: "Dalam Pengerjaan",
+        submitted: "Menunggu Persetujuan UMKM",
+        revision_requested: "Revisi Diminta",
+        approved: "Sudah Disetujui"
+      };
+
+      function message(text, success = false) {
+        $("rv-message").innerHTML =
+          `<div class="${success ? "rv-success" : "rv-error"}">${esc(text)}</div>`;
+      }
+
+      function render() {
+        const state = workspace.review_state || "working";
+        const canReview = state === "submitted";
+
+        const deliverablesHTML = deliverables.length
+          ? deliverables.map(d => `
+              <div class="rv-deliverable">
+                <h3>${esc(d.title || "Deliverable")}</h3>
+                <span class="rv-tag">${esc(d.type || "link")}</span>
+                <p>${esc(d.notes || "Tidak ada catatan tambahan.")}</p>
+                <a class="rv-link"
+                   href="${esc(d.url)}"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                  Buka Hasil Pekerjaan ↗
+                </a>
+              </div>
+            `).join("")
+          : `<p class="rv-subtitle">Belum ada deliverable yang diunggah.</p>`;
+
+        $("rv-content").innerHTML = `
+          <section class="rv-card">
+            <h2>${esc(project?.title || "Project Workspace")}</h2>
+            <span class="rv-tag">${esc(statuses[state] || state)}</span>
+
+            <div class="rv-grid">
+              <div class="rv-field">
+                <small>Status Proyek</small>
+                <strong>${esc(workspace.status)}</strong>
+              </div>
+              <div class="rv-field">
+                <small>Status Review</small>
+                <strong>${esc(statuses[state] || state)}</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="rv-card">
+            <h2>Project Deliverables</h2>
+            <p class="rv-subtitle">
+              Berikut hasil pekerjaan mahasiswa yang tersimpan di Supabase.
+            </p>
+            ${deliverablesHTML}
+          </section>
+
+          <section class="rv-card">
+            <h2>Project Completion</h2>
+
+            ${state === "approved"
+              ? `<div class="rv-success">Proyek telah disetujui dan dinyatakan selesai.</div>`
+              : state === "revision_requested"
+                ? `<p class="rv-subtitle">Revisi sudah diminta. Menunggu mahasiswa mengirimkan hasil akhir terbaru.</p>
+                   <p>${esc(workspace.revision_note || "")}</p>`
+                : state === "working"
+                  ? `<p class="rv-subtitle">Mahasiswa masih mengerjakan proyek dan belum melakukan Submit Final Project.</p>`
+                  : `<p class="rv-subtitle">Mahasiswa sudah mengirimkan hasil akhir. Periksa deliverable sebelum mengambil keputusan.</p>`
+            }
+
+            ${canReview ? `
+              <label for="rv-notes" style="display:block;margin:18px 0 9px;font-weight:700;font-size:13px">
+                Catatan Review
+              </label>
+              <textarea id="rv-notes" class="rv-input"
+                placeholder="Tuliskan feedback atau hal yang perlu diperbaiki..."></textarea>
+
+              <div class="rv-actions">
+                <button class="rv-btn rv-approve" id="rv-approve">
+                  ✓ Approve Final Project
+                </button>
+                <button class="rv-btn rv-revision" id="rv-revision">
+                  ↻ Request Revision
+                </button>
+              </div>
+            ` : ""}
+          </section>
+        `;
+
+        $("rv-approve")?.addEventListener("click", () => review("approve"));
+        $("rv-revision")?.addEventListener("click", () => review("request_revision"));
+      }
+
+      async function load() {
+        try {
+          if (!workspaceId) throw new Error("ID workspace tidak ditemukan pada URL.");
+          if (!sb || !auth) throw new Error("Supabase belum siap.");
+
+          await auth.ready();
+          const user = await auth.requireAuth("umkm");
+          if (!user?.id) return;
+
+          const result = await sb.from("workspaces")
+            .select("*")
+            .eq("id", workspaceId)
+            .eq("umkm_id", user.id)
+            .maybeSingle();
+
+          if (result.error) throw result.error;
+          if (!result.data) {
+            throw new Error("Workspace tidak ditemukan atau bukan milik akun UMKM ini.");
+          }
+          workspace = result.data;
+
+          const [projectResult, deliverableResult] = await Promise.all([
+            sb.from("projects")
+              .select("id,title")
+              .eq("id", workspace.project_id)
+              .maybeSingle(),
+
+            sb.from("workspace_deliverables")
+              .select("*")
+              .eq("workspace_id", workspaceId)
+              .order("created_at", { ascending: false })
+          ]);
+
+          if (projectResult.error) throw projectResult.error;
+          if (deliverableResult.error) throw deliverableResult.error;
+
+          project = projectResult.data;
+          deliverables = deliverableResult.data || [];
+          render();
+        } catch (error) {
+          console.error("[Review Workspace]", error);
+          message("Gagal membuka review: " + error.message);
+          $("rv-content").innerHTML = "";
+        }
+      }
+
+      async function review(decision) {
+        if (busy || workspace.review_state !== "submitted") return;
+
+        const note = $("rv-notes")?.value.trim() || "";
+
+        if (decision === "request_revision" && !note) {
+          message("Tuliskan alasan revisi terlebih dahulu.");
+          return;
+        }
+
+        const approval = decision === "approve";
+        const confirmed = confirm(approval
+          ? "Setujui hasil akhir mahasiswa dan selesaikan proyek?"
+          : "Kirim permintaan revisi kepada mahasiswa?");
+
+        if (!confirmed) return;
+
+        busy = true;
+        document.querySelectorAll(".rv-btn")
+          .forEach(button => button.disabled = true);
+
+        try {
+          const { error } = await sb.rpc("sb_umkm_review_final", {
+            p_workspace_id: workspaceId,
+            p_decision: decision,
+            p_note: note || null
+          });
+
+          if (error) throw error;
+
+          message(approval
+            ? "Hasil akhir berhasil disetujui."
+            : "Permintaan revisi berhasil dikirim.", true);
+
+          const updated = await sb.from("workspaces")
+            .select("*")
+            .eq("id", workspaceId)
+            .single();
+
+          if (updated.error) throw updated.error;
+          workspace = updated.data;
+          render();
+        } catch (error) {
+          console.error("[Submit Review]", error);
+          message("Gagal menyimpan review: " + error.message);
+        } finally {
+          busy = false;
+          document.querySelectorAll(".rv-btn")
+            .forEach(button => button.disabled = false);
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", load, { once: true });
+      } else {
+        load();
+      }
+    })();
+  </script>
+</body>
+</html>

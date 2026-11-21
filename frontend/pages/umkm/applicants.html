@@ -1,1383 +1,383 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evaluasi Pelamar Mahasiswa — SkillBridge</title>
-
-  <link rel="stylesheet" href="../../assets/css/style.css">
-  <link rel="stylesheet" href="../../assets/css/components.css">
-
-  <style>
-    .applicant-card {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 1.5rem;
-      padding: 1.75rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,.05);
-    }
-
-    .applicant-card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,.05);
-    }
-
-    .applicants-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .applicants-head h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -.02em;
-      margin: 0 0 4px;
-    }
-
-    .applicants-head p {
-      color: #64748b;
-      font-size: .95rem;
-      margin: 0;
-    }
-
-    .applicants-tools {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-      flex-wrap: wrap;
-    }
-
-    .applicant-count {
-      background: #eff6ff;
-      color: #2563eb;
-      font-weight: 800;
-      border-radius: 9999px;
-      padding: 7px 14px;
-      font-size: .85rem;
-    }
-
-    .applicant-identity {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .applicant-avatar {
-      width: 48px;
-      height: 48px;
-      flex-shrink: 0;
-      border-radius: 50%;
-      background: #eff6ff;
-      color: #2563eb;
-      font-size: 1.25rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .applicant-name {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin: 0 0 3px;
-    }
-
-    .applicant-university {
-      font-size: .85rem;
-      color: #64748b;
-    }
-
-    .applicant-status {
-      display: inline-block;
-      border-radius: 9999px;
-      padding: 5px 12px;
-      font-size: .8rem;
-      font-weight: 800;
-    }
-
-    .status-pending {
-      background: #fffbeb;
-      color: #d97706;
-    }
-
-    .status-accepted {
-      background: #ecfdf5;
-      color: #059669;
-    }
-
-    .status-rejected {
-      background: #fef2f2;
-      color: #dc2626;
-    }
-
-    .status-withdrawn {
-      background: #f1f5f9;
-      color: #64748b;
-    }
-
-    .applicant-skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 9px;
-    }
-
-    .applicant-skill {
-      background: #f1f5f9;
-      color: #334155;
-      border-radius: 9999px;
-      padding: 5px 11px;
-      font-size: .75rem;
-      font-weight: 600;
-    }
-
-    .applicant-letter {
-      background: #f8fafc;
-      border: 1px solid #f1f5f9;
-      border-radius: 1rem;
-      padding: 1.25rem;
-      margin: 1.25rem 0;
-    }
-
-    .applicant-letter strong {
-      color: #0f172a;
-      font-size: .9rem;
-    }
-
-    .applicant-letter p {
-      color: #475569;
-      font-size: .9rem;
-      line-height: 1.7;
-      margin: 8px 0 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .applicant-details {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 12px;
-      margin-bottom: 1.25rem;
-    }
-
-    .applicant-detail {
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 13px;
-    }
-
-    .applicant-detail-label {
-      color: #94a3b8;
-      font-size: .75rem;
-      margin-bottom: 6px;
-    }
-
-    .applicant-detail-value {
-      color: #334155;
-      font-size: .85rem;
-      font-weight: 700;
-      overflow-wrap: anywhere;
-    }
-
-    .applicant-detail-value a {
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    .applicant-ai-box {
-      display: none;
-      border: 1.5px solid #bfdbfe;
-      background: #eff6ff;
-      border-radius: 1rem;
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .applicant-ai-box h4 {
-      color: #1e40af;
-      font-size: .9rem;
-      font-weight: 800;
-      margin: 0 0 10px;
-    }
-
-    .applicant-ai-box p {
-      color: #1e3a8a;
-      font-size: .85rem;
-      line-height: 1.7;
-    }
-
-    .applicant-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      border-top: 1px solid #f1f5f9;
-      padding-top: 1.25rem;
-    }
-
-    .applicant-decision-actions {
-      display: flex;
-      gap: .75rem;
-      flex-wrap: wrap;
-    }
-
-    .applicant-action-btn {
-      border-radius: 9999px;
-      padding: .65rem 1.25rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .applicant-action-btn:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    .btn-reject {
-      background: transparent;
-      color: #dc2626;
-      border: 1px solid #fca5a5;
-    }
-
-    .applicant-empty {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: #fff;
-      border: 1.5px dashed #cbd5e1;
-      border-radius: 1.5rem;
-    }
-
-    .applicant-empty h3 {
-      color: #0f172a;
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin: 10px 0;
-    }
-
-    .applicant-empty p {
-      color: #64748b;
-      font-size: .9rem;
-      line-height: 1.7;
-    }
-
-    .applicants-alert {
-      display: none;
-      padding: 15px;
-      margin-bottom: 20px;
-      background: #fef2f2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    .applicants-alert.success {
-      background: #f0fdf4;
-      border-color: #bbf7d0;
-      color: #15803d;
-    }
-
-    .applicants-confirm {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 3000;
-      background: rgba(15,23,42,.6);
-      padding: 16px;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .applicants-confirm.active {
-      display: flex;
-    }
-
-    .applicants-confirm-panel {
-      background: #fff;
-      border-radius: 20px;
-      padding: 26px;
-      max-width: 460px;
-      width: 100%;
-    }
-
-    .applicants-confirm-panel h2 {
-      color: #0f172a;
-      font-size: 19px;
-      font-weight: 800;
-      margin: 0 0 12px;
-    }
-
-    .applicants-confirm-panel p {
-      color: #64748b;
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .applicants-confirm-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 22px;
-      flex-wrap: wrap;
-    }
-
-    @media(max-width:700px) {
-      .applicants-head h1 {
-        font-size: 1.7rem;
-      }
-
-      .applicant-card {
-        padding: 1.25rem;
-      }
-
-      .applicant-details {
-        grid-template-columns: 1fr;
-      }
-
-      .applicants-tools,
-      .applicants-tools select {
-        width: 100%;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Applicants — SkillBridge</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="../../assets/css/components.css">
+<style>
+.sbap-header{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:30px}
+.sbap-header h1{font-size:clamp(26px,3vw,36px);font-weight:800;color:#0f172a;margin:0 0 6px}
+.sbap-header p{font-size:14px;color:#64748b;margin:0;line-height:1.6}
+.sbap-filters{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sbap-count{background:#eff6ff;color:#2563eb;padding:9px 15px;border-radius:999px;font-size:12px;font-weight:800}
+.sbap-select{min-width:250px;max-width:100%;border:1px solid #dbe3ef;background:#fff;border-radius:12px;padding:12px 16px;font:inherit;font-size:13px;color:#334155}
+.sbap-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:25px;margin-bottom:18px}
+.sbap-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.sbap-person{display:flex;align-items:center;gap:14px}
+.sbap-avatar{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#eff6ff;color:#2563eb;font-weight:800;font-size:20px;flex-shrink:0}
+.sbap-person h2{font-size:17px;font-weight:800;color:#0f172a;margin:0 0 5px}
+.sbap-person p{font-size:12px;color:#64748b;margin:0}
+.sbap-status{display:inline-block;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:800;background:#fef3c7;color:#92400e}
+.sbap-status.accepted{background:#dcfce7;color:#15803d}
+.sbap-status.rejected{background:#fee2e2;color:#b91c1c}
+.sbap-section{margin-top:20px}
+.sbap-section strong{font-size:12px;color:#475569}
+.sbap-skills{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.sbap-skill{font-size:11px;color:#475569;background:#f1f5f9;padding:6px 10px;border-radius:7px}
+.sbap-letter{margin-top:18px;padding:18px;background:#f8fafc;border:1px solid #f1f5f9;border-radius:12px;font-size:13px;line-height:1.7;color:#475569;white-space:pre-wrap;overflow-wrap:anywhere}
+.sbap-letter strong{display:block;margin-bottom:7px;color:#0f172a}
+.sbap-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px;padding-top:20px;border-top:1px solid #e2e8f0}
+.sbap-btn{border:0;border-radius:10px;padding:12px 17px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;background:#2563eb;color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.sbap-btn.reject{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.sbap-btn.workspace{background:#eff6ff;color:#2563eb}
+.sbap-btn:disabled{opacity:.55;cursor:wait}
+.sbap-state{background:#fff;border:1px dashed #cbd5e1;border-radius:20px;text-align:center;padding:65px 20px;color:#64748b}
+.sbap-state h3{font-size:20px;color:#0f172a;margin:0 0 8px}
+.sbap-state p{font-size:13px;line-height:1.7}
+.sbap-error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;border-radius:12px;padding:16px;margin-bottom:20px;white-space:pre-wrap;font-size:13px}
+@media(max-width:650px){.sbap-card{padding:19px}.sbap-select{width:100%}.sbap-filters{width:100%}}
+</style>
 </head>
-
 <body class="dashboard-body">
-
-  <div class="dashboard-layout">
-
-    <!-- SIDEBAR UMKM ASLI -->
-    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
-
-    <!-- MAIN -->
-    <main class="dashboard-main">
-
-      <!-- TOPBAR ASLI -->
-      <header class="dashboard-topbar" id="shared-topbar"></header>
-
-      <!-- APPLICANTS CONTENT -->
-      <div class="dashboard-canvas">
-
-        <div class="applicants-head">
-          <div>
-            <h1>Evaluasi Pelamar Mahasiswa</h1>
-            <p>
-              Tinjau lamaran mahasiswa dan pilih kandidat
-              yang sesuai untuk proyek UMKM Anda.
-            </p>
-          </div>
-
-          <div class="applicants-tools">
-            <span id="applicants-count-badge" class="applicant-count">
-              0 Pelamar
-            </span>
-
-            <select
-              id="project-selector"
-              class="form-select"
-              style="min-width:280px;border-radius:9999px;"
-              aria-label="Pilih proyek"
-            >
-              <option value="">Memuat proyek...</option>
-            </select>
-          </div>
+<div class="dashboard-layout">
+  <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
+  <main class="dashboard-main">
+    <header class="dashboard-topbar" id="shared-topbar"></header>
+    <div class="dashboard-canvas">
+      <div class="sbap-header">
+        <div>
+          <h1>Evaluasi Pelamar Mahasiswa</h1>
+          <p>Tinjau lamaran mahasiswa dan pilih kandidat yang sesuai untuk proyek UMKM Anda.</p>
         </div>
-
-        <div
-          id="applicants-alert"
-          class="applicants-alert"
-          role="alert"
-        ></div>
-
-        <div id="applicants-list-container">
-          <div class="applicant-empty">
-            <h3>Memuat data pelamar...</h3>
-            <p>Mengambil lamaran dari Supabase.</p>
-          </div>
+        <div class="sbap-filters">
+          <span class="sbap-count" id="applicants-count-badge">0 Pelamar</span>
+          <select id="project-selector" class="sbap-select">
+            <option value="">Memuat proyek...</option>
+          </select>
         </div>
-
       </div>
 
-    </main>
-  </div>
-
-  <!-- CONFIRMATION MODAL -->
-  <div
-    id="decision-modal"
-    class="applicants-confirm"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="decision-modal-title"
-  >
-    <div class="applicants-confirm-panel">
-      <h2 id="decision-modal-title">
-        Konfirmasi Keputusan
-      </h2>
-
-      <p id="decision-modal-description"></p>
-
-      <div class="applicants-confirm-actions">
-        <button
-          type="button"
-          id="decision-cancel-btn"
-          class="btn btn-outline"
-        >
-          Batal
-        </button>
-
-        <button
-          type="button"
-          id="decision-confirm-btn"
-          class="btn btn-primary"
-        >
-          Konfirmasi
-        </button>
+      <div id="applicants-error" hidden></div>
+      <div id="applicants-list-container">
+        <div class="sbap-state">
+          <h3>Memuat data pelamar...</h3>
+          <p>Mengambil lamaran dari Supabase.</p>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
+</div>
 
-  <!-- DEPENDENCIES -->
-  <script src="../../assets/vendor/supabase.js"></script>
-  <script src="../../assets/js/config.js"></script>
-  <script src="../../assets/js/supabase.js"></script>
-  <script src="../../assets/js/toast.js"></script>
-  <script src="../../assets/js/auth.js"></script>
-  <script src="../../assets/js/database.js"></script>
-  <script src="../../assets/js/settings.js"></script>
-  <script src="../../assets/js/notifications.js"></script>
-  <script src="../../assets/js/api.js"></script>
+<script src="../../assets/vendor/supabase.js"></script>
+<script src="../../assets/js/config.js"></script>
+<script src="../../assets/js/supabase.js"></script>
+<script src="../../assets/js/toast.js"></script>
+<script src="../../assets/js/auth.js"></script>
+<script src="../../assets/js/database.js"></script>
+<script src="../../assets/js/settings.js"></script>
+<script src="../../assets/js/layout.js"></script>
 
-    <script src="../../assets/js/layout.js"></script>
 <script>
-    "use strict";
+(() => {
+  "use strict";
 
-    const auth = window.SkillBridgeAuth;
-    const skillDB = window.SkillBridgeDB;
-    const supabaseDB = window.supabaseClient;
+  const db = window.supabaseClient;
+  const auth = window.SkillBridgeAuth;
+  const selector = document.getElementById("project-selector");
+  const container = document.getElementById("applicants-list-container");
+  const badge = document.getElementById("applicants-count-badge");
+  const errorBox = document.getElementById("applicants-error");
 
-    let currentUser = null;
-    let currentProject = null;
-    let ownedProjects = [];
-    let currentApplicants = [];
-    let pendingDecision = null;
-    let isProcessingDecision = false;
+  let owner = null;
+  let myProjects = [];
+  let currentProject = null;
+  let applicants = [];
+  let workspaces = [];
+  let busy = false;
 
-    function el(id) {
-      return document.getElementById(id);
-    }
+  const esc = value => String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
-    function setText(id, value) {
-      const element = el(id);
+  function showError(text) {
+    errorBox.hidden = false;
+    errorBox.className = "sbap-error";
+    errorBox.textContent = text;
+  }
 
-      if (element) {
-        element.textContent = String(value ?? "");
-      }
-    }
+  function clearError() {
+    errorBox.hidden = true;
+    errorBox.textContent = "";
+  }
 
-    function escapeHTML(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
+  function showState(title, description) {
+    container.innerHTML = `
+      <div class="sbap-state">
+        <h3>${esc(title)}</h3>
+        <p>${esc(description)}</p>
+      </div>`;
+  }
 
-    function showAlert(message, success = false) {
-      const box = el("applicants-alert");
+  function findWorkspace(app) {
+    return workspaces.find(ws =>
+      String(ws.project_id) === String(app.project_id) &&
+      String(ws.student_id) === String(app.student_id)
+    );
+  }
 
-      box.textContent = message;
-      box.className = success
-        ? "applicants-alert success"
-        : "applicants-alert";
+  function statusLabel(status) {
+    const value = String(status || "pending").toLowerCase();
+    if (value === "accepted") return "Diterima";
+    if (value === "rejected") return "Ditolak";
+    return "Menunggu Keputusan";
+  }
 
-      box.style.display = "block";
-    }
+  function renderApplicants() {
+    badge.textContent = `${applicants.length} Pelamar`;
 
-    function clearAlert() {
-      const box = el("applicants-alert");
-
-      box.style.display = "none";
-      box.textContent = "";
-    }
-
-    function showEmpty(title, description) {
-      el("applicants-list-container").innerHTML = `
-        <div class="applicant-empty">
-          <div style="font-size:2.5rem;margin-bottom:12px;">
-            📭
-          </div>
-          <h3>${escapeHTML(title)}</h3>
-          <p>${escapeHTML(description)}</p>
-        </div>
-      `;
-    }
-
-    function formatDate(value) {
-      if (!value) return "Tidak tersedia";
-
-      const date = new Date(value);
-
-      if (Number.isNaN(date.getTime())) {
-        return "-";
-      }
-
-      return date.toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
-    }
-
-    function safeURL(value) {
-      if (!value) return null;
-
-      try {
-        const url = new URL(value);
-
-        if (
-          url.protocol === "https:" ||
-          url.protocol === "http:"
-        ) {
-          return url.href;
-        }
-      } catch (error) {
-        return null;
-      }
-
-      return null;
-    }
-
-    function getStatusLabel(status) {
-      const labels = {
-        pending: "Menunggu Keputusan",
-        accepted: "Diterima",
-        rejected: "Ditolak",
-        withdrawn: "Ditarik Mahasiswa"
-      };
-
-      return labels[status] || status || "-";
-    }
-
-    // =====================================
-    // INITIALIZE PAGE
-    // =====================================
-
-    async function initPage() {
-      try {
-        if (!auth || !skillDB || !supabaseDB) {
-          throw new Error(
-            "Supabase, Auth, atau database.js belum terhubung."
-          );
-        }
-
-        const allowedUser = await auth.requireAuth(["umkm"]);
-
-        if (!allowedUser) return;
-
-        currentUser = auth.getUser();
-
-        if (!currentUser?.id) {
-          throw new Error(
-            "Akun UMKM belum berhasil dimuat."
-          );
-        }
-
-        const name =
-          currentUser.company_name ||
-          currentUser.name ||
-          "UMKM";
-
-        setText(
-          "umkm-avatar-circle",
-          name.charAt(0).toUpperCase()
-        );
-
-        await loadOwnedProjects();
-
-      } catch (error) {
-        console.error("[Applicants Init]", error);
-
-        showAlert(
-          error.message || "Gagal membuka halaman Applicants."
-        );
-
-        showEmpty(
-          "Gagal Memuat Pelamar",
-          "Periksa koneksi Supabase dan login UMKM."
-        );
-      }
-    }
-
-    // =====================================
-    // LOAD UMKM'S OWN PROJECTS
-    // =====================================
-
-    async function loadOwnedProjects() {
-      const { data, error } = await supabaseDB
-        .from("projects")
-        .select("id,title,status,owner_id")
-        .eq("owner_id", currentUser.id)
-        .order("created_at", {
-          ascending: false
-        });
-
-      if (error) throw error;
-
-      ownedProjects = data || [];
-
-      const selector = el("project-selector");
-
-      selector.innerHTML = "";
-
-      if (!ownedProjects.length) {
-        const option = document.createElement("option");
-
-        option.value = "";
-        option.textContent = "Belum ada proyek";
-
-        selector.appendChild(option);
-        selector.disabled = true;
-
-        showEmpty(
-          "Belum Ada Proyek",
-          "Buat proyek melalui menu Projects agar mahasiswa dapat melamar."
-        );
-
-        return;
-      }
-
-      selector.disabled = false;
-
-      ownedProjects.forEach(project => {
-        const option = document.createElement("option");
-
-        option.value = project.id;
-        option.textContent = project.title;
-
-        selector.appendChild(option);
-      });
-
-      const params = new URLSearchParams(
-        window.location.search
+    if (!applicants.length) {
+      showState(
+        "Belum Ada Pelamar",
+        "Belum ada lamaran mahasiswa untuk proyek yang dipilih."
       );
-
-      const requestedId =
-        params.get("project_id") ||
-        params.get("projectId");
-
-      // Hanya boleh memilih ID yang benar-benar
-      // dimiliki UMKM login. Tidak ada ID dummy 'p1'.
-
-      const selected = ownedProjects.find(
-        project => project.id === requestedId
-      );
-
-      const selectedId = selected
-        ? selected.id
-        : ownedProjects[0].id;
-
-      selector.value = selectedId;
-
-      await loadApplicants(selectedId);
+      return;
     }
 
-    // =====================================
-    // LOAD APPLICATIONS
-    // =====================================
-
-    async function loadApplicants(projectId) {
-      clearAlert();
-
-      if (!projectId) {
-        showEmpty(
-          "Pilih Proyek",
-          "Silakan pilih proyek terlebih dahulu."
-        );
-        return;
-      }
-
-      currentProject = ownedProjects.find(
-        project => project.id === projectId
-      );
-
-      if (!currentProject) {
-        throw new Error(
-          "Proyek tersebut bukan milik akun UMKM ini."
-        );
-      }
-
-      showEmpty(
-        "Memuat Pelamar...",
-        "Sedang mengambil data lamaran mahasiswa."
-      );
-
-      try {
-        // Fungsi dari database.js yang sudah ada.
-        // Mengakses applications_with_student.
-        const applicants =
-          await skillDB.getApplicationsForProject(projectId);
-
-        currentApplicants = applicants || [];
-
-        setText(
-          "applicants-count-badge",
-          currentApplicants.length + " Pelamar Terdaftar"
-        );
-
-        renderApplicants(currentApplicants);
-
-      } catch (error) {
-        console.error("[Load Applicants]", error);
-
-        showAlert(
-          "Gagal memuat pelamar: " + error.message
-        );
-
-        showEmpty(
-          "Data Pelamar Tidak Dapat Dimuat",
-          "Periksa koneksi dan izin akses database."
-        );
-      }
-    }
-
-    // =====================================
-    // RENDER ALL APPLICANTS
-    // =====================================
-
-    function renderApplicants(applicants) {
-      const container = el("applicants-list-container");
-
-      container.innerHTML = "";
-
-      if (!applicants.length) {
-        showEmpty(
-          "Belum Ada Pelamar untuk Proyek Ini",
-          "Saat mahasiswa mengirim lamaran, datanya akan muncul di halaman ini."
-        );
-        return;
-      }
-
-      applicants.forEach(application => {
-        container.appendChild(
-          createApplicantCard(application)
-        );
-      });
-    }
-
-    // =====================================
-    // CREATE REAL APPLICATION CARD
-    // =====================================
-
-    function createApplicantCard(app) {
-      const card = document.createElement("div");
-
-      card.className = "applicant-card";
-      card.id = "app-card-" + app.id;
-
-      const studentName =
-        app.student_name ||
-        "Nama mahasiswa belum dilengkapi";
-
-      const university =
-        app.student_university ||
-        "Universitas belum dilengkapi";
-
+    container.innerHTML = applicants.map(app => {
+      const status = String(app.status || "pending").toLowerCase();
+      const name = app.student_name || "Mahasiswa";
+      const university = app.student_university || "Universitas belum diisi";
       const skills = Array.isArray(app.student_skills)
-        ? app.student_skills
-        : [];
+        ? app.student_skills : [];
+      const workspace = findWorkspace(app);
 
-      const status = app.status || "pending";
-
-      const statusClass = [
-        "pending",
-        "accepted",
-        "rejected",
-        "withdrawn"
-      ].includes(status)
-        ? status
-        : "pending";
-
-      const portfolioURL = safeURL(app.portfolio_url);
-
-      const portfolioHTML = portfolioURL
-        ? `
-          <a
-            href="${escapeHTML(portfolioURL)}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Buka Portofolio ↗
-          </a>
-        `
-        : "Belum dicantumkan";
-
-      const skillsHTML = skills.length
-        ? skills.map(skill => `
-            <span class="applicant-skill">
-              ${escapeHTML(skill)}
-            </span>
-          `).join("")
-        : `
-          <span class="profile-muted">
-            Belum ada skill di profil mahasiswa.
-          </span>
-        `;
-
-      card.innerHTML = `
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:flex-start;
-          flex-wrap:wrap;
-          gap:1rem;
-          margin-bottom:1.25rem;
-        ">
-
-          <div class="applicant-identity">
-
-            <div class="applicant-avatar">
-              ${escapeHTML(studentName.charAt(0).toUpperCase())}
-            </div>
-
-            <div>
-              <h3 class="applicant-name">
-                ${escapeHTML(studentName)}
-              </h3>
-
-              <div class="applicant-university">
-                🎓 ${escapeHTML(university)}
-              </div>
-
-              ${
-                app.student_major
-                  ? `<div class="applicant-university">
-                      ${escapeHTML(app.student_major)}
-                    </div>`
-                  : ""
-              }
-            </div>
-          </div>
-
-          <span class="applicant-status status-${statusClass}">
-            ${escapeHTML(getStatusLabel(status))}
-          </span>
-        </div>
-
-        <div style="margin-bottom:1.25rem;">
-          <div style="
-            font-size:.75rem;
-            font-weight:800;
-            color:#94a3b8;
-            text-transform:uppercase;
-            margin-bottom:7px;
-          ">
-            Keahlian yang Dimiliki
-          </div>
-
-          <div class="applicant-skills">
-            ${skillsHTML}
-          </div>
-        </div>
-
-        <div class="applicant-letter">
-          <strong>Surat Pengantar &amp; Motivasi</strong>
-
-          <p>
-            ${escapeHTML(
-              app.cover_letter ||
-              "Mahasiswa tidak mencantumkan cover letter."
-            )}
-          </p>
-        </div>
-
-        <div class="applicant-details">
-          <div class="applicant-detail">
-            <div class="applicant-detail-label">
-              Portfolio / GitHub
-            </div>
-
-            <div class="applicant-detail-value">
-              ${portfolioHTML}
-            </div>
-          </div>
-
-          <div class="applicant-detail">
-            <div class="applicant-detail-label">
-              Estimasi Pengerjaan
-            </div>
-
-            <div class="applicant-detail-value">
-              ${escapeHTML(
-                app.timeline_estimate || "Belum dicantumkan"
-              )}
-            </div>
-          </div>
-
-          <div class="applicant-detail">
-            <div class="applicant-detail-label">
-              Tanggal Lamaran
-            </div>
-
-            <div class="applicant-detail-value">
-              ${escapeHTML(formatDate(app.created_at))}
-            </div>
-          </div>
-
-          <div class="applicant-detail">
-            <div class="applicant-detail-label">
-              Status Lamaran
-            </div>
-
-            <div class="applicant-detail-value">
-              ${escapeHTML(getStatusLabel(status))}
-            </div>
-          </div>
-        </div>
-
-        <div class="applicant-ai-box" id="ai-box-${app.id}">
-          <h4>✨ Hasil Analisis Kecocokan AI</h4>
-
-          <div
-            id="ai-score-${app.id}"
-            style="font-size:22px;font-weight:800;color:#2563eb;"
-          ></div>
-
-          <p id="ai-recommendation-${app.id}"></p>
-          <p id="ai-reason-${app.id}"></p>
-        </div>
-
-        <div class="applicant-actions">
-
-          <button
-            type="button"
-            id="btn-ai-${app.id}"
-            class="btn btn-outline applicant-action-btn"
-            style="color:#2563eb;border-color:#bfdbfe;"
-          >
-            ⚡ Analisis Kecocokan AI
-          </button>
-
-          <div
-            class="applicant-decision-actions"
-            id="decision-actions-${app.id}"
-          ></div>
-
-        </div>
-      `;
-
-      const aiButton = card.querySelector(
-        "#btn-ai-" + app.id
-      );
-
-      aiButton.addEventListener("click", () => {
-        evaluateApplicant(app.id);
-      });
-
-      const decisionContainer = card.querySelector(
-        "#decision-actions-" + app.id
-      );
+      let actions = "";
 
       if (status === "pending") {
-        const rejectButton = document.createElement("button");
-
-        rejectButton.type = "button";
-        rejectButton.className =
-          "btn applicant-action-btn btn-reject";
-
-        rejectButton.textContent = "Tolak";
-
-        rejectButton.addEventListener("click", () => {
-          openDecisionModal(app.id, "rejected");
-        });
-
-        const acceptButton = document.createElement("button");
-
-        acceptButton.type = "button";
-        acceptButton.className =
-          "btn btn-primary applicant-action-btn";
-
-        acceptButton.textContent = "✅ Terima & Mulai Kolaborasi";
-
-        acceptButton.addEventListener("click", () => {
-          openDecisionModal(app.id, "accepted");
-        });
-
-        decisionContainer.appendChild(rejectButton);
-        decisionContainer.appendChild(acceptButton);
-
+        actions = `
+          <button type="button" class="sbap-btn"
+            data-decision="accepted" data-id="${esc(app.id)}">
+            Terima &amp; Mulai Kolaborasi
+          </button>
+          <button type="button" class="sbap-btn reject"
+            data-decision="rejected" data-id="${esc(app.id)}">
+            Tolak Lamaran
+          </button>`;
+      } else if (status === "accepted") {
+        actions = workspace ? `
+          <a class="sbap-btn workspace"
+             href="review-workspace.html?id=${encodeURIComponent(workspace.id)}">
+            ${workspace.review_state === "submitted"
+              ? "Review Final Project"
+              : "Buka Workspace"} →
+          </a>` : `
+          <span style="font-size:12px;color:#64748b">
+            Lamaran diterima. Workspace belum tersedia.
+          </span>`;
       } else {
-        const text = document.createElement("span");
-
-        text.className =
-          "applicant-status status-" + statusClass;
-
-        text.textContent =
-          "Lamaran sudah diproses: " +
-          getStatusLabel(status);
-
-        decisionContainer.appendChild(text);
+        actions = `
+          <span style="font-size:12px;color:#64748b">
+            Lamaran ini sudah ditolak.
+          </span>`;
       }
 
-      return card;
+      return `
+        <article class="sbap-card">
+          <div class="sbap-top">
+            <div class="sbap-person">
+              <div class="sbap-avatar">${esc(name.charAt(0).toUpperCase())}</div>
+              <div>
+                <h2>${esc(name)}</h2>
+                <p>${esc(university)}</p>
+              </div>
+            </div>
+            <span class="sbap-status ${status === "accepted"
+              ? "accepted" : status === "rejected" ? "rejected" : ""}">
+              ${statusLabel(status)}
+            </span>
+          </div>
+
+          <div class="sbap-section">
+            <strong>KEAHLIAN MAHASISWA</strong>
+            <div class="sbap-skills">
+              ${skills.length ? skills.map(skill =>
+                `<span class="sbap-skill">${esc(skill)}</span>`
+              ).join("") : `<span class="sbap-skill">Belum diisi</span>`}
+            </div>
+          </div>
+
+          <div class="sbap-letter">
+            <strong>Surat Pengantar &amp; Solusi</strong>
+            ${esc(app.cover_letter || "Mahasiswa belum memberikan surat pengantar.")}
+          </div>
+
+          ${app.portfolio_url ? `
+            <div class="sbap-section">
+              <a href="${esc(app.portfolio_url)}" target="_blank"
+                rel="noopener noreferrer"
+                style="color:#2563eb;font-size:13px;font-weight:700">
+                Lihat Portfolio →
+              </a>
+            </div>` : ""}
+
+          <div class="sbap-actions">${actions}</div>
+        </article>`;
+    }).join("");
+  }
+
+  async function loadApplicants(projectId) {
+    clearError();
+    currentProject = myProjects.find(p => String(p.id) === String(projectId));
+
+    if (!currentProject) {
+      applicants = [];
+      badge.textContent = "0 Pelamar";
+      showState("Pilih Proyek", "Pilih proyek untuk melihat daftar mahasiswa.");
+      return;
     }
 
-    // =====================================
-    // AI MATCHING
-    // =====================================
+    showState("Memuat data pelamar...", "Mengambil lamaran dari Supabase.");
 
-    async function evaluateApplicant(applicationId) {
-      const app = currentApplicants.find(
-        item => item.id === applicationId
+    try {
+      // View aplikasi asli, bukan data dummy.
+      const result = await db
+        .from("applications_with_student")
+        .select("*")
+        .eq("project_id", currentProject.id)
+        .order("created_at", { ascending: false });
+
+      if (result.error) throw result.error;
+      applicants = result.data || [];
+
+      const workspaceResult = await db
+        .from("workspaces")
+        .select("id,project_id,student_id,umkm_id,status,review_state")
+        .eq("project_id", currentProject.id)
+        .eq("umkm_id", owner.id);
+
+      if (workspaceResult.error) {
+        console.warn("[Applicants Workspaces]", workspaceResult.error);
+        workspaces = [];
+        showError("Daftar pelamar berhasil dimuat, tetapi workspace gagal dibaca: " +
+          workspaceResult.error.message);
+      } else {
+        workspaces = workspaceResult.data || [];
+      }
+
+      renderApplicants();
+    } catch (error) {
+      console.error("[SkillBridge Applicants]", error);
+      showError("Gagal memuat pelamar: " + error.message);
+      container.innerHTML = "";
+    }
+  }
+
+  async function handleDecision(id, decision) {
+    if (busy) return;
+
+    const app = applicants.find(item => String(item.id) === String(id));
+    if (!app || String(app.status).toLowerCase() !== "pending") return;
+
+    const accept = decision === "accepted";
+    const confirmed = confirm(accept
+      ? `Terima ${app.student_name || "mahasiswa"} untuk proyek ini?`
+      : `Tolak lamaran ${app.student_name || "mahasiswa"}?`);
+
+    if (!confirmed) return;
+
+    busy = true;
+
+    try {
+      const result = await window.SkillBridgeDB.updateApplicationStatus(
+        app.id, decision
       );
 
-      if (!app || !currentProject) {
-        showAlert("Data mahasiswa atau proyek tidak ditemukan.");
+      if (result?.error) throw result.error;
+
+      await loadApplicants(currentProject.id);
+      if (window.toast?.success) {
+        window.toast.success(accept
+          ? "Lamaran diterima. Workspace kolaborasi dibuat jika trigger aktif."
+          : "Lamaran ditolak.");
+      }
+    } catch (error) {
+      console.error("[Applicant Decision]", error);
+      showError("Gagal memproses lamaran: " + error.message);
+    } finally {
+      busy = false;
+    }
+  }
+
+  async function init() {
+    try {
+      if (!db || !auth) throw new Error("Supabase atau Auth belum tersedia.");
+
+      await auth.ready();
+      owner = await auth.requireAuth("umkm");
+      if (!owner?.id) return;
+
+      // Hanya ambil proyek milik UMKM yang sedang login.
+      const result = await db
+        .from("projects")
+        .select("id,title,status,owner_id")
+        .eq("owner_id", owner.id)
+        .order("created_at", { ascending: false });
+
+      if (result.error) throw result.error;
+
+      myProjects = result.data || [];
+
+      if (!myProjects.length) {
+        selector.innerHTML = `<option value="">Belum ada proyek</option>`;
+        showState("Belum Ada Proyek", "Buat proyek dahulu melalui Create Project.");
         return;
       }
 
-      const button = el("btn-ai-" + applicationId);
+      const requested = new URLSearchParams(location.search)
+        .get("project_id");
 
-      button.disabled = true;
-      button.textContent = "⏳ Menganalisis...";
+      const selected = myProjects.some(p => String(p.id) === String(requested))
+        ? requested : myProjects[0].id;
 
-      try {
-        /*
-          Cek FastAPI terlebih dahulu.
+      selector.innerHTML = myProjects.map(project => `
+        <option value="${esc(project.id)}"
+          ${String(project.id) === String(selected) ? "selected" : ""}>
+          ${esc(project.title)}
+        </option>
+      `).join("");
 
-          Ini penting karena api.js mempunyai fallback
-          perhitungan lokal ketika backend tidak tersedia.
-          Halaman ini tidak akan mengaku hasil fallback
-          sebagai hasil evaluasi AI Gemini.
-        */
+      await loadApplicants(selected);
 
-        if (
-          typeof window.SkillBridgeAI?.checkHealth !== "function" ||
-          typeof window.SkillBridgeAI?.calculateMatch !== "function"
-        ) {
-          throw new Error(
-            "Layanan AI belum tersedia."
-          );
-        }
-
-        const healthy = await window.SkillBridgeAI.checkHealth();
-
-        if (!healthy) {
-          throw new Error(
-            "Backend FastAPI belum aktif. Nyalakan backend AI terlebih dahulu."
-          );
-        }
-
-        const studentProfile = {
-          name: app.student_name || "Mahasiswa",
-          university: app.student_university || "",
-          skills: app.student_skills || [],
-          bio: app.cover_letter || ""
-        };
-
-        const result =
-          await window.SkillBridgeAI.calculateMatch(
-            studentProfile,
-            currentProject
-          );
-
-        /*
-          Hanya menerima skor yang valid.
-          Skor ini adalah analisis untuk ditinjau UMKM,
-          bukan keputusan penerimaan otomatis.
-        */
-
-        const score = Number(result.match_score);
-
-        if (
-          !Number.isFinite(score) ||
-          score < 0 ||
-          score > 100
-        ) {
-          throw new Error(
-            "Backend tidak memberikan skor kecocokan yang valid."
-          );
-        }
-
-        const box = el("ai-box-" + applicationId);
-
-        setText(
-          "ai-score-" + applicationId,
-          score + "% Match"
-        );
-
-        setText(
-          "ai-recommendation-" + applicationId,
-          result.recommendation || ""
-        );
-
-        setText(
-          "ai-reason-" + applicationId,
-          result.reasoning || ""
-        );
-
-        box.style.display = "block";
-
-      } catch (error) {
-        console.error("[Applicant AI]", error);
-
-        showAlert(
-          error.message || "Analisis AI gagal."
-        );
-
-      } finally {
-        button.disabled = false;
-        button.textContent = "🔄 Analisis Ulang AI";
-      }
+    } catch (error) {
+      console.error("[Applicants Init]", error);
+      showError("Gagal membuka halaman Applicants: " + error.message);
+      container.innerHTML = "";
     }
+  }
 
-    // =====================================
-    // DECISION CONFIRMATION
-    // =====================================
+  selector.addEventListener("change", () => {
+    loadApplicants(selector.value);
+  });
 
-    function openDecisionModal(applicationId, decision) {
-      if (isProcessingDecision) return;
+  container.addEventListener("click", event => {
+    const button = event.target.closest("[data-decision]");
+    if (!button) return;
 
-      const application = currentApplicants.find(
-        app => app.id === applicationId
-      );
+    handleDecision(button.dataset.id, button.dataset.decision);
+  });
 
-      if (!application) {
-        showAlert("Lamaran tidak ditemukan.");
-        return;
-      }
-
-      if (application.status !== "pending") {
-        showAlert(
-          "Lamaran ini sudah diproses dan tidak bisa diputuskan ulang."
-        );
-        return;
-      }
-
-      pendingDecision = {
-        applicationId,
-        decision,
-        projectId: currentProject.id
-      };
-
-      const name =
-        application.student_name || "mahasiswa ini";
-
-      if (decision === "accepted") {
-        setText(
-          "decision-modal-title",
-          "Terima Lamaran Mahasiswa?"
-        );
-
-        setText(
-          "decision-modal-description",
-          "Kamu akan menerima " + name +
-          " untuk proyek " + currentProject.title +
-          ". Supabase akan membuat workspace kolaborasi " +
-          "secara otomatis. Keputusan ini tidak bisa dibatalkan melalui halaman ini."
-        );
-
-        const confirmButton = el("decision-confirm-btn");
-
-        confirmButton.textContent = "Ya, Terima Mahasiswa";
-        confirmButton.className = "btn btn-primary";
-
-      } else {
-        setText(
-          "decision-modal-title",
-          "Tolak Lamaran Mahasiswa?"
-        );
-
-        setText(
-          "decision-modal-description",
-          "Kamu akan menolak lamaran " + name +
-          " untuk proyek " + currentProject.title +
-          ". Keputusan ini tidak dapat diubah melalui halaman ini."
-        );
-
-        const confirmButton = el("decision-confirm-btn");
-
-        confirmButton.textContent = "Ya, Tolak Lamaran";
-        confirmButton.className =
-          "btn applicant-action-btn btn-reject";
-      }
-
-      el("decision-modal").classList.add("active");
-    }
-
-    function closeDecisionModal() {
-      if (isProcessingDecision) return;
-
-      pendingDecision = null;
-      el("decision-modal").classList.remove("active");
-    }
-
-    // =====================================
-    // ACCEPT / REJECT APPLICATION
-    // =====================================
-
-    async function confirmDecision() {
-      if (!pendingDecision || isProcessingDecision) {
-        return;
-      }
-
-      const decision = { ...pendingDecision };
-
-      const confirmButton = el("decision-confirm-btn");
-      const cancelButton = el("decision-cancel-btn");
-
-      isProcessingDecision = true;
-
-      confirmButton.disabled = true;
-      cancelButton.disabled = true;
-
-      confirmButton.textContent = "Menyimpan...";
-
-      try {
-        // Fungsi lama yang sudah tersedia di database.js.
-        // Fungsi ini memeriksa kepemilikan proyek
-        // sebelum memperbarui status lamaran.
-
-        await skillDB.updateApplicationStatus(
-          decision.applicationId,
-          decision.decision
-        );
-
-        /*
-          PENTING:
-          Trigger database sudah menangani:
-          - Workspace baru ketika accepted
-          - Notifikasi mahasiswa
-          - Notifikasi UMKM
-          - Perubahan status proyek menjadi active
-
-          Jadi jangan insert workspace manual,
-          jangan buat notifikasi role-wide,
-          dan jangan redirect otomatis ke
-          workspace mahasiswa.
-        */
-
-        pendingDecision = null;
-
-        el("decision-modal").classList.remove("active");
-
-        await loadApplicants(decision.projectId);
-
-        if (decision.decision === "accepted") {
-          showAlert(
-            "Lamaran berhasil diterima. Workspace kolaborasi dibuat oleh database.",
-            true
-          );
-        } else {
-          showAlert(
-            "Lamaran mahasiswa berhasil ditolak.",
-            true
-          );
-        }
-
-      } catch (error) {
-        console.error(
-          "[Applicant Decision]",
-          error
-        );
-
-        showAlert(
-          "Gagal memproses lamaran: " +
-          (error.message || "Unknown error")
-        );
-
-        pendingDecision = null;
-
-        el("decision-modal").classList.remove("active");
-
-        if (currentProject) {
-          await loadApplicants(currentProject.id);
-        }
-
-      } finally {
-        isProcessingDecision = false;
-
-        confirmButton.disabled = false;
-        cancelButton.disabled = false;
-      }
-    }
-
-    // =====================================
-    // EVENT LISTENERS
-    // =====================================
-
-    el("project-selector").addEventListener(
-      "change",
-      async function () {
-        try {
-          const selectedId = this.value;
-
-          const url = new URL(window.location.href);
-
-          url.searchParams.set("project_id", selectedId);
-
-          window.history.replaceState({}, "", url);
-
-          await loadApplicants(selectedId);
-
-        } catch (error) {
-          console.error(error);
-          showAlert(error.message);
-        }
-      }
-    );
-
-    el("decision-confirm-btn").addEventListener(
-      "click",
-      confirmDecision
-    );
-
-    el("decision-cancel-btn").addEventListener(
-      "click",
-      closeDecisionModal
-    );
-
-    el("decision-modal").addEventListener(
-      "click",
-      function (event) {
-        if (event.target === this) {
-          closeDecisionModal();
-        }
-      }
-    );
-
-    el("sidebar-settings-btn").addEventListener(
-      "click",
-      function () {
-        window.SkillBridgeSettings?.openModal?.();
-      }
-    );
-
-    document.addEventListener(
-      "keydown",
-      function (event) {
-        if (event.key === "Escape") {
-          closeDecisionModal();
-        }
-      }
-    );
-
-    // =====================================
-    // START
-    // =====================================
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initPage
-    );
-  </script>
-
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
