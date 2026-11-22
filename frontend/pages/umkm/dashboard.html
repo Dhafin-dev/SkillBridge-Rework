@@ -1,11 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>UMKM Dashboard — SkillBridge</title>
+
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+
   <style>
     .umkm-stats-row {
       display: grid;
@@ -14,37 +18,28 @@
       margin-bottom: 1.75rem;
     }
 
-    @media (max-width: 992px) {
-      .umkm-stats-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .umkm-stats-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
     .stat-pill-box {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
+      background: #fff;
+      border: 1px solid #e2e8f0;
       border-radius: 1.5rem;
       padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        border-color .15s ease;
     }
 
     .stat-pill-box:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      border-color: #CBD5E1;
+      box-shadow: 0 6px 16px rgba(0,0,0,.08);
+      border-color: #cbd5e1;
     }
 
     .navy-performance-banner {
-      background-color: #0B132B;
-      color: #FFFFFF;
+      background: #0b132b;
+      color: #fff;
       border-radius: 1.5rem;
       padding: 1.75rem 2.25rem;
       display: flex;
@@ -53,7 +48,7 @@
       margin-bottom: 2rem;
       flex-wrap: wrap;
       gap: 1.5rem;
-      box-shadow: 0 8px 24px rgba(11, 19, 43, 0.25);
+      box-shadow: 0 8px 24px rgba(11,19,43,.25);
     }
 
     .navy-metrics-group {
@@ -70,25 +65,25 @@
     .navy-metric-val {
       font-size: 1.75rem;
       font-weight: 800;
-      color: #FFFFFF;
+      color: #fff;
     }
 
     .navy-metric-lbl {
-      font-size: 0.7rem;
+      font-size: .7rem;
       font-weight: 700;
-      color: #94A3B8;
+      color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: .05em;
       margin-bottom: 2px;
     }
 
     .dash-section-card {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
+      background: #fff;
+      border: 1px solid #e2e8f0;
       border-radius: 1.5rem;
       padding: 1.75rem;
       margin-bottom: 1.75rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
     }
 
     .recent-proj-item {
@@ -96,233 +91,509 @@
       justify-content: space-between;
       align-items: center;
       padding: 1.25rem 0;
-      border-bottom: 1px solid #F1F5F9;
+      border-bottom: 1px solid #f1f5f9;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all .2s ease;
     }
 
     .recent-proj-item:hover {
-      background: #F8FAFC;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-      border-radius: 0.75rem;
+      background: #f8fafc;
+      padding-left: .75rem;
+      padding-right: .75rem;
+      border-radius: .75rem;
     }
 
     .recent-proj-item:last-child {
       border-bottom: none;
       padding-bottom: 0;
     }
+
+    @media (max-width: 992px) {
+      .umkm-stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .umkm-stats-row {
+        grid-template-columns: 1fr;
+      }
+
+      .navy-performance-banner {
+        padding: 1.25rem;
+      }
+
+      .dash-section-card {
+        padding: 1.25rem;
+      }
+    }
   </style>
 </head>
+
 <body class="dashboard-body">
+
   <div class="dashboard-layout">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
 
-    <!-- Main Canvas -->
+    <!-- ERROR MESSAGE -->
+    <div
+      id="dashboard-load-error"
+      hidden
+      style="
+        position:fixed;
+        z-index:1500;
+        left:20%;
+        right:2%;
+        top:15px;
+        padding:12px;
+        background:#fef2f2;
+        color:#b91c1c;
+        border:1px solid #fecaca;
+        border-radius:10px">
+    </div>
+
+    <!-- SHARED SIDEBAR -->
+    <aside
+      class="dashboard-sidebar"
+      id="shared-sidebar">
+    </aside>
+
+    <!-- MAIN -->
     <main class="dashboard-main">
-      <!-- Topbar -->
-      <header class="dashboard-topbar" id="shared-topbar"></header>
 
-      <!-- Dashboard Canvas -->
+      <!-- SHARED TOPBAR -->
+      <header
+        class="dashboard-topbar"
+        id="shared-topbar">
+      </header>
+
       <div class="dashboard-canvas">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+
+        <!-- WELCOME HEADER -->
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:2rem;
+          flex-wrap:wrap;
+          gap:1rem;">
+
           <div>
-            <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em; margin: 0 0 4px;">
-              Welcome back, <span id="umkm-display-business">Lumina Beans Roastery</span>
+            <h1 style="
+              font-size:2.25rem;
+              font-weight:800;
+              color:#0f172a;
+              letter-spacing:-.02em;
+              margin:0 0 4px;">
+
+              Welcome back,
+              <span id="umkm-display-business">
+                UMKM
+              </span>
             </h1>
-            <p style="color: #64748B; font-size: 0.95rem; margin: 0;">
+
+            <p style="
+              color:#64748b;
+              font-size:.95rem;
+              margin:0;">
+
               Here's your business collaboration overview.
             </p>
           </div>
 
-          <a href="create-project.html" class="btn btn-primary" style="border-radius: 9999px; padding: 0.75rem 1.5rem; font-weight: 700; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);">
+          <a
+            href="create-project.html"
+            class="btn btn-primary"
+            style="
+              border-radius:9999px;
+              padding:.75rem 1.5rem;
+              font-weight:700;
+              box-shadow:0 4px 14px rgba(37,99,235,.25);">
+
             + Post New Project
           </a>
         </div>
 
-        <!-- 4 Stats Cards (Matching 09_umkm_dashboard.png) -->
+        <!-- 4 STATS CARDS -->
         <div class="umkm-stats-row">
-          <div class="stat-pill-box" onclick="window.location.href='my-projects.html'">
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
-                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+
+          <!-- ACTIVE PROJECTS -->
+          <div
+            class="stat-pill-box"
+            onclick="location.href='my-projects.html'">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:.5rem;
+              color:#64748b;
+              font-size:.825rem;
+              font-weight:700;
+              margin-bottom:.75rem;">
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2563eb"
+                stroke-width="2">
+
+                <rect
+                  width="20"
+                  height="14"
+                  x="2"
+                  y="7"
+                  rx="2"
+                  ry="2"/>
+
+                <path
+                  d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
               </svg>
+
               <span>Active Projects</span>
             </div>
-            <div id="stat-active-projects" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
-              4
+
+            <div
+              id="stat-active-projects"
+              style="
+                font-size:2.25rem;
+                font-weight:800;
+                color:#0f172a;
+                line-height:1;">
+              —
             </div>
           </div>
 
-          <div class="stat-pill-box" onclick="window.location.href='applicants.html'">
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <!-- OPEN APPLICATIONS -->
+          <div
+            class="stat-pill-box"
+            onclick="location.href='applicants.html'">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:.5rem;
+              color:#64748b;
+              font-size:.825rem;
+              font-weight:700;
+              margin-bottom:.75rem;">
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#d97706"
+                stroke-width="2">
+
+                <path
+                  d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+
                 <circle cx="9" cy="7" r="4"/>
               </svg>
+
               <span>Open Apps</span>
             </div>
-            <div id="stat-open-apps" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
-              14
+
+            <div
+              id="stat-open-apps"
+              style="
+                font-size:2.25rem;
+                font-weight:800;
+                color:#0f172a;
+                line-height:1;">
+              —
             </div>
           </div>
 
-          <div class="stat-pill-box" onclick="window.location.href='my-projects.html'">
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          <!-- COLLABORATIONS -->
+          <div
+            class="stat-pill-box"
+            onclick="location.href='my-projects.html'">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:.5rem;
+              color:#64748b;
+              font-size:.825rem;
+              font-weight:700;
+              margin-bottom:.75rem;">
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7c3aed"
+                stroke-width="2">
+
+                <path
+                  d="M22 12h-4l-3 9L9 3l-3 9H2"/>
               </svg>
+
               <span>Total Collabs</span>
             </div>
-            <div id="stat-total-collabs" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
-              8
+
+            <div
+              id="stat-total-collabs"
+              style="
+                font-size:2.25rem;
+                font-weight:800;
+                color:#0f172a;
+                line-height:1;">
+              —
             </div>
           </div>
 
-          <div class="stat-pill-box" onclick="window.location.href='my-projects.html'">
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748B; font-size: 0.825rem; font-weight: 700; margin-bottom: 0.75rem;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
+          <!-- COMPLETED -->
+          <div
+            class="stat-pill-box"
+            onclick="location.href='my-projects.html'">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:.5rem;
+              color:#64748b;
+              font-size:.825rem;
+              font-weight:700;
+              margin-bottom:.75rem;">
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#059669"
+                stroke-width="2">
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"/>
+
                 <path d="m9 12 2 2 4-4"/>
               </svg>
+
               <span>Completed</span>
             </div>
-            <div id="stat-completed" style="font-size: 2.25rem; font-weight: 800; color: #0F172A; line-height: 1;">
-              1
+
+            <div
+              id="stat-completed"
+              style="
+                font-size:2.25rem;
+                font-weight:800;
+                color:#0f172a;
+                line-height:1;">
+              —
             </div>
           </div>
+
         </div>
 
-        <!-- Navy Overall Performance Banner (Matching 09_umkm_dashboard.png) -->
+        <!-- PERFORMANCE BANNER -->
         <div class="navy-performance-banner">
+
           <div>
-            <div style="font-size: 0.75rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+            <div style="
+              font-size:.75rem;
+              font-weight:700;
+              color:#94a3b8;
+              text-transform:uppercase;
+              letter-spacing:.05em;
+              margin-bottom:4px;">
+
               Overall Performance
             </div>
-            <div style="font-size: 1.6rem; font-weight: 800; color: #FFFFFF; letter-spacing: -0.01em;">
-              Projects are tracking well
+
+            <div style="
+              font-size:1.6rem;
+              font-weight:800;
+              color:#fff;
+              letter-spacing:-.01em;">
+
+              <span id="umkm-performance-title">
+                Memuat ringkasan...
+              </span>
             </div>
           </div>
 
           <div class="navy-metrics-group">
+
             <div class="navy-metric-item">
-              <div class="navy-metric-lbl">TOTAL PROJECTS</div>
-              <div class="navy-metric-val">8</div>
+              <div class="navy-metric-lbl">
+                TOTAL PROJECTS
+              </div>
+
+              <div
+                class="navy-metric-val"
+                id="umkm-banner-total-projects">
+                —
+              </div>
             </div>
+
             <div class="navy-metric-item">
-              <div class="navy-metric-lbl">TOTAL APPLICATIONS</div>
-              <div class="navy-metric-val">14</div>
+              <div class="navy-metric-lbl">
+                TOTAL APPLICATIONS
+              </div>
+
+              <div
+                class="navy-metric-val"
+                id="umkm-banner-total-applications">
+                —
+              </div>
             </div>
+
             <div class="navy-metric-item">
-              <div class="navy-metric-lbl">ACTIVE PROJECTS</div>
-              <div class="navy-metric-val">4</div>
+              <div class="navy-metric-lbl">
+                ACTIVE PROJECTS
+              </div>
+
+              <div
+                class="navy-metric-val"
+                id="umkm-banner-active-projects">
+                —
+              </div>
             </div>
+
           </div>
         </div>
 
-        <!-- Recent Projects Card (Matching 09_umkm_dashboard.png) -->
+        <!-- RECENT PROJECTS -->
         <div class="dash-section-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; font-weight: 800; color: #0F172A;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5">
-                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:1.25rem;">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:.5rem;
+              font-size:1.15rem;
+              font-weight:800;
+              color:#0f172a;">
+
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2563eb"
+                stroke-width="2.5">
+
+                <rect
+                  width="20"
+                  height="14"
+                  x="2"
+                  y="7"
+                  rx="2"
+                  ry="2"/>
+
+                <path
+                  d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
               </svg>
+
               <span>Recent Projects</span>
             </div>
-            <a href="my-projects.html" style="font-size: 0.85rem; font-weight: 700; color: #2563EB; text-decoration: none;">
+
+            <a
+              href="my-projects.html"
+              style="
+                font-size:.85rem;
+                font-weight:700;
+                color:#2563eb;
+                text-decoration:none;">
+
               View All
             </a>
           </div>
 
           <div id="umkm-recent-projects-list">
-            <!-- Project 1 -->
-            <div class="recent-proj-item" onclick="window.location.href='applicants.html?project_id=p_cust_seg'">
-              <div>
-                <div style="font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 3px;">
-                  Customer Segmentation & AI Sales Analytics
-                </div>
-                <div style="font-size: 0.8rem; color: #64748B;">3 applications</div>
-              </div>
-              <div>
-                <span class="badge" style="background: #ECFDF5; color: #059669; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">
-                  Active
-                </span>
-              </div>
-            </div>
-
-            <!-- Project 2 -->
-            <div class="recent-proj-item" onclick="window.location.href='applicants.html?project_id=p_coffee_sub'">
-              <div>
-                <div style="font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 3px;">
-                  Coffee Subscription App & Checkout Platform
-                </div>
-                <div style="font-size: 0.8rem; color: #64748B;">3 applications</div>
-              </div>
-              <div>
-                <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">
-                  COMPLETED
-                </span>
-              </div>
-            </div>
-
-            <!-- Project 3 -->
-            <div class="recent-proj-item" onclick="window.location.href='applicants.html?project_id=p_coffee_dev'">
-              <div>
-                <div style="font-weight: 800; font-size: 1.05rem; color: #0F172A; margin-bottom: 3px;">
-                  Coffee Subscription App Development
-                </div>
-                <div style="font-size: 0.8rem; color: #64748B;">1 applications</div>
-              </div>
-              <div>
-                <span class="badge" style="background: #EFF6FF; color: #2563EB; font-weight: 700; border-radius: 9999px; padding: 4px 12px; font-size: 0.75rem;">
-                  PUBLISHED
-                </span>
-              </div>
+            <div style="
+              padding:20px;
+              color:#64748b;">
+              Memuat proyek...
             </div>
           </div>
         </div>
 
-        <!-- Recent Activity Card (Matching 09_umkm_dashboard.png) -->
+        <!-- RECENT ACTIVITY -->
         <div class="dash-section-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; font-weight: 800; color: #0F172A;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2.5">
-                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:1.5rem;">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:.5rem;
+              font-size:1.15rem;
+              font-weight:800;
+              color:#0f172a;">
+
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#d97706"
+                stroke-width="2.5">
+
+                <path
+                  d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+
+                <path
+                  d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
               </svg>
+
               <span>Recent Activity</span>
             </div>
-            <a href="applicants.html" style="font-size: 0.85rem; font-weight: 700; color: #2563EB; text-decoration: none;">
+
+            <a
+              href="applicants.html"
+              style="
+                font-size:.85rem;
+                font-weight:700;
+                color:#2563eb;
+                text-decoration:none;">
+
               All Activity
             </a>
           </div>
 
-          <div style="min-height: 80px; display: flex; align-items: center; justify-content: center; color: #94A3B8; font-size: 0.9rem;">
-            No recent activity.
+          <div
+            id="umkm-recent-activity-list"
+            style="
+              min-height:80px;
+              color:#64748b;
+              font-size:13px;">
+
+            Memuat aktivitas...
           </div>
         </div>
+
       </div>
     </main>
   </div>
+
+  <!-- DEPENDENCIES -->
   <script src="../../assets/vendor/supabase.js"></script>
   <script src="../../assets/js/config.js"></script>
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/database.js"></script>
   <script src="../../assets/js/settings.js"></script>
-    <script src="../../assets/js/layout.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      window.SkillBridgeAuth.requireAuth('umkm');
-      const user = window.SkillBridgeAuth.getUser() || {};
-      if (user.company_name || user.name) {
-        const name = user.company_name || user.name;
-        document.getElementById('umkm-display-business').textContent = name;
-        document.getElementById('umkm-avatar-circle').textContent = name[0].toUpperCase();
-      }
-    });
-  </script>
+  <script src="../../assets/js/layout.js"></script>
+
+  <!-- LIVE DASHBOARD DATA -->
+  <script src="../../assets/js/dashboard-data.js"></script>
+
 </body>
 </html>

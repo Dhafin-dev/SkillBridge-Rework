@@ -1,0 +1,523 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Project Invitations — SkillBridge</title>
+
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+
+  <style>
+    .inv-page {
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+
+    .inv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .inv-header h1 {
+      font-size: 30px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 8px;
+    }
+
+    .inv-subtitle {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .inv-refresh {
+      padding: 11px 17px;
+      border: 1px solid #dbe3ef;
+      border-radius: 11px;
+      background: white;
+      color: #2563eb;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .inv-refresh:hover {
+      background: #eff6ff;
+    }
+
+    .inv-refresh:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    .inv-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .inv-stat-card {
+      padding: 21px;
+      border-radius: 16px;
+      background: white;
+      border: 1px solid #e2e8f0;
+    }
+
+    .inv-stat-label {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+
+    .inv-stat-value {
+      color: #0f172a;
+      font-size: 29px;
+      font-weight: 800;
+    }
+
+    .inv-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 13px;
+    }
+
+    .inv-tab {
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 15px;
+      background: transparent;
+      color: #64748b;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .inv-tab:hover {
+      color: #2563eb;
+      background: #eff6ff;
+    }
+
+    .inv-tab.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .inv-list {
+      display: grid;
+      gap: 17px;
+    }
+
+    .inv-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 23px;
+      box-shadow: 0 2px 8px rgba(15,23,42,.025);
+    }
+
+    .inv-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .inv-business {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: 0;
+    }
+
+    .inv-avatar {
+      display: grid;
+      place-items: center;
+      width: 49px;
+      height: 49px;
+      flex-shrink: 0;
+      background: #eaf1ff;
+      border-radius: 13px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #2563eb;
+    }
+
+    .inv-business-name {
+      color: #64748b;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .inv-project-title {
+      color: #0f172a;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .inv-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .inv-status.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .inv-status.accepted {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .inv-status.declined {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .inv-description {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #475569;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 18px 0;
+    }
+
+    .inv-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px 22px;
+      padding: 14px 0;
+      border-top: 1px solid #edf2f7;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .inv-meta strong {
+      color: #334155;
+    }
+
+    .inv-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .inv-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 17px;
+      border: 1px solid #2563eb;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      background: #2563eb;
+      color: white;
+    }
+
+    .inv-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .inv-btn.secondary {
+      background: white;
+      color: #2563eb;
+    }
+
+    .inv-btn.secondary:hover {
+      background: #eff6ff;
+    }
+
+    .inv-btn.danger {
+      border-color: #e2e8f0;
+      background: white;
+      color: #dc2626;
+    }
+
+    .inv-btn.danger:hover {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    .inv-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .inv-empty {
+      padding: 55px 25px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .inv-empty-icon {
+      font-size: 33px;
+      margin-bottom: 12px;
+    }
+
+    .inv-empty h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 9px;
+    }
+
+    .inv-empty p {
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .inv-error {
+      border-radius: 12px;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      color: #b91c1c;
+      padding: 14px 16px;
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    .inv-error[hidden] {
+      display: none;
+    }
+
+    .inv-info {
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+      border-radius: 13px;
+      padding: 15px 18px;
+      font-size: 12px;
+      line-height: 1.7;
+      margin-bottom: 23px;
+    }
+
+    @media (max-width: 700px) {
+      .inv-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .inv-header h1 {
+        font-size: 25px;
+      }
+
+      .inv-card {
+        padding: 18px;
+      }
+
+      .inv-actions .inv-btn {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside
+      class="dashboard-sidebar"
+      id="shared-sidebar">
+    </aside>
+
+    <main class="dashboard-main">
+
+      <!-- TOPBAR -->
+      <header
+        class="dashboard-topbar"
+        id="shared-topbar">
+      </header>
+
+      <div class="dashboard-canvas">
+        <div class="inv-page">
+
+          <!-- HEADER -->
+          <div class="inv-header">
+            <div>
+              <h1>Project Invitations</h1>
+
+              <p class="inv-subtitle">
+                Lihat undangan kolaborasi yang
+                dikirimkan UMKM kepadamu.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              id="inv-refresh"
+              class="inv-refresh">
+              Refresh Invitations
+            </button>
+          </div>
+
+          <!-- ERROR -->
+          <div
+            id="inv-error"
+            class="inv-error"
+            role="alert"
+            hidden>
+          </div>
+
+          <!-- INFORMATION -->
+          <div class="inv-info">
+            <strong>How it works:</strong>
+            Ketika UMKM mengundangmu ke sebuah proyek,
+            kamu dapat menerima atau menolak undangan
+            tersebut. Menerima undangan tidak otomatis
+            membuatmu bergabung ke Workspace.
+            Kamu masih perlu mengajukan lamaran dan
+            menunggu persetujuan akhir dari UMKM.
+          </div>
+
+          <!-- STATISTICS -->
+          <div class="inv-stats">
+
+            <div class="inv-stat-card">
+              <div class="inv-stat-label">
+                Pending Invitations
+              </div>
+
+              <div
+                id="inv-pending-count"
+                class="inv-stat-value">
+                —
+              </div>
+            </div>
+
+            <div class="inv-stat-card">
+              <div class="inv-stat-label">
+                Accepted Invitations
+              </div>
+
+              <div
+                id="inv-accepted-count"
+                class="inv-stat-value">
+                —
+              </div>
+            </div>
+
+            <div class="inv-stat-card">
+              <div class="inv-stat-label">
+                Declined Invitations
+              </div>
+
+              <div
+                id="inv-declined-count"
+                class="inv-stat-value">
+                —
+              </div>
+            </div>
+
+          </div>
+
+          <!-- STATUS FILTERS -->
+          <div
+            class="inv-tabs"
+            role="group"
+            aria-label="Filter undangan">
+
+            <button
+              type="button"
+              class="inv-tab active"
+              data-inv-filter="all">
+              All Invitations
+            </button>
+
+            <button
+              type="button"
+              class="inv-tab"
+              data-inv-filter="pending">
+              Pending
+            </button>
+
+            <button
+              type="button"
+              class="inv-tab"
+              data-inv-filter="accepted">
+              Accepted
+            </button>
+
+            <button
+              type="button"
+              class="inv-tab"
+              data-inv-filter="declined">
+              Declined
+            </button>
+          </div>
+
+          <!-- INVITATION LIST -->
+          <div
+            id="inv-list"
+            class="inv-list"
+            aria-live="polite">
+
+            <div class="inv-empty">
+              <div class="inv-empty-icon">✉️</div>
+              <h3>Loading Invitations...</h3>
+              <p>
+                Mengambil undangan proyek
+                dari Supabase.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- DEPENDENCIES -->
+  <script src="../../assets/vendor/supabase.js"></script>
+  <script src="../../assets/js/config.js"></script>
+  <script src="../../assets/js/supabase.js"></script>
+  <script src="../../assets/js/toast.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/database.js"></script>
+  <script src="../../assets/js/settings.js"></script>
+  <script src="../../assets/js/layout.js"></script>
+
+  <!-- INVITATIONS CONTROLLER -->
+  <script src="../../assets/js/invitations.js"></script>
+
+</body>
+</html>
