@@ -1,13 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Student Dashboard — SkillBridge</title>
+
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+
   <style>
-    /* Student Dashboard specific styles matching Figma 04_student_dashboard.png */
     .activity-metrics-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -16,8 +19,8 @@
     }
 
     .activity-metric-box {
-      background: #F8FAFC;
-      border: 1px solid #F1F5F9;
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
       border-radius: 1rem;
       padding: 1.25rem;
       text-align: center;
@@ -26,111 +29,121 @@
     .activity-metric-val {
       font-size: 2rem;
       font-weight: 800;
-      color: #0F172A;
+      color: #0f172a;
       line-height: 1.1;
     }
 
     .activity-metric-label {
-      font-size: 0.75rem;
-      color: #64748B;
+      font-size: .75rem;
+      color: #64748b;
       font-weight: 600;
-      margin-bottom: 0.25rem;
+      margin-bottom: .25rem;
     }
 
-    /* Dynamic Interactive Chart Styles */
+    /* Chart */
     .chart-period-tabs {
       display: flex;
-      background: #F1F5F9;
+      background: #f1f5f9;
       border-radius: var(--radius-full);
       padding: 3px;
       gap: 2px;
     }
+
     [data-theme="dark"] .chart-period-tabs {
-      background: #1E293B;
+      background: #1e293b;
     }
+
     .chart-tab-btn {
       border: none;
       background: transparent;
-      padding: 0.35rem 0.85rem;
-      font-size: 0.775rem;
+      padding: .35rem .85rem;
+      font-size: .775rem;
       font-weight: 700;
-      color: #64748B;
+      color: #64748b;
       border-radius: var(--radius-full);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all .15s ease;
     }
+
     .chart-tab-btn:hover {
       color: var(--color-primary);
     }
+
     .chart-tab-btn.active {
-      background: #FFFFFF;
+      background: #fff;
       color: var(--color-primary);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
+
     [data-theme="dark"] .chart-tab-btn.active {
-      background: #0F172A;
-      color: #60A5FA;
+      background: #0f172a;
+      color: #60a5fa;
     }
+
     .chart-interactive-wrap {
       position: relative;
       width: 100%;
       height: 240px;
-      margin: 1.5rem 0 0.5rem;
+      margin: 1.5rem 0 .5rem;
     }
+
     .chart-tooltip-box {
       position: absolute;
       pointer-events: none;
-      background: #0F172A;
-      color: #FFFFFF;
+      background: #0f172a;
+      color: #fff;
       padding: 6px 12px;
       border-radius: 8px;
-      font-size: 0.75rem;
+      font-size: .75rem;
       font-weight: 600;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
       transform: translate(-50%, -125%);
       display: none;
       z-index: 20;
       white-space: nowrap;
     }
+
     .chart-data-point {
       cursor: pointer;
-      transition: r 0.15s ease, fill 0.15s ease;
+      transition: r .15s ease, fill .15s ease;
     }
+
     .chart-data-point:hover {
       r: 7 !important;
-      fill: #2563EB !important;
-      stroke: #FFFFFF !important;
+      fill: #2563eb !important;
+      stroke: #fff !important;
       stroke-width: 3 !important;
     }
 
     .chart-banner-info {
-      background: #EFF6FF;
-      border: 1px solid #DBEAFE;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
       border-radius: 1rem;
       padding: 1rem 1.25rem;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      color: #1E40AF;
-      font-size: 0.85rem;
+      gap: .75rem;
+      color: #1e40af;
+      font-size: .85rem;
       font-weight: 600;
       margin-top: 1.5rem;
     }
 
-    /* Recent Projects list item */
+    /* Recent projects */
     .recent-proj-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem 0.75rem;
-      border-bottom: 1px solid #F1F5F9;
-      border-radius: 0.75rem;
+      padding: 1rem .75rem;
+      border-bottom: 1px solid #f1f5f9;
+      border-radius: .75rem;
       cursor: pointer;
-      transition: background-color 0.15s ease, transform 0.15s ease;
+      transition: background-color .15s ease,
+                  transform .15s ease;
     }
 
     .recent-proj-row:hover {
-      background-color: #F8FAFC;
+      background-color: #f8fafc;
       transform: translateX(4px);
     }
 
@@ -141,206 +154,466 @@
     .proj-avatar-badge {
       width: 44px;
       height: 44px;
-      border-radius: 0.875rem;
-      background-color: #EFF6FF;
-      color: #2563EB;
+      border-radius: .875rem;
+      background-color: #eff6ff;
+      color: #2563eb;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 750px) {
+      .activity-metrics-row {
+        grid-template-columns: 1fr;
+        gap: .75rem;
+      }
+
+      .recent-proj-row {
+        gap: 12px;
+      }
     }
   </style>
 </head>
-<body>
+
+<body class="dashboard-body">
 
   <div class="dashboard-layout">
-    <!-- Left Sidebar (Figma White Sidebar) -->
-    <aside class="dashboard-sidebar" id="shared-sidebar"></aside>
 
-    <!-- Main Canvas -->
+    <!-- ERROR MESSAGE -->
+    <div
+      id="dashboard-load-error"
+      hidden
+      style="
+        position:fixed;
+        z-index:1500;
+        left:20%;
+        right:2%;
+        top:15px;
+        padding:12px;
+        background:#fef2f2;
+        color:#b91c1c;
+        border:1px solid #fecaca;
+        border-radius:10px">
+    </div>
+
+    <!-- SHARED SIDEBAR -->
+    <aside
+      class="dashboard-sidebar"
+      id="shared-sidebar">
+    </aside>
+
+    <!-- MAIN -->
     <main class="dashboard-main">
-      <!-- Topbar Header -->
-      <header class="dashboard-topbar" id="shared-topbar"></header>
 
-      <!-- Dashboard Content Body -->
+      <!-- SHARED TOPBAR -->
+      <header
+        class="dashboard-topbar"
+        id="shared-topbar">
+      </header>
+
       <div class="dashboard-canvas">
-        <div style="margin-bottom: 2rem;">
-          <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em;">
-            Welcome back, <span id="student-name">Ahmad</span>
+
+        <!-- WELCOME -->
+        <div style="margin-bottom:2rem;">
+
+          <h1 style="
+            font-size:2.25rem;
+            font-weight:800;
+            color:#0f172a;
+            letter-spacing:-.02em;">
+
+            Welcome back,
+            <span id="student-name">
+              Mahasiswa
+            </span>
           </h1>
-          <p style="color: #64748B; font-size: 0.95rem; margin-top: 0.25rem;">
+
+          <p style="
+            color:#64748b;
+            font-size:.95rem;
+            margin-top:.25rem;">
+
             Here's your academic and project overview.
           </p>
+
         </div>
 
-        <!-- 3-Column Top Stat Card (Figma Style) -->
+        <!-- TOP STATISTICS -->
         <div class="stats-grouped-card">
-          <div class="stat-column" style="cursor: pointer;" onclick="window.location.href='profile.html'">
+
+          <!-- PORTFOLIO SCORE -->
+          <div
+            class="stat-column"
+            style="cursor:pointer;"
+            onclick="location.href='profile.html'">
+
             <div class="stat-icon-square stat-icon-blue">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/>
-                <path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+
+                <path
+                  d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/>
+
+                <path
+                  d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/>
               </svg>
             </div>
+
             <div>
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                <span class="stat-label" style="margin-bottom: 0;">Portfolio Score</span>
-                <span class="badge badge-primary">Top 1% Student</span>
+              <span class="stat-label">
+                Portfolio Score
+              </span>
+
+              <div
+                class="stat-val"
+                id="stat-score">
+                —
               </div>
-              <div class="stat-val" id="stat-score">98</div>
             </div>
+
           </div>
 
-          <div class="stat-column" style="cursor: pointer;" onclick="window.location.href='my-projects.html'">
+          <!-- ACTIVE PROJECTS -->
+          <div
+            class="stat-column"
+            style="cursor:pointer;"
+            onclick="location.href='my-projects.html'">
+
             <div class="stat-icon-square stat-icon-gray">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+
+                <rect
+                  width="20"
+                  height="14"
+                  x="2"
+                  y="7"
+                  rx="2"
+                  ry="2"/>
+
+                <path
+                  d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
               </svg>
             </div>
+
             <div>
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                <span class="stat-label" style="margin-bottom: 0;">Active Projects</span>
-                <span class="badge badge-neutral">Ongoing</span>
+
+              <div style="
+                display:flex;
+                align-items:center;
+                gap:.5rem;
+                margin-bottom:.25rem;">
+
+                <span
+                  class="stat-label"
+                  style="margin-bottom:0;">
+                  Active Projects
+                </span>
+
+                <span class="badge badge-neutral">
+                  Ongoing
+                </span>
               </div>
-              <div class="stat-val" id="stat-active-count">3</div>
+
+              <div
+                class="stat-val"
+                id="stat-active-count">
+                —
+              </div>
             </div>
           </div>
 
-          <div class="stat-column" style="cursor: pointer;" onclick="window.location.href='my-projects.html'">
+          <!-- COMPLETED PROJECTS -->
+          <div
+            class="stat-column"
+            style="cursor:pointer;"
+            onclick="location.href='my-projects.html'">
+
             <div class="stat-icon-square stat-icon-green">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2">
+
+                <path
+                  d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+
+                <polyline
+                  points="22 4 12 14.01 9 11.01"/>
               </svg>
             </div>
+
             <div>
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                <span class="stat-label" style="margin-bottom: 0;">Completed Projects</span>
-                <span class="badge badge-success">Lifetime</span>
+              <div style="
+                display:flex;
+                align-items:center;
+                gap:.5rem;
+                margin-bottom:.25rem;">
+
+                <span
+                  class="stat-label"
+                  style="margin-bottom:0;">
+                  Completed Projects
+                </span>
+
+                <span class="badge badge-success">
+                  Lifetime
+                </span>
               </div>
-              <div class="stat-val" id="stat-completed-count">2</div>
+
+              <div
+                class="stat-val"
+                id="stat-completed-count">
+                —
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Dynamic Student Activity Chart Card -->
-        <div class="card" style="margin-bottom: 2rem;">
-          <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+        <!-- ACTIVITY CHART -->
+        <div
+          class="card"
+          style="margin-bottom:2rem;">
+
+          <div
+            class="card-header"
+            style="
+              flex-wrap:wrap;
+              gap:.75rem;">
+
             <div>
-              <h2 class="card-title">Grafik Aktivitas & Kontribusi Mahasiswa</h2>
-              <p class="card-subtitle">Pencatatan milestone selesai, jam kerja aktif, dan deliverable proyek</p>
+              <h2 class="card-title">
+                Grafik Aktivitas Proyek
+              </h2>
+
+              <p class="card-subtitle">
+                Aktivitas dari Supabase:
+                lamaran, kolaborasi,
+                pengajuan, dan penyelesaian
+              </p>
             </div>
-            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:.75rem;
+              flex-wrap:wrap;">
+
               <div class="chart-period-tabs">
-                <button class="chart-tab-btn active" id="tab-btn-7d" onclick="switchChartPeriod('7d')">7 Hari</button>
-                <button class="chart-tab-btn" id="tab-btn-30d" onclick="switchChartPeriod('30d')">30 Hari</button>
-                <button class="chart-tab-btn" id="tab-btn-semester" onclick="switchChartPeriod('semester')">Semester Ini</button>
+
+                <button
+                  type="button"
+                  class="chart-tab-btn active"
+                  id="tab-btn-7d"
+                  onclick="switchChartPeriod('7d')">
+                  7 Hari
+                </button>
+
+                <button
+                  type="button"
+                  class="chart-tab-btn"
+                  id="tab-btn-30d"
+                  onclick="switchChartPeriod('30d')">
+                  30 Hari
+                </button>
+
+                <button
+                  type="button"
+                  class="chart-tab-btn"
+                  id="tab-btn-semester"
+                  onclick="switchChartPeriod('semester')">
+                  Semester Ini
+                </button>
+
               </div>
-              <span class="badge badge-success" id="chart-growth-badge" style="font-size: 0.8rem; font-weight: 700;">
-                ↗ +38% Aktif
+
+              <span
+                class="badge badge-success"
+                id="chart-growth-badge"
+                style="
+                  font-size:.8rem;
+                  font-weight:700;">
+
+                Memuat...
               </span>
+
             </div>
           </div>
 
+          <!-- ACTIVITY METRICS -->
           <div class="activity-metrics-row">
+
             <div class="activity-metric-box">
-              <div class="activity-metric-label">Milestone Selesai</div>
-              <div class="activity-metric-val" id="metric-tasks-done">14</div>
+              <div class="activity-metric-label">
+                Proyek Selesai
+              </div>
+
+              <div
+                class="activity-metric-val"
+                id="metric-tasks-done">
+                —
+              </div>
             </div>
+
             <div class="activity-metric-box">
-              <div class="activity-metric-label">Jam Belajar & Proyek</div>
-              <div class="activity-metric-val" id="metric-hours-logged" style="color: #2563EB;">42 jam</div>
+              <div class="activity-metric-label">
+                Jam Kerja (Belum Dilacak)
+              </div>
+
+              <div
+                class="activity-metric-val"
+                id="metric-hours-logged"
+                style="color:#2563eb;">
+                —
+              </div>
             </div>
+
             <div class="activity-metric-box">
-              <div class="activity-metric-label">Ketepatan Waktu</div>
-              <div class="activity-metric-val" id="metric-ontime-rate" style="color: #10B981;">100%</div>
+              <div class="activity-metric-label">
+                Ketepatan Waktu (Belum Dilacak)
+              </div>
+
+              <div
+                class="activity-metric-val"
+                id="metric-ontime-rate"
+                style="color:#10b981;">
+                —
+              </div>
             </div>
           </div>
 
-          <!-- Dynamic Responsive Vector Area Chart Container -->
+          <!-- CHART SVG -->
           <div class="chart-interactive-wrap">
-            <div class="chart-tooltip-box" id="chart-tooltip"></div>
-            <svg class="chart-svg" id="dynamic-activity-svg" viewBox="0 0 900 240" preserveAspectRatio="none" style="width: 100%; height: 240px; overflow: visible;">
+
+            <div
+              class="chart-tooltip-box"
+              id="chart-tooltip">
+            </div>
+
+            <svg
+              class="chart-svg"
+              id="dynamic-activity-svg"
+              viewBox="0 0 900 240"
+              preserveAspectRatio="none"
+              style="
+                width:100%;
+                height:240px;
+                overflow:visible;">
+
               <defs>
-                <linearGradient id="actGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#2563EB" stop-opacity="0.3"/>
-                  <stop offset="100%" stop-color="#2563EB" stop-opacity="0.0"/>
+                <linearGradient
+                  id="actGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1">
+
+                  <stop
+                    offset="0%"
+                    stop-color="#2563eb"
+                    stop-opacity=".3"/>
+
+                  <stop
+                    offset="100%"
+                    stop-color="#2563eb"
+                    stop-opacity="0"/>
                 </linearGradient>
               </defs>
 
-              <!-- Dynamic Grid & Elements populated by renderActivityChart() -->
               <g id="chart-grid-group"></g>
-              <path id="chart-area-path" fill="url(#actGradient)"></path>
-              <path id="chart-line-path" fill="none" stroke="#2563EB" stroke-width="3" stroke-linejoin="miter" stroke-miterlimit="10"></path>
+
+              <path
+                id="chart-area-path"
+                fill="url(#actGradient)">
+              </path>
+
+              <path
+                id="chart-line-path"
+                fill="none"
+                stroke="#2563eb"
+                stroke-width="3"
+                stroke-linejoin="miter"
+                stroke-miterlimit="10">
+              </path>
+
               <g id="chart-points-group"></g>
               <g id="chart-labels-group"></g>
+
             </svg>
           </div>
 
+          <!-- CHART DESCRIPTION -->
           <div class="chart-banner-info">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2">
-              <path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#2563eb"
+              stroke-width="2">
+
+              <path
+                d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/>
+
+              <path
+                d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/>
             </svg>
-            <span id="chart-summary-text"><strong>Aktivitas Terverifikasi:</strong> Mahasiswa konsisten menyelesaikan deliverable mingguan dengan feedback mitra UMKM bernilai 4.9/5.0.</span>
+
+            <span id="chart-summary-text">
+              Memuat data aktivitas...
+            </span>
           </div>
+
         </div>
 
-        <!-- Recent Projects Card -->
+        <!-- RECENT PROJECTS -->
         <div class="card">
+
           <div class="card-header">
+
             <div>
-              <h2 class="card-title">Recent Projects</h2>
-              <p class="card-subtitle">Your ongoing engagements and completed works</p>
+              <h2 class="card-title">
+                Recent Projects
+              </h2>
+
+              <p class="card-subtitle">
+                Your ongoing engagements
+                and completed works
+              </p>
             </div>
-            <a href="my-projects.html" style="font-size: 0.85rem; font-weight: 700; color: #2563EB;">View All &rarr;</a>
+
+            <a
+              href="my-projects.html"
+              style="
+                font-size:.85rem;
+                font-weight:700;
+                color:#2563eb;">
+
+              View All &rarr;
+            </a>
           </div>
 
           <div id="student-recent-projects-list">
-            <!-- Project 1 -->
-            <div class="recent-proj-row" onclick="window.location.href='workspace.html'">
-              <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="proj-avatar-badge">AI</div>
-                <div>
-                  <h4 style="font-size: 0.95rem; font-weight: 800; color: #0F172A;">AI Smart Recommendation &amp; Talent Matching</h4>
-                  <p style="font-size: 0.75rem; color: #64748B;">Batik Wastra Nusantara</p>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="badge badge-primary">Active</span>
-                <div style="font-size: 0.75rem; font-weight: 700; color: #64748B; margin-top: 0.25rem;">50% Done</div>
-              </div>
-            </div>
-
-            <!-- Project 2 -->
-            <div class="recent-proj-row" onclick="window.location.href='workspace.html'">
-              <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="proj-avatar-badge" style="background-color: #F0FDF4; color: #16A34A;">CU</div>
-                <div>
-                  <h4 style="font-size: 0.95rem; font-weight: 800; color: #0F172A;">Customer Segmentation &amp; AI Sales Analytics</h4>
-                  <p style="font-size: 0.75rem; color: #64748B;">Lumina Beans Roastery</p>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="badge badge-primary">Active</span>
-                <div style="font-size: 0.75rem; font-weight: 700; color: #64748B; margin-top: 0.25rem;">75% Done</div>
-              </div>
-            </div>
-
-            <!-- Project 3 -->
-            <div class="recent-proj-row" onclick="window.location.href='workspace.html'">
-              <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="proj-avatar-badge" style="background-color: #ECFDF5; color: #059669;">BA</div>
-                <div>
-                  <h4 style="font-size: 0.95rem; font-weight: 800; color: #0F172A;">Batik Virtual Showroom &amp; Digital E-Commerce</h4>
-                  <p style="font-size: 0.75rem; color: #64748B;">Batik Wastra Nusantara</p>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="badge badge-success">Completed</span>
-                <div style="font-size: 0.75rem; font-weight: 700; color: #10B981; margin-top: 0.25rem;">100% Done</div>
-              </div>
+            <div style="
+              padding:20px;
+              color:#64748b;">
+              Memuat proyek...
             </div>
           </div>
         </div>
@@ -348,186 +621,19 @@
       </div>
     </main>
   </div>
+
+  <!-- DEPENDENCIES -->
   <script src="../../assets/js/toast.js"></script>
   <script src="../../assets/vendor/supabase.js"></script>
   <script src="../../assets/js/config.js"></script>
   <script src="../../assets/js/supabase.js"></script>
   <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/database.js"></script>
   <script src="../../assets/js/settings.js"></script>
-    <script src="../../assets/js/layout.js"></script>
-<script>
-    const CHART_DATA = {
-      '7d': {
-        labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-        tasks: [2, 3, 5, 4, 6, 2, 1],
-        hours: [4, 6, 8, 7, 9, 5, 3],
-        totalTasks: 23,
-        totalHours: '42 jam',
-        ontime: '100%',
-        growth: '↗ +24% Pekan Ini'
-      },
-      '30d': {
-        labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
-        tasks: [14, 19, 24, 21],
-        hours: [38, 46, 54, 50],
-        totalTasks: 78,
-        totalHours: '188 jam',
-        ontime: '98%',
-        growth: '↗ +32% Bulan Ini'
-      },
-      'semester': {
-        labels: ['Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt'],
-        tasks: [18, 26, 32, 28, 38, 44],
-        hours: [45, 62, 78, 70, 88, 95],
-        totalTasks: 186,
-        totalHours: '438 jam',
-        ontime: '99%',
-        growth: '↗ +38% Semester Ini'
-      }
-    };
+  <script src="../../assets/js/layout.js"></script>
 
-    let currentPeriod = '7d';
+  <!-- LIVE DASHBOARD DATA -->
+  <script src="../../assets/js/dashboard-data.js"></script>
 
-    function renderActivityChart(period) {
-      currentPeriod = period;
-      const data = CHART_DATA[period] || CHART_DATA['7d'];
-      const width = 900;
-      const height = 240;
-      const padX = 60;
-      const padYTop = 30;
-      const padYBottom = 50;
-      const plotWidth = width - padX * 2;
-      const plotHeight = height - padYTop - padYBottom;
-
-      // Update Metric summaries
-      document.getElementById('metric-tasks-done').textContent = data.totalTasks;
-      document.getElementById('metric-hours-logged').textContent = data.totalHours;
-      document.getElementById('metric-ontime-rate').textContent = data.ontime;
-      document.getElementById('chart-growth-badge').textContent = data.growth;
-
-      // Dynamic Grid Lines
-      const gridGroup = document.getElementById('chart-grid-group');
-      gridGroup.innerHTML = '';
-      [0.25, 0.5, 0.75, 1.0].forEach(ratio => {
-        const y = padYTop + plotHeight * ratio;
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', '40');
-        line.setAttribute('y1', y);
-        line.setAttribute('x2', '860');
-        line.setAttribute('y2', y);
-        line.setAttribute('stroke', '#E2E8F0');
-        line.setAttribute('stroke-dasharray', '4');
-        gridGroup.appendChild(line);
-      });
-
-      // Calculate Coordinates
-      const maxVal = Math.max(...data.tasks) * 1.25 || 10;
-      const points = data.tasks.map((val, idx) => {
-        const x = padX + (idx / (data.tasks.length - 1)) * plotWidth;
-        const y = padYTop + plotHeight - (val / maxVal) * plotHeight;
-        return { x, y, val, label: data.labels[idx], hours: data.hours[idx] };
-      });
-
-      // Build Linear Segmented Path (Garis patah-patah antar titik)
-      let pathD = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 1; i < points.length; i++) {
-        pathD += ` L ${points[i].x} ${points[i].y}`;
-      }
-
-      document.getElementById('chart-line-path').setAttribute('d', pathD);
-
-      // Area Path
-      const last = points[points.length - 1];
-      const first = points[0];
-      const areaD = `${pathD} L ${last.x} ${height - padYBottom} L ${first.x} ${height - padYBottom} Z`;
-      document.getElementById('chart-area-path').setAttribute('d', areaD);
-
-      // Render Points
-      const pointsGroup = document.getElementById('chart-points-group');
-      const tooltip = document.getElementById('chart-tooltip');
-      const wrap = document.querySelector('.chart-interactive-wrap');
-      pointsGroup.innerHTML = '';
-
-      points.forEach(pt => {
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', pt.x);
-        circle.setAttribute('cy', pt.y);
-        circle.setAttribute('r', '5');
-        circle.setAttribute('fill', '#FFFFFF');
-        circle.setAttribute('stroke', '#2563EB');
-        circle.setAttribute('stroke-width', '2.5');
-        circle.setAttribute('class', 'chart-data-point');
-
-        circle.addEventListener('mouseenter', (e) => {
-          tooltip.style.display = 'block';
-          tooltip.innerHTML = `<strong>${pt.label}:</strong> ${pt.val} Milestone • ${pt.hours} Jam Aktif`;
-          const rect = wrap.getBoundingClientRect();
-          const pctX = (pt.x / width) * 100;
-          const pctY = (pt.y / height) * 100;
-          tooltip.style.left = `${pctX}%`;
-          tooltip.style.top = `${pctY}%`;
-        });
-
-        circle.addEventListener('mouseleave', () => {
-          tooltip.style.display = 'none';
-        });
-
-        pointsGroup.appendChild(circle);
-      });
-
-      // Render Labels
-      const labelsGroup = document.getElementById('chart-labels-group');
-      labelsGroup.innerHTML = '';
-      points.forEach(pt => {
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', pt.x);
-        text.setAttribute('y', height - 20);
-        text.setAttribute('font-size', '12');
-        text.setAttribute('fill', '#64748B');
-        text.setAttribute('font-weight', '600');
-        text.setAttribute('text-anchor', 'middle');
-        text.textContent = pt.label;
-        labelsGroup.appendChild(text);
-      });
-    }
-
-    function switchChartPeriod(period) {
-      document.querySelectorAll('.chart-tab-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById(`tab-btn-${period}`);
-      if (activeBtn) activeBtn.classList.add('active');
-      renderActivityChart(period);
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      await window.SkillBridgeAuth.ready();
-      const user = await window.SkillBridgeAuth.requireAuth('student');
-      if (!user) return;
-
-      const fullName = user.name || user.fullName || 'Mahasiswa';
-      const firstName = fullName.split(' ')[0] || fullName;
-      const nameEl = document.getElementById('student-name');
-      if (nameEl) nameEl.innerText = firstName;
-      const avatarCircle = document.getElementById('student-avatar-circle');
-      if (avatarCircle) avatarCircle.innerText = firstName.charAt(0).toUpperCase();
-
-      renderActivityChart('7d');
-
-      const statScore = document.getElementById('stat-score');
-      if (statScore) statScore.innerText = String(user.portfolio_score ?? 0);
-
-      try {
-        const workspaces = await window.SkillBridgeDB.getWorkspaces();
-        const mine = workspaces.filter(workspace => workspace.student_id === user.id);
-        const active = mine.filter(workspace => workspace.status === 'active').length;
-        const completed = mine.filter(workspace => workspace.status === 'completed').length;
-        const statActive = document.getElementById('stat-active-count');
-        const statCompleted = document.getElementById('stat-completed-count');
-        if (statActive) statActive.innerText = String(active);
-        if (statCompleted) statCompleted.innerText = String(completed);
-      } catch (error) {
-        console.warn('[Dashboard] Gagal memuat statistik workspace:', error);
-      }
-    });
-  </script>
 </body>
 </html>

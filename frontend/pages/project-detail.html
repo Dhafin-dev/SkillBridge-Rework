@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project Details — SkillBridge</title>
 
   <link rel="stylesheet" href="../assets/css/style.css">
@@ -23,9 +24,7 @@
       text-decoration: none;
     }
 
-    .detail-heading {
-      margin-bottom: 26px;
-    }
+    .detail-heading { margin-bottom: 26px; }
 
     .detail-heading h1 {
       color: #0f172a;
@@ -44,7 +43,7 @@
 
     .detail-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+      grid-template-columns: minmax(0,1.7fr) minmax(280px,1fr);
       gap: 24px;
       align-items: start;
     }
@@ -181,24 +180,37 @@
       font-size: 12px;
     }
 
-    .detail-summary-row span {
-      color: #94a3b8;
-    }
+    .detail-summary-row span { color: #94a3b8; }
 
     .detail-summary-row strong {
       color: #334155;
       text-align: right;
     }
 
-    .detail-apply-button {
-      display: flex;
-      justify-content: center;
+    .detail-apply-button,
+    .detail-chat-button {
       width: 100%;
-      margin-top: 20px;
-      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       border-radius: 11px;
+      padding: 14px;
+      font: inherit;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
+    }
+
+    .detail-apply-button {
+      margin-top: 20px;
+      background: #2563eb;
+      border: 1px solid #2563eb;
+      color: white;
+    }
+
+    .detail-apply-button:hover:not(:disabled) {
+      background: #1d4ed8;
     }
 
     .detail-apply-button:disabled {
@@ -207,6 +219,24 @@
       border-color: #e2e8f0;
       cursor: not-allowed;
     }
+
+    .detail-chat-button {
+      margin-top: 10px;
+      background: white;
+      color: #2864f0;
+      border: 1px solid #2864f0;
+    }
+
+    .detail-chat-button:hover:not(:disabled) {
+      background: #eff5ff;
+    }
+
+    .detail-chat-button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .detail-chat-button[hidden] { display: none; }
 
     .application-status-box {
       display: none;
@@ -261,7 +291,7 @@
 
     .detail-ai-button {
       width: 100%;
-      background: #fff;
+      background: white;
       color: #2563eb;
       border: 1px solid #bfdbfe;
       border-radius: 11px;
@@ -300,29 +330,24 @@
       color: #15803d;
     }
 
-    /* APPLICATION MODAL */
-
     .application-modal {
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 1000;
+      z-index: 3000;
       background: rgba(15,23,42,.6);
-      backdrop-filter: blur(4px);
       padding: 16px;
       align-items: center;
       justify-content: center;
     }
 
-    .application-modal.active {
-      display: flex;
-    }
+    .application-modal.active { display: flex; }
 
     .application-modal-content {
       width: min(100%,570px);
       max-height: 92vh;
       overflow-y: auto;
-      background: #fff;
+      background: white;
       border-radius: 20px;
       box-shadow: 0 25px 70px rgba(0,0,0,.18);
     }
@@ -344,17 +369,14 @@
       font-size: 20px;
       color: #0f172a;
       margin: 0;
-      font-weight: 800;
     }
+
+    .application-modal-body { padding: 25px; }
 
     .application-modal-footer {
       border-top: 1px solid #e2e8f0;
       justify-content: flex-end;
       flex-wrap: wrap;
-    }
-
-    .application-modal-body {
-      padding: 25px;
     }
 
     .application-modal-close {
@@ -365,9 +387,7 @@
       color: #94a3b8;
     }
 
-    .application-field {
-      margin-bottom: 20px;
-    }
+    .application-field { margin-bottom: 20px; }
 
     .application-field label {
       display: block;
@@ -380,12 +400,14 @@
     .application-field input,
     .application-field textarea,
     .application-field select {
+      display: block;
       width: 100%;
+      box-sizing: border-box;
       padding: 12px 13px;
       border-radius: 10px;
       border: 1px solid #cbd5e1;
       color: #334155;
-      background: #fff;
+      background: white;
       font: inherit;
       font-size: 13px;
     }
@@ -406,46 +428,39 @@
       font-size: 12px;
     }
 
-    @media(max-width:900px) {
-      .detail-layout {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 900px) {
+      .detail-layout { grid-template-columns: 1fr; }
     }
 
-    @media(max-width:600px) {
+    @media (max-width: 600px) {
       .detail-card,
-      .detail-ai-box {
-        padding: 19px;
-      }
+      .detail-ai-box { padding: 19px; }
 
       .application-modal-header,
       .application-modal-footer,
-      .application-modal-body {
-        padding: 18px;
-      }
+      .application-modal-body { padding: 18px; }
     }
   </style>
 </head>
 
-<body>
+<body class="dashboard-body">
 
   <div class="dashboard-layout">
 
-    <!--
-      SIDEBAR DIAMBIL LANGSUNG DARI:
-      frontend/pages/student/dashboard.html
+    <!-- SHARED SIDEBAR -->
+    <aside
+      class="dashboard-sidebar"
+      id="shared-sidebar">
+    </aside>
 
-      TIDAK DITULIS ULANG.
-    -->
-    <div id="original-student-sidebar"></div>
-
+    <!-- MAIN CONTENT -->
     <main class="dashboard-main">
 
-      <!--
-        TOPBAR DIAMBIL LANGSUNG DARI:
-        frontend/pages/student/dashboard.html
-      -->
-      <div id="original-student-topbar"></div>
+      <!-- SHARED TOPBAR -->
+      <header
+        class="dashboard-topbar"
+        id="shared-topbar">
+      </header>
 
       <div class="dashboard-canvas">
 
@@ -458,22 +473,19 @@
           <div
             id="detail-message"
             class="detail-message"
-            role="alert"
-          ></div>
+            role="alert">
+          </div>
 
           <div class="detail-heading">
             <span style="
               color:#2563eb;
               font-size:11px;
               font-weight:800;
-              letter-spacing:1px;
-            ">
+              letter-spacing:1px;">
               PROJECT OPPORTUNITY
             </span>
 
-            <h1 id="detail-title">
-              Memuat proyek...
-            </h1>
+            <h1 id="detail-title">Memuat proyek...</h1>
 
             <p>
               Explore project details, requirements,
@@ -484,8 +496,8 @@
           <!-- APPLICATION STATUS -->
           <div
             id="application-status-box"
-            class="application-status-box"
-          >
+            class="application-status-box">
+
             <strong id="application-status-title">
               Application Submitted
             </strong>
@@ -505,15 +517,13 @@
                 <div class="detail-tags">
                   <span
                     id="detail-category"
-                    class="detail-tag"
-                  >
+                    class="detail-tag">
                     Loading...
                   </span>
 
                   <span
                     id="detail-status"
-                    class="detail-tag status"
-                  >
+                    class="detail-tag status">
                     Loading...
                   </span>
                 </div>
@@ -530,8 +540,7 @@
 
                 <p
                   id="detail-desc"
-                  class="detail-description"
-                >
+                  class="detail-description">
                   Loading project description...
                 </p>
 
@@ -541,12 +550,12 @@
 
                 <div
                   id="detail-skills"
-                  class="detail-skills"
-                ></div>
+                  class="detail-skills">
+                </div>
 
               </section>
 
-              <!-- UMKM PROFILE -->
+              <!-- UMKM INFORMATION -->
               <section class="detail-card">
 
                 <h2>About the UMKM</h2>
@@ -555,32 +564,30 @@
 
                   <div
                     id="business-avatar"
-                    class="business-avatar"
-                  >
+                    class="business-avatar">
                     U
                   </div>
 
                   <div>
                     <h3
                       id="detail-umkm-name"
-                      class="business-name"
-                    >
+                      class="business-name">
                       Loading...
                     </h3>
 
                     <p
                       id="detail-umkm-meta"
                       class="detail-muted"
-                      style="margin:0;"
-                    ></p>
+                      style="margin:0;">
+                    </p>
                   </div>
 
                 </div>
 
                 <p
                   id="detail-umkm-desc"
-                  class="detail-description"
-                ></p>
+                  class="detail-description">
+                </p>
 
               </section>
 
@@ -597,8 +604,7 @@
 
                 <div
                   id="detail-budget"
-                  class="detail-budget"
-                >
+                  class="detail-budget">
                   -
                 </div>
 
@@ -617,20 +623,28 @@
                   <strong id="summary-deadline">-</strong>
                 </div>
 
+                <!-- APPLY BUTTON -->
                 <button
                   type="button"
-                  class="btn btn-primary detail-apply-button"
+                  class="detail-apply-button"
                   id="btn-apply-modal"
-                  disabled
-                >
+                  disabled>
                   Loading...
+                </button>
+
+                <!-- CHAT BUTTON -->
+                <button
+                  type="button"
+                  class="detail-chat-button"
+                  id="btn-chat-umkm"
+                  disabled>
+                  💬 Chat with UMKM
                 </button>
 
                 <p
                   id="apply-note"
                   class="detail-muted"
-                  style="text-align:center;margin-top:12px;"
-                >
+                  style="text-align:center;margin-top:12px;">
                   Only student accounts can apply.
                 </p>
 
@@ -649,27 +663,24 @@
                 <button
                   type="button"
                   id="btn-run-ai"
-                  class="detail-ai-button"
-                >
+                  class="detail-ai-button">
                   Analyze My Skill Match
                 </button>
 
                 <div
                   id="ai-results-box"
-                  class="detail-ai-results"
-                >
+                  class="detail-ai-results">
 
                   <strong
                     id="ai-score-badge"
-                    style="font-size:27px;color:#2563eb;"
-                  ></strong>
+                    style="font-size:27px;color:#2563eb;">
+                  </strong>
 
                   <p id="ai-model-badge"></p>
 
-                  <h3
-                    id="ai-recommendation-text"
-                    style="color:#1e40af;font-size:14px;"
-                  ></h3>
+                  <h3 id="ai-recommendation-text"
+                    style="color:#1e40af;font-size:14px;">
+                  </h3>
 
                   <p id="ai-reasoning-text"></p>
 
@@ -679,8 +690,8 @@
 
                   <div
                     id="ai-matched-skills"
-                    class="detail-skills"
-                  ></div>
+                    class="detail-skills">
+                  </div>
 
                   <h3 style="font-size:12px;">
                     Skills to Develop
@@ -688,34 +699,33 @@
 
                   <div
                     id="ai-missing-skills"
-                    class="detail-skills"
-                  ></div>
+                    class="detail-skills">
+                  </div>
 
                 </div>
+
               </section>
 
             </aside>
-
           </div>
+
         </div>
       </div>
 
     </main>
   </div>
 
-  <!-- APPLICATION MODAL -->
+  <!-- APPLY MODAL -->
   <div
     id="application-modal"
     class="application-modal"
     role="dialog"
     aria-modal="true"
-    aria-labelledby="application-title"
-  >
+    aria-labelledby="application-title">
 
     <div class="application-modal-content">
 
       <div class="application-modal-header">
-
         <h2 id="application-title">
           Apply to Project
         </h2>
@@ -724,11 +734,9 @@
           type="button"
           id="modal-close-btn"
           class="application-modal-close"
-          aria-label="Close"
-        >
+          aria-label="Close">
           &times;
         </button>
-
       </div>
 
       <form id="application-form">
@@ -738,11 +746,10 @@
           <div
             id="application-error"
             class="application-error"
-            role="alert"
-          ></div>
+            role="alert">
+          </div>
 
           <div class="application-field">
-
             <label for="app-letter">
               Motivation / Cover Letter *
             </label>
@@ -752,17 +759,15 @@
               required
               minlength="30"
               maxlength="5000"
-              placeholder="Explain your experience and why you're interested in this project..."
-            ></textarea>
+              placeholder="Explain why you're interested in this project...">
+            </textarea>
 
             <small class="detail-muted">
               Minimum 30 characters.
             </small>
-
           </div>
 
           <div class="application-field">
-
             <label for="app-portfolio">
               Portfolio / GitHub Link
             </label>
@@ -770,41 +775,32 @@
             <input
               type="url"
               id="app-portfolio"
-              placeholder="https://github.com/username"
-            >
+              placeholder="https://github.com/username">
 
             <small class="detail-muted">
               Optional.
             </small>
-
           </div>
 
           <div class="application-field">
-
             <label for="app-timeline">
               Estimated Completion Time
             </label>
 
             <select id="app-timeline" required>
-
               <option value="1-2 minggu">
                 1–2 Weeks
               </option>
-
               <option value="3-4 minggu" selected>
                 3–4 Weeks
               </option>
-
               <option value="5-8 minggu">
                 5–8 Weeks
               </option>
-
               <option value="fleksibel">
                 Flexible
               </option>
-
             </select>
-
           </div>
 
         </div>
@@ -814,16 +810,14 @@
           <button
             type="button"
             id="modal-cancel-btn"
-            class="btn btn-outline"
-          >
+            class="btn btn-outline">
             Cancel
           </button>
 
           <button
             type="submit"
             id="submit-application-btn"
-            class="btn btn-primary"
-          >
+            class="btn btn-primary">
             Submit Application
           </button>
 
@@ -843,6 +837,9 @@
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/settings.js"></script>
 
+  <!-- SHARED LAYOUT: SIDEBAR + TOPBAR -->
+  <script src="../assets/js/layout.js"></script>
+
   <script>
     "use strict";
 
@@ -852,178 +849,19 @@
     let currentProject = null;
     let myApplication = null;
 
-    const applyButton = document.getElementById(
-      "btn-apply-modal"
-    );
+    const $ = id => document.getElementById(id);
+    const applyButton = $("btn-apply-modal");
+    const chatButton = $("btn-chat-umkm");
+    const aiButton = $("btn-run-ai");
+    const modal = $("application-modal");
 
-    const aiButton = document.getElementById(
-      "btn-run-ai"
-    );
-
-    const applicationModal = document.getElementById(
-      "application-modal"
-    );
-
-    // ======================================
-    // REUSE LAYOUT ASLI DARI DASHBOARD
-    // ======================================
-
-    async function loadOriginalDashboardLayout() {
-      /*
-        File sumber:
-        frontend/pages/student/dashboard.html
-
-        Karena project-detail.html berada di folder
-        frontend/pages/, path yang benar adalah:
-        student/dashboard.html
-      */
-
-      const dashboardUrl = new URL(
-        "student/dashboard.html",
-        window.location.href
-      );
-
-      const response = await fetch(dashboardUrl, {
-        cache: "no-store"
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          "Tidak dapat membaca Student Dashboard: " +
-          response.status
-        );
-      }
-
-      const html = await response.text();
-
-      const parser = new DOMParser();
-
-      const dashboardDoc = parser.parseFromString(
-        html,
-        "text/html"
-      );
-
-      const sourceSidebar = dashboardDoc.querySelector(
-        ".dashboard-sidebar"
-      );
-
-      const sourceTopbar = dashboardDoc.querySelector(
-        ".dashboard-topbar"
-      );
-
-      if (!sourceSidebar || !sourceTopbar) {
-        throw new Error(
-          "Sidebar atau topbar tidak ditemukan dalam student/dashboard.html"
-        );
-      }
-
-      /*
-        Gunakan elemen aslinya.
-        Tidak menyalin ikon satu per satu.
-      */
-
-      const sidebar = document.importNode(
-        sourceSidebar,
-        true
-      );
-
-      const topbar = document.importNode(
-        sourceTopbar,
-        true
-      );
-
-      /*
-        Perbaiki href karena sidebar aslinya
-        menggunakan path relatif dari folder student/.
-      */
-
-      sidebar.querySelectorAll("a[href]").forEach(link => {
-        const originalHref = link.getAttribute("href");
-
-        if (!originalHref) return;
-
-        link.href = new URL(
-          originalHref,
-          dashboardUrl
-        ).href;
-      });
-
-      /*
-        Menu aktif:
-        Market, bukan Home.
-      */
-
-      sidebar.querySelectorAll(".sidebar-item").forEach(item => {
-        item.classList.remove("active");
-      });
-
-      const links = sidebar.querySelectorAll(
-        ".sidebar-nav a"
-      );
-
-      links.forEach(link => {
-        const label = link.textContent
-          .trim()
-          .toLowerCase();
-
-        if (label === "market") {
-          link.classList.add("active");
-        }
-      });
-
-      /*
-        Pasang HTML asli.
-
-        .dashboard-layout membutuhkan sidebar
-        sebagai anak langsung, bukan sidebar
-        yang masih terbungkus placeholder div.
-      */
-
-      const sidebarPlaceholder = document.getElementById(
-        "original-student-sidebar"
-      );
-
-      const topbarPlaceholder = document.getElementById(
-        "original-student-topbar"
-      );
-
-      sidebarPlaceholder.replaceWith(sidebar);
-      topbarPlaceholder.replaceWith(topbar);
-
-      /*
-        Sesuaikan avatar dengan akun login.
-      */
-
-      const user = auth?.getUser?.();
-
-      if (user) {
-        const avatar = document.getElementById(
-          "student-avatar-circle"
-        );
-
-        if (avatar) {
-          avatar.textContent = (
-            user.name ||
-            "Student"
-          ).charAt(0).toUpperCase();
-        }
-      }
-
-      console.log(
-        "[SkillBridge] Sidebar dan topbar asli berhasil di-reuse."
-      );
-    }
-
-    // ======================================
+    // ===============================
     // HELPERS
-    // ======================================
+    // ===============================
 
     function setText(id, value) {
-      const el = document.getElementById(id);
-
-      if (el) {
-        el.textContent = String(value ?? "");
-      }
+      const el = $(id);
+      if (el) el.textContent = String(value ?? "");
     }
 
     function escapeHTML(value) {
@@ -1036,12 +874,9 @@
     }
 
     function showMessage(message, success = false) {
-      const box = document.getElementById(
-        "detail-message"
-      );
+      const box = $("detail-message");
 
       box.textContent = message;
-
       box.className = success
         ? "detail-message success"
         : "detail-message";
@@ -1058,18 +893,13 @@
           : value
       );
 
-      if (Number.isNaN(date.getTime())) {
-        return "-";
-      }
+      if (Number.isNaN(date.getTime())) return "-";
 
-      return date.toLocaleDateString(
-        "id-ID",
-        {
-          day: "numeric",
-          month: "long",
-          year: "numeric"
-        }
-      );
+      return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
     }
 
     function formatMoney(value) {
@@ -1082,15 +912,12 @@
       return "Rp " + amount.toLocaleString("id-ID");
     }
 
-    // ======================================
-    // LOAD PROJECT FROM SUPABASE
-    // ======================================
+    // ===============================
+    // LOAD PROJECT
+    // ===============================
 
     async function loadProject() {
-      const params = new URLSearchParams(
-        window.location.search
-      );
-
+      const params = new URLSearchParams(location.search);
       const projectId = params.get("id");
 
       if (!projectId) {
@@ -1100,204 +927,136 @@
       }
 
       if (!window.SkillBridgeDB?.getProjectById) {
-        throw new Error(
-          "database.js belum terhubung."
-        );
+        throw new Error("Database service belum tersedia.");
       }
 
-      const project = await window.SkillBridgeDB.getProjectById(
-        projectId
-      );
+      const project =
+        await window.SkillBridgeDB.getProjectById(projectId);
 
       if (!project) {
-        throw new Error(
-          "Proyek tidak ditemukan di Supabase."
-        );
+        throw new Error("Proyek tidak ditemukan di Supabase.");
       }
 
       currentProject = project;
 
       renderProject();
 
+      chatButton.disabled = false;
+
       await checkApplication();
     }
 
-    // ======================================
-    // RENDER PROJECT DETAILS
-    // ======================================
+    // ===============================
+    // RENDER PROJECT
+    // ===============================
 
     function renderProject() {
-      const project = currentProject;
+      const p = currentProject;
 
-      document.title =
-        project.title + " — SkillBridge";
+      document.title = p.title + " — SkillBridge";
 
-      setText("detail-title", project.title);
-
+      setText("detail-title", p.title);
       setText(
         "detail-category",
-        project.category_name ||
-        project.category ||
-        "Uncategorized"
+        p.category_name || p.category || "Uncategorized"
       );
-
-      setText(
-        "detail-status",
-        project.status
-      );
-
+      setText("detail-status", p.status);
       setText(
         "detail-city",
-        "📍 " + (
-          project.location ||
-          "Not specified"
-        )
+        "📍 " + (p.location || "Not specified")
       );
-
       setText(
         "detail-deadline",
-        "📅 " + formatDate(project.deadline)
+        "📅 " + formatDate(p.deadline)
       );
-
       setText(
         "detail-applicants",
-        project.applicants_count != null
-          ? "👥 " +
-            project.applicants_count +
-            " Applicants"
+        p.applicants_count != null
+          ? "👥 " + p.applicants_count + " Applicants"
           : "👥 Applicants"
       );
 
       setText(
         "detail-desc",
-        project.description ||
-        "No description available."
+        p.description || "No description available."
       );
-
-      setText(
-        "detail-budget",
-        formatMoney(project.budget)
-      );
-
-      setText(
-        "summary-status",
-        project.status
-      );
-
+      setText("detail-budget", formatMoney(p.budget));
+      setText("summary-status", p.status);
       setText(
         "summary-location",
-        project.location ||
-        "Not specified"
+        p.location || "Not specified"
       );
-
       setText(
         "summary-deadline",
-        formatDate(project.deadline)
+        formatDate(p.deadline)
       );
-
-      // PROFILE BISNIS DARI DATA SUPABASE
 
       const businessName =
-        project.umkm_name ||
-        project.business_name ||
+        p.umkm_name ||
+        p.business_name ||
         "Nama bisnis belum dilengkapi";
 
-      setText(
-        "detail-umkm-name",
-        businessName
-      );
-
+      setText("detail-umkm-name", businessName);
       setText(
         "business-avatar",
         businessName.charAt(0).toUpperCase()
       );
-
       setText(
         "detail-umkm-meta",
-        project.umkm_city ||
-        project.location ||
-        "Not specified"
+        p.umkm_city || p.location || "Not specified"
       );
-
       setText(
         "detail-umkm-desc",
-        project.umkm_description ||
-        project.umkm_desc ||
+        p.umkm_description ||
+        p.umkm_desc ||
         "Profil bisnis belum dilengkapi."
       );
 
-      // REQUIRED SKILLS
+      const skills = Array.isArray(p.required_skills)
+        ? p.required_skills
+        : Array.isArray(p.skills)
+          ? p.skills
+          : [];
 
-      const skills = Array.isArray(
-        project.required_skills
-      )
-        ? project.required_skills
-        : Array.isArray(project.skills)
-        ? project.skills
-        : [];
-
-      const skillsElement = document.getElementById(
-        "detail-skills"
-      );
-
-      if (skills.length > 0) {
-        skillsElement.innerHTML = skills.map(skill => `
+      if (skills.length) {
+        $("detail-skills").innerHTML = skills.map(skill => `
           <span class="detail-skill">
             ${escapeHTML(skill)}
           </span>
         `).join("");
       } else {
-        skillsElement.textContent =
-          "No skills specified.";
+        $("detail-skills").textContent = "No skills specified.";
       }
 
-      // STATUS BADGE
-
-      const statusBadge = document.getElementById(
-        "detail-status"
-      );
-
-      statusBadge.className =
-        project.status === "recruiting"
+      $("detail-status").className =
+        p.status === "recruiting"
           ? "detail-tag status"
           : "detail-tag closed";
     }
 
-    // ======================================
-    // CHECK EXISTING APPLICATION
-    // ======================================
+    // ===============================
+    // APPLICATION STATUS
+    // ===============================
 
     async function checkApplication() {
       const user = auth.getUser();
-
-      const statusBox = document.getElementById(
-        "application-status-box"
-      );
+      const statusBox = $("application-status-box");
 
       myApplication = null;
-
       applyButton.disabled = true;
       statusBox.style.display = "none";
 
-      // BELUM LOGIN
-
       if (!user) {
         applyButton.disabled = false;
-
-        applyButton.textContent =
-          "Login to Apply";
-
+        applyButton.textContent = "Login to Apply";
         setText(
           "apply-note",
           "Login sebagai mahasiswa untuk melamar."
         );
-
         return;
       }
 
-      // AKUN UMKM / ADMIN
-
-      if (user.role !== "student") {
+      if (String(user.role).toLowerCase() !== "student") {
         applyButton.textContent =
           user.role === "umkm" &&
           currentProject.owner_id === user.id
@@ -1308,11 +1067,8 @@
           "apply-note",
           "Only students can submit applications."
         );
-
         return;
       }
-
-      // CEK LAMARAN DARI SUPABASE
 
       const { data, error } = await db
         .from("project_applications")
@@ -1321,16 +1077,12 @@
         .eq("student_id", user.id)
         .maybeSingle();
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       myApplication = data;
 
-      // SUDAH PERNAH APPLY
-
       if (myApplication) {
-        const statusLabels = {
+        const labels = {
           pending: "Application Pending",
           accepted: "Application Accepted",
           rejected: "Application Rejected",
@@ -1338,20 +1090,16 @@
         };
 
         const label =
-          statusLabels[myApplication.status] ||
+          labels[myApplication.status] ||
           "Application Submitted";
 
         applyButton.textContent = label;
         applyButton.disabled = true;
 
-        setText(
-          "application-status-title",
-          label
-        );
-
+        setText("application-status-title", label);
         setText(
           "application-status-description",
-          "Lamaran kamu telah tersimpan. Status saat ini: " +
+          "Lamaran telah tersimpan. Status saat ini: " +
           myApplication.status + "."
         );
 
@@ -1370,26 +1118,17 @@
         return;
       }
 
-      // PROYEK TIDAK RECRUITING
-
       if (currentProject.status !== "recruiting") {
-        applyButton.textContent =
-          "Applications Closed";
-
+        applyButton.textContent = "Applications Closed";
         setText(
           "apply-note",
           "This project is not accepting applications."
         );
-
         return;
       }
 
-      // BOLEH APPLY
-
       applyButton.disabled = false;
-
-      applyButton.textContent =
-        "Apply to This Project";
+      applyButton.textContent = "Apply to This Project";
 
       setText(
         "apply-note",
@@ -1397,144 +1136,148 @@
       );
     }
 
-    // ======================================
+    // ===============================
+    // CHAT WITH UMKM
+    // ===============================
+
+    chatButton.addEventListener("click", async () => {
+      if (!currentProject?.id) {
+        showMessage("Data proyek belum selesai dimuat.");
+        return;
+      }
+
+      try {
+        chatButton.disabled = true;
+
+        await auth.ready();
+
+        const user = auth.getUser();
+
+        if (!user) {
+          location.href = auth.getPathTo("login");
+          return;
+        }
+
+        if (String(user.role).toLowerCase() !== "student") {
+          showMessage(
+            "Chat with UMKM hanya tersedia untuk akun Student."
+          );
+          return;
+        }
+
+        // Messages.js handles sb_start_project_chat.
+        location.href =
+          "student/messages.html?project_id=" +
+          encodeURIComponent(currentProject.id);
+
+      } catch (error) {
+        showMessage(
+          "Gagal membuka chat: " + error.message
+        );
+      } finally {
+        chatButton.disabled = false;
+      }
+    });
+
+    // ===============================
     // APPLICATION MODAL
-    // ======================================
+    // ===============================
 
     function openModal() {
-      applicationModal.classList.add("active");
+      modal.classList.add("active");
       document.body.style.overflow = "hidden";
     }
 
     function closeModal() {
-      applicationModal.classList.remove("active");
+      modal.classList.remove("active");
       document.body.style.overflow = "";
     }
 
-    document.getElementById(
-      "modal-close-btn"
-    ).addEventListener("click", closeModal);
+    $("modal-close-btn").addEventListener("click", closeModal);
+    $("modal-cancel-btn").addEventListener("click", closeModal);
 
-    document.getElementById(
-      "modal-cancel-btn"
-    ).addEventListener("click", closeModal);
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeModal();
+    });
 
-    applicationModal.addEventListener(
-      "click",
-      event => {
-        if (event.target === applicationModal) {
-          closeModal();
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeModal();
+    });
+
+    // ===============================
+    // APPLY BUTTON
+    // ===============================
+
+    applyButton.addEventListener("click", async () => {
+      try {
+        await auth.ready();
+
+        const user = auth.getUser();
+
+        if (!user) {
+          location.href = auth.getPathTo("login");
+          return;
         }
-      }
-    );
 
-    document.addEventListener(
-      "keydown",
-      event => {
-        if (event.key === "Escape") {
-          closeModal();
+        if (String(user.role).toLowerCase() !== "student") {
+          showMessage("Hanya Student yang dapat melamar.");
+          return;
         }
-      }
-    );
 
-    // ======================================
-    // OPEN APPLY FORM
-    // ======================================
-
-    applyButton.addEventListener(
-      "click",
-      async () => {
-        try {
-          await auth.ready();
-
-          const user = auth.getUser();
-
-          if (!user) {
-            window.location.href =
-              auth.getPathTo("login");
-
-            return;
-          }
-
-          if (user.role !== "student") {
-            showMessage(
-              "Hanya mahasiswa yang dapat melamar."
-            );
-            return;
-          }
-
-          if (
-            !currentProject ||
-            currentProject.status !== "recruiting"
-          ) {
-            showMessage(
-              "Proyek ini tidak sedang membuka lamaran."
-            );
-            return;
-          }
-
-          if (myApplication) {
-            showMessage(
-              "Kamu sudah pernah melamar proyek ini."
-            );
-            return;
-          }
-
-          openModal();
-
-        } catch (error) {
-          console.error(
-            "[Open Application]",
-            error
-          );
-
+        if (!currentProject ||
+            currentProject.status !== "recruiting") {
           showMessage(
-            error.message ||
-            "Gagal membuka form lamaran."
+            "Proyek ini tidak sedang membuka lamaran."
           );
+          return;
         }
+
+        if (myApplication) {
+          showMessage(
+            "Kamu sudah pernah melamar proyek ini."
+          );
+          return;
+        }
+
+        openModal();
+
+      } catch (error) {
+        showMessage(
+          error.message || "Gagal membuka form lamaran."
+        );
       }
-    );
+    });
 
-    // ======================================
-    // SUBMIT APPLICATION TO SUPABASE
-    // ======================================
+    // ===============================
+    // SUBMIT APPLICATION
+    // ===============================
 
-    document.getElementById(
-      "application-form"
-    ).addEventListener(
+    $("application-form").addEventListener(
       "submit",
       async event => {
         event.preventDefault();
 
-        const submitButton = document.getElementById(
-          "submit-application-btn"
-        );
-
-        const errorBox = document.getElementById(
-          "application-error"
-        );
-
-        errorBox.style.display = "none";
+        const submitButton = $("submit-application-btn");
+        const errorBox = $("application-error");
 
         submitButton.disabled = true;
         submitButton.textContent = "Submitting...";
+        errorBox.style.display = "none";
 
         try {
           await auth.ready();
 
           const user = auth.getUser();
 
-          if (!user || user.role !== "student") {
+          if (!user ||
+              String(user.role).toLowerCase() !== "student") {
             throw new Error(
               "Login sebagai mahasiswa terlebih dahulu."
             );
           }
 
           if (!currentProject) {
-            throw new Error(
-              "Project tidak ditemukan."
-            );
+            throw new Error("Project tidak ditemukan.");
           }
 
           if (currentProject.status !== "recruiting") {
@@ -1549,27 +1292,19 @@
             );
           }
 
-          if (!window.SkillBridgeDB?.applyToProject) {
-            throw new Error(
-              "Fungsi Apply tidak tersedia pada database.js."
-            );
-          }
-
-          const coverLetter = document.getElementById(
-            "app-letter"
-          ).value.trim();
-
-          const portfolioUrl = document.getElementById(
-            "app-portfolio"
-          ).value.trim();
-
-          const timeline = document.getElementById(
-            "app-timeline"
-          ).value;
+          const coverLetter = $("app-letter").value.trim();
+          const portfolioUrl = $("app-portfolio").value.trim();
+          const timeline = $("app-timeline").value;
 
           if (coverLetter.length < 30) {
             throw new Error(
               "Cover letter minimal 30 karakter."
+            );
+          }
+
+          if (!window.SkillBridgeDB?.applyToProject) {
+            throw new Error(
+              "Fungsi Apply tidak tersedia di database.js."
             );
           }
 
@@ -1587,223 +1322,171 @@
             true
           );
 
-          if (window.toast?.success) {
-            window.toast.success(
-              "Application submitted successfully!"
-            );
-          }
-
           await checkApplication();
 
         } catch (error) {
-          console.error(
-            "[SkillBridge Apply Error]",
-            error
-          );
+          console.error("[SkillBridge Apply]", error);
 
-          let errorMessage =
-            error.message ||
-            "Gagal mengirim lamaran.";
+          errorBox.textContent =
+            error.code === "23505"
+              ? "Kamu sudah pernah melamar proyek ini."
+              : error.message || "Gagal mengirim lamaran.";
 
-          if (error.code === "23505") {
-            errorMessage =
-              "Kamu sudah pernah melamar proyek ini.";
-          }
-
-          errorBox.textContent = errorMessage;
           errorBox.style.display = "block";
 
         } finally {
           submitButton.disabled = false;
-
-          submitButton.textContent =
-            "Submit Application";
+          submitButton.textContent = "Submit Application";
         }
       }
     );
 
-    // ======================================
+    // ===============================
     // AI MATCHMAKER
-    // ======================================
+    // ===============================
 
-    aiButton.addEventListener(
-      "click",
-      async () => {
-        aiButton.disabled = true;
-        aiButton.textContent = "Analyzing...";
+    aiButton.addEventListener("click", async () => {
+      aiButton.disabled = true;
+      aiButton.textContent = "Analyzing...";
 
-        try {
-          await auth.ready();
+      try {
+        await auth.ready();
 
-          const user = auth.getUser();
+        const user = auth.getUser();
 
-          if (!user || user.role !== "student") {
-            throw new Error(
-              "Login sebagai mahasiswa untuk menggunakan AI Matching."
-            );
-          }
-
-          if (!currentProject) {
-            throw new Error(
-              "Project data belum tersedia."
-            );
-          }
-
-          if (
-            typeof window.SkillBridgeAI?.calculateMatch !==
-            "function"
-          ) {
-            throw new Error(
-              "Backend AI belum terhubung."
-            );
-          }
-
-          const result =
-            await window.SkillBridgeAI.calculateMatch(
-              user,
-              currentProject
-            );
-
-          const score = Number(
-            result.match_score
+        if (!user ||
+            String(user.role).toLowerCase() !== "student") {
+          throw new Error(
+            "Login sebagai Student untuk menggunakan AI Matching."
           );
-
-          setText(
-            "ai-score-badge",
-            result.match_score != null &&
-            Number.isFinite(score)
-              ? score + "% Match"
-              : "Score unavailable"
-          );
-
-          setText(
-            "ai-model-badge",
-            result.modelUsed ||
-            "AI Skill Matching"
-          );
-
-          setText(
-            "ai-recommendation-text",
-            result.recommendation || ""
-          );
-
-          setText(
-            "ai-reasoning-text",
-            result.reasoning || ""
-          );
-
-          const matched = Array.isArray(
-            result.matched_skills
-          )
-            ? result.matched_skills
-            : [];
-
-          const missing = Array.isArray(
-            result.missing_skills
-          )
-            ? result.missing_skills
-            : [];
-
-          document.getElementById(
-            "ai-matched-skills"
-          ).innerHTML = matched.map(skill => `
-            <span class="detail-skill">
-              ${escapeHTML(skill)}
-            </span>
-          `).join("");
-
-          document.getElementById(
-            "ai-missing-skills"
-          ).innerHTML = missing.map(skill => `
-            <span class="detail-skill">
-              ${escapeHTML(skill)}
-            </span>
-          `).join("");
-
-          document.getElementById(
-            "ai-results-box"
-          ).style.display = "block";
-
-        } catch (error) {
-          console.error(
-            "[SkillBridge AI Matchmaker]",
-            error
-          );
-
-          showMessage(
-            error.message ||
-            "AI Matching gagal."
-          );
-
-        } finally {
-          aiButton.disabled = false;
-
-          aiButton.textContent =
-            "Analyze My Skill Match";
         }
-      }
-    );
 
-    // ======================================
-    // INITIALIZE PAGE
-    // ======================================
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      async () => {
-        /*
-          1. Pulihkan session mahasiswa.
-          2. Reuse SIDEBAR ASLI.
-          3. Reuse TOPBAR ASLI.
-          4. Ambil proyek Supabase.
-          5. Ambil status aplikasi mahasiswa.
-        */
-
-        try {
-          if (typeof auth?.ready === "function") {
-            await auth.ready();
-          }
-
-          /*
-            Layout dan proyek tidak saling
-            bergantung. Jika load layout gagal,
-            data proyek tetap dicoba.
-          */
-
-          try {
-            await loadOriginalDashboardLayout();
-          } catch (layoutError) {
-            console.error(
-              "[SkillBridge Layout Error]",
-              layoutError
-            );
-
-            showMessage(
-              "Gagal memuat sidebar/topbar asli: " +
-              layoutError.message
-            );
-          }
-
-          await loadProject();
-
-        } catch (error) {
-          console.error(
-            "[SkillBridge Project Detail]",
-            error
-          );
-
-          showMessage(
-            error.message ||
-            "Gagal memuat project."
-          );
-
-          applyButton.disabled = true;
-          applyButton.textContent =
-            "Project Unavailable";
+        if (!currentProject) {
+          throw new Error("Project data belum tersedia.");
         }
-      }
-    );
 
+        if (
+          typeof window.SkillBridgeAI?.calculateMatch !==
+          "function"
+        ) {
+          throw new Error("Backend AI belum terhubung.");
+        }
+
+        const result =
+          await window.SkillBridgeAI.calculateMatch(
+            user,
+            currentProject
+          );
+
+        const score = Number(result.match_score);
+
+        setText(
+          "ai-score-badge",
+          result.match_score != null &&
+          Number.isFinite(score)
+            ? score + "% Match"
+            : "Score unavailable"
+        );
+
+        setText(
+          "ai-model-badge",
+          result.modelUsed || "AI Skill Matching"
+        );
+
+        setText(
+          "ai-recommendation-text",
+          result.recommendation || ""
+        );
+
+        setText(
+          "ai-reasoning-text",
+          result.reasoning || ""
+        );
+
+        const matched = Array.isArray(result.matched_skills)
+          ? result.matched_skills
+          : [];
+
+        const missing = Array.isArray(result.missing_skills)
+          ? result.missing_skills
+          : [];
+
+        $("ai-matched-skills").innerHTML = matched.map(skill => `
+          <span class="detail-skill">
+            ${escapeHTML(skill)}
+          </span>
+        `).join("");
+
+        $("ai-missing-skills").innerHTML = missing.map(skill => `
+          <span class="detail-skill">
+            ${escapeHTML(skill)}
+          </span>
+        `).join("");
+
+        $("ai-results-box").style.display = "block";
+
+      } catch (error) {
+        console.error("[AI Matchmaker]", error);
+
+        showMessage(
+          error.message || "AI Matching gagal."
+        );
+
+      } finally {
+        aiButton.disabled = false;
+        aiButton.textContent = "Analyze My Skill Match";
+      }
+    });
+
+    // ===============================
+    // PAGE INITIALIZATION
+    // ===============================
+
+    async function initPage() {
+      try {
+        if (!auth) {
+          throw new Error("Auth service tidak tersedia.");
+        }
+
+        await auth.ready();
+
+        await loadProject();
+
+        const user = auth.getUser();
+
+        if (
+          user &&
+          String(user.role).toLowerCase() !== "student"
+        ) {
+          chatButton.hidden = true;
+        }
+
+      } catch (error) {
+        console.error(
+          "[SkillBridge Project Detail]",
+          error
+        );
+
+        showMessage(
+          error.message || "Gagal memuat project."
+        );
+
+        applyButton.disabled = true;
+        applyButton.textContent = "Project Unavailable";
+
+        chatButton.disabled = true;
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        initPage,
+        { once: true }
+      );
+    } else {
+      initPage();
+    }
   </script>
 
 </body>
